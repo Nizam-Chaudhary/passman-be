@@ -1,17 +1,16 @@
 import { FastifyInstance } from 'fastify';
+import { $ref } from '../../lib/apiSchema';
 import passwordController from '../modules/password/password.controller';
-import { $ref, passwordSchemas } from '../modules/password/password.schema';
 
 export default async (fastify: FastifyInstance) => {
-  for (let schema of [...passwordSchemas]) {
-    fastify.addSchema(schema);
-  }
-
   fastify.route({
     method: 'POST',
     url: '/',
     attachValidation: true,
     schema: {
+      tags: ['Password'],
+      description: 'add password',
+      security: [{ cookieAuth: [] }],
       body: $ref('addPasswordSchema'),
       response: {
         200: $ref('responseSchema'),
@@ -25,6 +24,9 @@ export default async (fastify: FastifyInstance) => {
     method: 'GET',
     url: '/',
     schema: {
+      tags: ['Password'],
+      description: 'fetch passwords',
+      security: [{ cookieAuth: [] }],
       response: {
         200: $ref('getPasswordsResponseSchema'),
       },
@@ -38,6 +40,9 @@ export default async (fastify: FastifyInstance) => {
     url: '/:id',
     attachValidation: true,
     schema: {
+      tags: ['Password'],
+      description: 'fetch password',
+      security: [{ cookieAuth: [] }],
       params: $ref('idParamsSchema'),
       response: {
         200: $ref('getPasswordResponseSchema'),
@@ -52,6 +57,9 @@ export default async (fastify: FastifyInstance) => {
     url: '/:id',
     attachValidation: true,
     schema: {
+      tags: ['Password'],
+      description: 'update password',
+      security: [{ cookieAuth: [] }],
       params: $ref('idParamsSchema'),
       body: $ref('updatePasswordSchema'),
       response: {
@@ -67,6 +75,9 @@ export default async (fastify: FastifyInstance) => {
     url: '/:id',
     attachValidation: true,
     schema: {
+      tags: ['Password'],
+      description: 'delete password',
+      security: [{ cookieAuth: [] }],
       params: $ref('idParamsSchema'),
       response: {
         200: $ref('responseSchema'),
@@ -81,6 +92,9 @@ export default async (fastify: FastifyInstance) => {
     url: '/import',
     attachValidation: true,
     schema: {
+      tags: ['Password'],
+      description: 'import passwords',
+      security: [{ cookieAuth: [] }],
       body: $ref('importPasswordsSchema'),
       response: {
         200: $ref('responseSchema'),

@@ -54,18 +54,7 @@ const selectUserModel = createSelectSchema(users).pick({
 
 export type SelectUserModel = z.infer<typeof selectUserModel>;
 
-const getUserResponseSchema = z.object({
+export const getUserResponseSchema = z.object({
   status: z.string(),
   data: selectUserModel,
-});
-
-// to build our JSON schema, we use buildJsonSchemas from fastify-zod
-// it returns all the schemas to register and a ref to refer these schemas
-export const { schemas: userSchemas, $ref } = buildJsonSchemas({
-  signUpUserSchema,
-  responseSchema,
-  signInUserSchema,
-  updateUserSchema,
-  idParamsSchema,
-  getUserResponseSchema,
 });

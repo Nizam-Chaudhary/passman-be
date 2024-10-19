@@ -60,12 +60,3 @@ export const getPasswordResponseSchema = z.object({
   status: z.string(),
   data: selectPasswordsModel,
 });
-export const { schemas: passwordSchemas, $ref } = buildJsonSchemas({
-  addPasswordSchema,
-  updatePasswordSchema,
-  getPasswordsResponseSchema,
-  getPasswordResponseSchema,
-  responseSchema,
-  idParamsSchema,
-  importPasswordsSchema,
-});

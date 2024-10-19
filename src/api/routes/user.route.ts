@@ -1,21 +1,20 @@
 import { FastifyInstance } from 'fastify';
+import { $ref } from '../../lib/apiSchema';
 import userController from '../modules/user/user.controller';
-import { $ref, userSchemas } from '../modules/user/user.schema';
 
 export default async (fastify: FastifyInstance) => {
-  for (let schema of [...userSchemas]) {
-    fastify.addSchema(schema);
-  }
-
   fastify.route({
     method: 'POST',
     url: '/sign-up',
     attachValidation: true,
     schema: {
+      tags: ['User'],
+      description: 'Sign up user',
       body: $ref('signUpUserSchema'),
       response: {
         200: $ref('responseSchema'),
       },
+      required: ['email'],
     },
     handler: userController.signUpUser,
   });
@@ -25,6 +24,8 @@ export default async (fastify: FastifyInstance) => {
     url: '/sign-in',
     attachValidation: true,
     schema: {
+      tags: ['User'],
+      description: 'Sign in user',
       body: $ref('signInUserSchema'),
       response: {
         200: $ref('responseSchema'),
@@ -38,6 +39,9 @@ export default async (fastify: FastifyInstance) => {
     url: '/update',
     attachValidation: true,
     schema: {
+      tags: ['User'],
+      description: 'update user details',
+      security: [{ cookieAuth: [] }],
       body: $ref('updateUserSchema'),
       response: {
         200: $ref('responseSchema'),
@@ -51,6 +55,9 @@ export default async (fastify: FastifyInstance) => {
     method: 'GET',
     url: '/',
     schema: {
+      security: [{ cookieAuth: [] }],
+      tags: ['User'],
+      description: 'fetch user details',
       response: {
         200: $ref('getUserResponseSchema'),
       },
@@ -63,6 +70,8 @@ export default async (fastify: FastifyInstance) => {
     method: 'GET',
     url: '/logout',
     schema: {
+      tags: ['User'],
+      description: 'Log out user',
       response: {
         200: $ref('responseSchema'),
       },

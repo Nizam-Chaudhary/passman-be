@@ -1,10 +1,14 @@
+import cors from '@fastify/cors';
 import fJwt from '@fastify/jwt';
 import secureSession from '@fastify/secure-session';
+import fastifySwagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
 import routes from './api/routes/routes';
 import AppError from './lib/appError';
 import env from './lib/env';
 import { globalErrorHandler } from './lib/errorHandler';
+import { swaggerOptions, swaggerUiOptions } from './utils/swagger';
 
 const fastify = Fastify({
   logger: {
@@ -12,13 +16,18 @@ const fastify = Fastify({
       targets: [
         { target: env.LOGGER_TARGET },
         {
-          target: 'pino/file',
+          target: env.LOGGER_TARGET,
           options: { destination: `${__dirname}/../app.log` },
         },
       ],
     },
     level: env.PINO_LOG_LEVEL,
   },
+});
+
+fastify.register(cors, {
+  origin: true,
+  credentials: true,
 });
 
 // @ts-ignore
@@ -40,6 +49,8 @@ fastify.addHook('preHandler', (req, _res, done) => {
   done();
 });
 
+fastify.register(fastifySwagger, swaggerOptions);
+fastify.register(swaggerUi, swaggerUiOptions);
 // Register all routes
 fastify.register(routes);
 

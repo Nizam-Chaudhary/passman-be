@@ -20,8 +20,6 @@ COPY package*.json .
 
 RUN yarn install --production
 
-COPY . .
-
 COPY --from=build /app/dist ./dist
 
 CMD [ "yarn", "start" ]
