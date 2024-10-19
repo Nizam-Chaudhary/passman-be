@@ -59,6 +59,15 @@ class UserService {
       where: eq(users.email, input.email),
     });
 
+    if (!userData) {
+      throw new AppError(
+        'USER_NOT_REGISTERED',
+        'Email not registered. Please register first!',
+        401,
+        true
+      );
+    }
+
     if (!userData?.isVerified) {
       throw new AppError('USER_NOT_VERIFIED', 'Email not verified', 401, true);
     }

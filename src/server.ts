@@ -6,12 +6,25 @@ import AppError from './lib/appError';
 import env from './lib/env';
 import { globalErrorHandler } from './lib/errorHandler';
 
+const logger =
+  env.NODE_ENV === 'production'
+    ? {
+        level: env.PINO_LOG_LEVEL,
+        formatters: {
+          level: (label: string) => {
+            return { severity: label.toUpperCase() };
+          },
+        },
+        timestamp: () => `,"timestamp":"${new Date(Date.now()).toISOString()}"`,
+      }
+    : {
+        transport: {
+          target: 'pino-pretty',
+        },
+        level: env.PINO_LOG_LEVEL,
+      };
 const fastify = Fastify({
-  logger: {
-    transport: {
-      target: 'pino-pretty',
-    },
-  },
+  logger: logger,
 });
 
 // @ts-ignore

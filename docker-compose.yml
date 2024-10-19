@@ -8,7 +8,10 @@ services:
     ports:
       - '3000:3000'
     env_file:
-      - .env.prod
+      - .env
+    environment:
+      - NODE_ENV=production
+    hostname: 'passman-be'
 
 volumes:
   db-data:
