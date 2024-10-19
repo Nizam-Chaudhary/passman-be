@@ -1,0 +1,32 @@
+import { config } from 'dotenv';
+import { expand } from 'dotenv-expand';
+import { z, ZodError } from 'zod';
+
+const envSchema = z.object({
+  PORT: z.coerce.number().min(1),
+  HOST: z.string().min(1),
+  NODE_ENV: z.enum(['development', 'production']),
+  DB_HOST: z.string().min(1),
+  DB_USERNAME: z.string().min(1),
+  DB_PASSWORD: z.string().min(1),
+  DB_NAME: z.string().min(1),
+  DB_PORT: z.coerce.number().min(1),
+  DB_URL: z.string().min(1),
+  SALT_ROUNDS: z.coerce.number().min(6),
+  JWT_SECRET: z.string().min(1),
+  ENC_KEY_LENGTH: z.coerce.number().min(1),
+  ENC_IV_LENGTH: z.coerce.number().min(1),
+  SESSION_SECRET: z.string().min(1),
+});
+
+expand(config());
+
+try {
+  envSchema.parse(process.env);
+} catch (e) {
+  if (e instanceof ZodError) {
+    console.error('Environment validation error:', e.errors);
+  }
+}
+
+export default envSchema.parse(process.env);

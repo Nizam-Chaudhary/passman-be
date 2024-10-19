@@ -1,0 +1,14 @@
+services:
+  passman-be:
+    container_name: passman-be
+    build:
+      context: .
+      target: production
+    image: passman-be
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env.prod
+
+volumes:
+  db-data:

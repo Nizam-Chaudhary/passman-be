@@ -1,0 +1,9 @@
+node_modules
+dist/
+.gitignore
+.dockerignore
+.vscode
+.env.sample
+.env.prod
+.env
+.git
