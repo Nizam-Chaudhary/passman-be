@@ -8,6 +8,10 @@ import passwordRoute from './password.route';
 import userRoute from './user.route';
 
 export default async (fastify: FastifyInstance) => {
+  fastify.get('/', (_req, reply: FastifyReply) => {
+    reply.code(200).send('Hello, World!');
+  });
+
   fastify.decorate(
     'authenticate',
     async (req: FastifyRequest, _reply: FastifyReply) => {
