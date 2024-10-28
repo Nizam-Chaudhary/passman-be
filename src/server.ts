@@ -4,6 +4,7 @@ import secureSession from '@fastify/secure-session';
 import fastifySwagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
 import Fastify, { FastifyReply, FastifyRequest } from 'fastify';
+import fp from 'fastify-plugin';
 import routes from './api/routes/routes';
 import AppError from './lib/appError';
 import env from './lib/env';
@@ -49,9 +50,12 @@ fastify.addHook('preHandler', (req, _res, done) => {
   done();
 });
 
-fastify.register(fastifySwagger, swaggerOptions);
+fastify.register(
+  fp(async (fastify) => {
+    fastify.register(fastifySwagger, swaggerOptions);
+  })
+);
 fastify.register(swaggerUi, swaggerUiOptions);
-// Register all routes
 fastify.register(routes);
 
 // set global error handler

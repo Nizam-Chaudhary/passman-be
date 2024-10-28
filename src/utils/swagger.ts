@@ -2,7 +2,7 @@ import { SwaggerOptions } from '@fastify/swagger';
 
 export const swaggerOptions: SwaggerOptions = {
   openapi: {
-    openapi: '3.0.0',
+    openapi: '3.0.3',
     info: {
       title: `Passman API's`,
       description: `Passman Backend API's`,
