@@ -17,7 +17,7 @@ const fastify = Fastify({
       targets: [
         { target: env.LOGGER_TARGET },
         {
-          target: env.LOGGER_TARGET,
+          target: 'pino/file',
           options: { destination: `${__dirname}/../app.log` },
         },
       ],
