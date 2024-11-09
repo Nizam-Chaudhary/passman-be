@@ -12,6 +12,7 @@ services:
     environment:
       - NODE_ENV=production
       - LOGGER_TARGET=pino/file
+      - HOST=0.0.0.0
     hostname: 'passman-be'
 
 volumes:
