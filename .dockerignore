@@ -1,10 +1,26 @@
+# project files
 node_modules
 dist/
-.gitignore
-.dockerignore
+
+# not needed as build is run
+src
+
+# editor config files
 .vscode
+
+# env
 .env.sample
 .env.prod
 .env
+
+# git
 .git
+.gitignore
+
+# log files
 *.log
+
+# docker files
+.dockerignore
+docker-compose.yml
+Dockerfile
