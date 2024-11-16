@@ -7,12 +7,12 @@ WORKDIR  /app
 COPY . /app
 
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store,id=pnpm-cache pnpm install --prod --frozen-lockfile
 
 # Build stage
 FROM base AS build
 COPY --from=base /app /app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store,id=pnpm-cache pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM base
