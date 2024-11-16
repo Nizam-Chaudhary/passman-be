@@ -7,5 +7,5 @@ const pool = new Pool({
   connectionString: env.DB_URL,
 });
 
-export const db = drizzle(pool, { schema, logger: true });
+export const db = drizzle(pool, { schema, logger: env.NODE_ENV === 'development' ? true : false });
 export type DB = typeof db;
