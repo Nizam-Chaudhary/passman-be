@@ -2,9 +2,6 @@
 node_modules
 dist/
 
-# not needed as build is run
-src
-
 # editor config files
 .vscode
 
