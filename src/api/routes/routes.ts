@@ -2,16 +2,29 @@ import { FastifyJWT } from '@fastify/jwt';
 import { FastifyInstance, FastifyRequest } from 'fastify';
 import { JsonSchema } from 'fastify-zod';
 import { FastifyReply } from 'fastify/types/reply';
-import { Schemas } from '../../lib/apiSchema';
+import { errorSchema, Schemas } from '../../lib/apiSchema';
 import AppError from '../../lib/appError';
 import docsRoute from './docs.route';
 import passwordRoute from './password.route';
 import userRoute from './user.route';
 
 export default async (fastify: FastifyInstance) => {
-	fastify.get('/', (_req, reply: FastifyReply) => {
-		reply.code(200).send('Hello, World!');
-	});
+	fastify.get(
+		'/',
+		{
+			schema: {
+				description: 'Check server health',
+				summary: 'Server health',
+				tags: ['Default'],
+			},
+		},
+		(_req, reply: FastifyReply) => {
+			reply.code(200).send({
+				status: 'success',
+				message: 'Working fine',
+			});
+		}
+	);
 
 	fastify.decorate(
 		'authenticate',
@@ -33,6 +46,7 @@ export default async (fastify: FastifyInstance) => {
 };
 
 const addSchema = (fastify: FastifyInstance, schemas: JsonSchema[]) => {
+	fastify.addSchema(errorSchema);
 	for (const schema of schemas) {
 		fastify.addSchema(schema);
 	}

@@ -13,6 +13,8 @@ export default async (fastify: FastifyInstance) => {
 			body: $ref('signUpUserSchema'),
 			response: {
 				200: $ref('responseSchema'),
+				'4xx': { $ref: 'errorSchema#' },
+				'5xx': { $ref: 'errorSchema#' },
 			},
 			required: ['email'],
 		},
@@ -29,6 +31,8 @@ export default async (fastify: FastifyInstance) => {
 			body: $ref('signInUserSchema'),
 			response: {
 				200: $ref('responseSchema'),
+				'4xx': { $ref: 'errorSchema#' },
+				'5xx': { $ref: 'errorSchema#' },
 			},
 		},
 		handler: userController.signInUser,
@@ -45,6 +49,8 @@ export default async (fastify: FastifyInstance) => {
 			body: $ref('updateUserSchema'),
 			response: {
 				200: $ref('responseSchema'),
+				'4xx': { $ref: 'errorSchema#' },
+				'5xx': { $ref: 'errorSchema#' },
 			},
 		},
 		preHandler: [fastify.authenticate],
@@ -60,6 +66,8 @@ export default async (fastify: FastifyInstance) => {
 			description: 'fetch user details',
 			response: {
 				200: $ref('getUserResponseSchema'),
+				'4xx': { $ref: 'errorSchema#' },
+				'5xx': { $ref: 'errorSchema#' },
 			},
 		},
 		preHandler: [fastify.authenticate],
@@ -74,6 +82,8 @@ export default async (fastify: FastifyInstance) => {
 			description: 'Log out user',
 			response: {
 				200: $ref('responseSchema'),
+				'4xx': { $ref: 'errorSchema#' },
+				'5xx': { $ref: 'errorSchema#' },
 			},
 		},
 		handler: userController.logout,
