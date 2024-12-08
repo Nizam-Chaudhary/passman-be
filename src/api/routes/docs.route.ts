@@ -4,7 +4,7 @@ import { FastifyInstance } from 'fastify';
 import env from '../../lib/env';
 
 export default async (fastify: FastifyInstance) => {
-	// // Register fastify-basic-auth plugin for basic authentication
+	// Register fastify-basic-auth plugin for basic authentication
 	await fastify.register(fastifyBasicAuth, {
 		validate(username, password, req, reply, done) {
 			if (username === env.DOC_USERNAME && password === env.DOC_PASSWORD) {

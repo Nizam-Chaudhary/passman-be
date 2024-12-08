@@ -8,16 +8,6 @@ export const swaggerOptions: SwaggerOptions = {
 			description: `Passman Backend API's`,
 			version: '1.0.0',
 		},
-		servers: [
-			{
-				url: 'http://localhost:3000',
-				description: 'Development server',
-			},
-			{
-				url: 'https://passman-be-production.up.railway.app',
-				description: 'Production server',
-			},
-		],
 		components: {
 			securitySchemes: {
 				cookieAuth: {
