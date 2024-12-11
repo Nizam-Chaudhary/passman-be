@@ -43,7 +43,7 @@ export default async (fastify: FastifyInstance) => {
 		url: '/update',
 		attachValidation: true,
 		schema: {
-			tags: ['Auth'],
+			tags: ['User'],
 			description: 'update user details',
 			security: [{ cookieAuth: [] }],
 			body: $ref('updateUserSchema'),
@@ -78,7 +78,7 @@ export default async (fastify: FastifyInstance) => {
 		method: 'GET',
 		url: '/logout',
 		schema: {
-			tags: ['User'],
+			tags: ['Auth'],
 			description: 'Log out user',
 			response: {
 				200: $ref('responseSchema'),

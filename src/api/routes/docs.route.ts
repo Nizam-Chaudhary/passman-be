@@ -17,7 +17,7 @@ export default async (fastify: FastifyInstance) => {
 	});
 
 	await fastify.register(ScalarApiReference, {
-		routePrefix: '/docs',
+		routePrefix: '/',
 		// Additional hooks for the API reference routes. You can provide the onRequest and preHandler hooks
 		hooks: {
 			onRequest: function (request, reply, done) {

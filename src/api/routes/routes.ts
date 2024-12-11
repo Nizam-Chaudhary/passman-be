@@ -10,7 +10,7 @@ import userRoute from './user.route';
 
 export default async (fastify: FastifyInstance) => {
 	fastify.get(
-		'/',
+		'/health-check',
 		{
 			schema: {
 				description: 'Check server health',
