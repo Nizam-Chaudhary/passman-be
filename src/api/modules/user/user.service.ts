@@ -1,17 +1,17 @@
-import { compare, compareSync, hash } from 'bcrypt';
-import { randomBytes } from 'crypto';
-import { eq } from 'drizzle-orm';
-import { db } from '../../../db/index';
-import { users } from '../../../db/schema/user';
-import AppError from '../../../lib/appError';
-import env from '../../../lib/env';
-import { generateOtp, generateSalt } from '../../../utils/generator';
-import { deriveKey } from '../../../utils/passwordEncryption';
+import { compare, compareSync, hash } from "bcrypt";
+import { randomBytes } from "crypto";
+import { eq } from "drizzle-orm";
+import { db } from "../../../db/index";
+import { users } from "../../../db/schema/user";
+import AppError from "../../../lib/appError";
+import env from "../../../lib/env";
+import { generateOtp, generateSalt } from "../../../utils/generator";
+import { deriveKey } from "../../../utils/passwordEncryption";
 import {
   SignInUserInput,
   SignUpUserInput,
   UpdateUserInput,
-} from './user.schema';
+} from "./user.schema";
 
 class UserService {
   async signUpUser(input: SignUpUserInput) {
@@ -23,8 +23,8 @@ class UserService {
     });
 
     if (alreadyRegistered) {
-      const newLocal = 'Email already registered';
-      throw new AppError('EMAIL_ALREADY_REGISTERED', newLocal, 400);
+      const newLocal = "Email already registered";
+      throw new AppError("EMAIL_ALREADY_REGISTERED", newLocal, 400);
     }
 
     const hashedPassword = await hash(input.password, env.SALT_ROUNDS);
@@ -41,8 +41,8 @@ class UserService {
     });
 
     return {
-      status: 'success',
-      message: 'User signed up successfully',
+      status: "success",
+      message: "User signed up successfully",
     };
   }
 
@@ -61,23 +61,23 @@ class UserService {
 
     if (!userData) {
       throw new AppError(
-        'USER_NOT_REGISTERED',
-        'Email not registered. Please register first!',
+        "USER_NOT_REGISTERED",
+        "Email not registered. Please register first!",
         401,
         true
       );
     }
 
     if (!userData?.isVerified) {
-      throw new AppError('USER_NOT_VERIFIED', 'Email not verified', 401, true);
+      throw new AppError("USER_NOT_VERIFIED", "Email not verified", 401, true);
     }
     const isMatch =
       userData && (await compare(input.password, userData.password));
 
     if (!userData || !isMatch) {
       throw new AppError(
-        'INVALID_CREDENTIALS',
-        'Invalid email or password',
+        "INVALID_CREDENTIALS",
+        "Invalid email or password",
         401,
         true
       );
@@ -86,7 +86,7 @@ class UserService {
     const encryptionKey = deriveKey(
       input.password,
       userData.saltValue
-    ).toString('hex');
+    ).toString("hex");
 
     return {
       id: userData.id,
@@ -109,7 +109,7 @@ class UserService {
     });
 
     return {
-      status: 'success',
+      status: "success",
       data: userData,
     };
   }
@@ -123,8 +123,8 @@ class UserService {
       .where(eq(users.id, id));
 
     return {
-      status: 'success',
-      message: 'user name updated successfully',
+      status: "success",
+      message: "user name updated successfully",
     };
   }
 }

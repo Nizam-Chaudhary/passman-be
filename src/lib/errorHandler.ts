@@ -1,6 +1,6 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
-import AppError from './appError';
-import env from './env';
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import AppError from "./appError";
+import env from "./env";
 
 export const globalErrorHandler = (
   fastify: FastifyInstance,
@@ -9,10 +9,10 @@ export const globalErrorHandler = (
   reply: FastifyReply
 ): any => {
   fastify.log.error(error);
-  if (error.name === 'ZodError') {
+  if (error.name === "ZodError") {
     error = new AppError(error.name, error.issues[0].message, 400, true);
   }
-  if (env.NODE_ENV === 'development') {
+  if (env.NODE_ENV === "development") {
     return sendErrorDev(error, reply);
   }
 
@@ -22,8 +22,8 @@ export const globalErrorHandler = (
 const sendErrorDev = (error: any, reply: FastifyReply) => {
   const statusCode = error.statusCode || 500;
   const status =
-    error.statusCode >= 400 && error.statusCode < 500 ? 'fail' : 'error';
-  const message = error.message || 'something went wrong';
+    error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
+  const message = error.message || "something went wrong";
 
   return reply.code(statusCode).send({
     status: status,
@@ -35,8 +35,8 @@ const sendErrorDev = (error: any, reply: FastifyReply) => {
 const sendErrorProd = (error: any, reply: FastifyReply) => {
   const statusCode = error.statusCode || 500;
   const status =
-    error.statusCode >= 400 && error.statusCode < 500 ? 'fail' : 'error';
-  const message = error.message || 'something went wrong';
+    error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
+  const message = error.message || "something went wrong";
 
   if (error.isOperational) {
     return reply.code(statusCode).send({
@@ -46,7 +46,7 @@ const sendErrorProd = (error: any, reply: FastifyReply) => {
   }
 
   return reply.code(statusCode).send({
-    status: 'error',
-    message: 'something went wrong',
+    status: "error",
+    message: "something went wrong",
   });
 };

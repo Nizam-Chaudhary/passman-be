@@ -1,19 +1,19 @@
-import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
-import { buildJsonSchemas } from 'fastify-zod';
-import { z } from 'zod';
-import { passwords } from '../../../db/schema/password';
-import { idParamsSchema, responseSchema } from '../../../utils/basicSchema';
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { buildJsonSchemas } from "fastify-zod";
+import { z } from "zod";
+import { passwords } from "../../../db/schema/password";
+import { idParamsSchema, responseSchema } from "../../../utils/basicSchema";
 
 const baseSchema = createInsertSchema(passwords, {
   username: (schema) => schema.username.optional().nullable(),
-  email: (schema) => schema.email.email('invalid email').optional().nullable(),
-  password: (schema) => schema.password.min(1, 'Password cannot be empty'),
+  email: (schema) => schema.email.email("invalid email").optional().nullable(),
+  password: (schema) => schema.password.min(1, "Password cannot be empty"),
   appName: (schema) => schema.appName.optional().nullable(),
-  baseUrl: (schema) => schema.baseUrl.url('invalid url').optional().nullable(),
+  baseUrl: (schema) => schema.baseUrl.url("invalid url").optional().nullable(),
   specificUrl: (schema) =>
-    schema.specificUrl.url('invalid url').optional().nullable(),
+    schema.specificUrl.url("invalid url").optional().nullable(),
   faviconUrl: (schema) =>
-    schema.specificUrl.url('invalid url').optional().nullable(),
+    schema.specificUrl.url("invalid url").optional().nullable(),
   notes: (schema) => schema.notes.optional().nullable(),
 });
 

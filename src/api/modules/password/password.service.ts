@@ -1,16 +1,16 @@
-import { and, eq } from 'drizzle-orm';
-import { db } from '../../../db/index';
-import { passwords } from '../../../db/schema/password';
-import AppError from '../../../lib/appError';
+import { and, eq } from "drizzle-orm";
+import { db } from "../../../db/index";
+import { passwords } from "../../../db/schema/password";
+import AppError from "../../../lib/appError";
 import {
   decryptPassword,
   encryptPassword,
-} from '../../../utils/passwordEncryption';
+} from "../../../utils/passwordEncryption";
 import {
   AddPasswordInput,
   ImportPasswordsInput,
   SelectPasswordsModel,
-} from './password.schema';
+} from "./password.schema";
 
 class PasswordService {
   async addPassword(userId: number, input: AddPasswordInput, key: string) {
@@ -30,8 +30,8 @@ class PasswordService {
     });
 
     return {
-      status: 'success',
-      message: 'password added successfully',
+      status: "success",
+      message: "password added successfully",
     };
   }
 
@@ -54,7 +54,7 @@ class PasswordService {
     });
 
     return {
-      status: 'success',
+      status: "success",
       data: passwordsData,
     };
   }
@@ -65,12 +65,12 @@ class PasswordService {
     });
 
     if (!password) {
-      throw new AppError('PASSWORD_NOT_FOUND', 'Password not found', 400);
+      throw new AppError("PASSWORD_NOT_FOUND", "Password not found", 400);
     }
     password.password = decryptPassword(password.iv, password.password, key);
 
     return {
-      status: 'success',
+      status: "success",
       data: password,
     };
   }
@@ -86,7 +86,7 @@ class PasswordService {
     });
 
     if (!password) {
-      throw new AppError('PASSWORD_NOT_FOUND', 'password not found', 400);
+      throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
     }
 
     const encryptedData = encryptPassword(input.password, key);
@@ -104,8 +104,8 @@ class PasswordService {
     });
 
     return {
-      status: 'success',
-      message: 'password updated successfully',
+      status: "success",
+      message: "password updated successfully",
     };
   }
 
@@ -115,8 +115,8 @@ class PasswordService {
       .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
 
     return {
-      status: 'success',
-      message: 'password deleted successfully',
+      status: "success",
+      message: "password deleted successfully",
     };
   }
 
@@ -145,8 +145,8 @@ class PasswordService {
     await db.insert(passwords).values(inputData);
 
     return {
-      status: 'success',
-      message: 'passwords imported successfully',
+      status: "success",
+      message: "passwords imported successfully",
     };
   }
 }

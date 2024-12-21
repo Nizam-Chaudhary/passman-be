@@ -1,5 +1,5 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { idParamsSchema } from '../../../utils/basicSchema';
+import { FastifyReply, FastifyRequest } from "fastify";
+import { idParamsSchema } from "../../../utils/basicSchema";
 import {
   SignInUserInput,
   signInUserSchema,
@@ -7,8 +7,8 @@ import {
   signUpUserSchema,
   UpdateUserInput,
   updateUserSchema,
-} from './user.schema';
-import userService from './user.service';
+} from "./user.schema";
+import userService from "./user.service";
 
 class UserController {
   async signUpUser(
@@ -34,10 +34,10 @@ class UserController {
     const response = await userService.signInUser(req.body);
     const token = req.jwt.sign(response);
 
-    req.session.set('access_token', token);
+    req.session.set("access_token", token);
     reply.code(200).send({
-      status: 'success',
-      message: 'Used signed in successfully',
+      status: "success",
+      message: "Used signed in successfully",
     });
   }
 
@@ -59,8 +59,8 @@ class UserController {
     req.session.delete();
 
     return reply.status(200).send({
-      status: 'success',
-      message: 'logged out successfully',
+      status: "success",
+      message: "logged out successfully",
     });
   }
 
