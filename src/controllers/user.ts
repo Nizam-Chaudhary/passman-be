@@ -1,5 +1,4 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { idParamsSchema } from "../../../utils/basicSchema";
 import {
   SignInUserInput,
   signInUserSchema,
@@ -7,8 +6,9 @@ import {
   signUpUserSchema,
   UpdateUserInput,
   updateUserSchema,
-} from "./user.schema";
-import userService from "./user.service";
+} from "../schemas/user";
+import userService from "../services/user";
+import { idParamsSchema } from "../utils/basicSchema";
 
 class UserController {
   async signUpUser(

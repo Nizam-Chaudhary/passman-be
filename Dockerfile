@@ -5,6 +5,7 @@ ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /app
 
+# Install prod dependencies
 FROM base AS prod-deps
 COPY package.json /app/package.json
 COPY pnpm-lock.yaml /app/pnpm-lock.yaml
@@ -23,6 +24,7 @@ RUN pnpm install  --frozen-lockfile
 COPY . /app/
 RUN pnpm run build
 
+# Main build
 FROM base
 COPY --from=prod-deps /app/node_modules node_modules
 COPY --from=build /app/dist dist

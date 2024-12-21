@@ -1,17 +1,16 @@
-import { compare, compareSync, hash } from "bcrypt";
-import { randomBytes } from "crypto";
+import { compare, hash } from "bcrypt";
 import { eq } from "drizzle-orm";
-import { db } from "../../../db/index";
-import { users } from "../../../db/schema/user";
-import AppError from "../../../lib/appError";
-import env from "../../../lib/env";
-import { generateOtp, generateSalt } from "../../../utils/generator";
-import { deriveKey } from "../../../utils/passwordEncryption";
+import { db } from "../db/index";
+import { users } from "../db/schema/user";
+import AppError from "../lib/appError";
+import env from "../lib/env";
 import {
   SignInUserInput,
   SignUpUserInput,
   UpdateUserInput,
-} from "./user.schema";
+} from "../schemas/user";
+import { generateOtp, generateSalt } from "../utils/generator";
+import { deriveKey } from "../utils/passwordEncryption";
 
 class UserService {
   async signUpUser(input: SignUpUserInput) {

@@ -1,16 +1,13 @@
 import { and, eq } from "drizzle-orm";
-import { db } from "../../../db/index";
-import { passwords } from "../../../db/schema/password";
-import AppError from "../../../lib/appError";
-import {
-  decryptPassword,
-  encryptPassword,
-} from "../../../utils/passwordEncryption";
+import { db } from "../db/index";
+import { passwords } from "../db/schema/password";
+import AppError from "../lib/appError";
 import {
   AddPasswordInput,
   ImportPasswordsInput,
   SelectPasswordsModel,
-} from "./password.schema";
+} from "../schemas/password";
+import { decryptPassword, encryptPassword } from "../utils/passwordEncryption";
 
 class PasswordService {
   async addPassword(userId: number, input: AddPasswordInput, key: string) {

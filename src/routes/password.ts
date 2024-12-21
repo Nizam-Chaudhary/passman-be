@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { $ref } from "../../lib/apiSchema";
-import passwordController from "../modules/password/password.controller";
+import passwordController from "../controllers/password";
+import { $ref } from "../lib/apiSchema";
 
 export default async (fastify: FastifyInstance) => {
   fastify.route({

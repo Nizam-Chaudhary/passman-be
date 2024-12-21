@@ -4,10 +4,10 @@ import secureSession from "@fastify/secure-session";
 import fastifySwagger from "@fastify/swagger";
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
-import routes from "./api/routes/routes";
 import AppError from "./lib/appError";
 import env from "./lib/env";
 import { globalErrorHandler } from "./lib/errorHandler";
+import routes from "./routes";
 import { swaggerOptions } from "./utils/swagger";
 
 const fastify = Fastify({

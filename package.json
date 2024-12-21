@@ -14,13 +14,13 @@
     "db:check": "drizzle-kit check",
     "db:up": "drizzle-kit up",
     "db:studio": "drizzle-kit studio",
-    "db:update": "yarn db:generate && yarn db:migrate",
+    "db:update": "pnpm db:generate && pnpm db:migrate",
     "db:seed": "tsx src/db/seed.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nizam Chaudhary",
   "license": "ISC",
-  "description": "",
+  "description": "Password Manager backend",
   "devDependencies": {
     "@eslint/js": "^9.11.1",
     "@types/bcrypt": "^5.0.2",

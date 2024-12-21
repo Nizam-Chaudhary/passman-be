@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { $ref } from "../../lib/apiSchema";
-import userController from "../modules/user/user.controller";
+import userController from "../controllers/user";
+import { $ref } from "../lib/apiSchema";
 
 export default async (fastify: FastifyInstance) => {
   fastify.route({

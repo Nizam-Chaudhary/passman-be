@@ -5,13 +5,13 @@ import {
   getPasswordsResponseSchema,
   importPasswordsSchema,
   updatePasswordSchema,
-} from "../api/modules/password/password.schema";
+} from "../schemas/password";
 import {
   getUserResponseSchema,
   signInUserSchema,
   signUpUserSchema,
   updateUserSchema,
-} from "../api/modules/user/user.schema";
+} from "../schemas/user";
 import { idParamsSchema, responseSchema } from "../utils/basicSchema";
 
 export const errorSchema = {

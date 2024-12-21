@@ -1,8 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { buildJsonSchemas } from "fastify-zod";
 import { z } from "zod";
-import { users } from "../../../db/schema/user";
-import { idParamsSchema, responseSchema } from "../../../utils/basicSchema";
+import { users } from "../db/schema/user";
 
 const baseSchema = createInsertSchema(users, {
   userName: (schema) =>

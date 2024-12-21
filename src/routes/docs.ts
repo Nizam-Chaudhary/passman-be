@@ -1,7 +1,7 @@
 import { fastifyBasicAuth } from "@fastify/basic-auth";
 import ScalarApiReference from "@scalar/fastify-api-reference";
 import { FastifyInstance } from "fastify";
-import env from "../../lib/env";
+import env from "../lib/env";
 
 export default async (fastify: FastifyInstance) => {
   // Register fastify-basic-auth plugin for basic authentication

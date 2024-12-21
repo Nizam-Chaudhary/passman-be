@@ -2,11 +2,11 @@ import { FastifyJWT } from "@fastify/jwt";
 import { FastifyInstance, FastifyRequest } from "fastify";
 import { JsonSchema } from "fastify-zod";
 import { FastifyReply } from "fastify/types/reply";
-import { errorSchema, Schemas } from "../../lib/apiSchema";
-import AppError from "../../lib/appError";
-import docsRoute from "./docs.route";
-import passwordRoute from "./password.route";
-import userRoute from "./user.route";
+import { errorSchema, Schemas } from "../lib/apiSchema";
+import AppError from "../lib/appError";
+import docsRoute from "./docs";
+import passwordRoute from "./password";
+import userRoute from "./user";
 
 export default async (fastify: FastifyInstance) => {
   fastify.get(
