@@ -8,14 +8,14 @@ import secureSession from "./secure.session";
 import swaggerDocs from "./swagger.docs";
 
 export default fastifyPlugin(
-  (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
-    fastify.register(cors, opts);
-    fastify.register(jwt, opts);
-    fastify.register(secureSession, opts);
-    fastify.register(swaggerDocs, opts);
-    fastify.register(authenticate, opts);
-    fastify.register(schemas, opts);
+    (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
+        fastify.register(cors, opts);
+        fastify.register(jwt, opts);
+        fastify.register(secureSession, opts);
+        fastify.register(swaggerDocs, opts);
+        fastify.register(authenticate, opts);
+        fastify.register(schemas, opts);
 
-    done();
-  }
+        done();
+    }
 );

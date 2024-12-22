@@ -1,76 +1,76 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import {
-  SignInUserInput,
-  signInUserSchema,
-  SignUpUserInput,
-  signUpUserSchema,
-  UpdateUserInput,
-  updateUserSchema,
+    SignInUserInput,
+    signInUserSchema,
+    SignUpUserInput,
+    signUpUserSchema,
+    UpdateUserInput,
+    updateUserSchema,
 } from "../schemas/user";
 import userService from "../services/user";
 import { idParamsSchema } from "../utils/basicSchema";
 
 class UserController {
-  async signUpUser(
-    req: FastifyRequest<{ Body: SignUpUserInput }>,
-    reply: FastifyReply
-  ) {
-    if (req.validationError) {
-      signUpUserSchema.parse(req.body);
+    async signUpUser(
+        req: FastifyRequest<{ Body: SignUpUserInput }>,
+        reply: FastifyReply
+    ) {
+        if (req.validationError) {
+            signUpUserSchema.parse(req.body);
+        }
+
+        const response = await userService.signUpUser(req.body);
+        await reply.code(200).send(response);
     }
 
-    const response = await userService.signUpUser(req.body);
-    await reply.code(200).send(response);
-  }
+    async signInUser(
+        req: FastifyRequest<{ Body: SignInUserInput }>,
+        reply: FastifyReply
+    ) {
+        if (req.validationError) {
+            signInUserSchema.parse(req.body);
+        }
 
-  async signInUser(
-    req: FastifyRequest<{ Body: SignInUserInput }>,
-    reply: FastifyReply
-  ) {
-    if (req.validationError) {
-      signInUserSchema.parse(req.body);
+        const response = await userService.signInUser(req.body);
+        const token = req.jwt.sign(response);
+
+        req.session.set("access_token", token);
+        reply.code(200).send({
+            status: "success",
+            message: "Used signed in successfully",
+        });
     }
 
-    const response = await userService.signInUser(req.body);
-    const token = req.jwt.sign(response);
+    async updateUser(
+        req: FastifyRequest<{ Body: UpdateUserInput }>,
+        reply: FastifyReply
+    ) {
+        if (req.validationError) {
+            idParamsSchema.parse(req.params);
+            updateUserSchema.parse(req.body);
+        }
 
-    req.session.set("access_token", token);
-    reply.code(200).send({
-      status: "success",
-      message: "Used signed in successfully",
-    });
-  }
+        const response = await userService.updateUser(req.user.id, req.body);
 
-  async updateUser(
-    req: FastifyRequest<{ Body: UpdateUserInput }>,
-    reply: FastifyReply
-  ) {
-    if (req.validationError) {
-      idParamsSchema.parse(req.params);
-      updateUserSchema.parse(req.body);
+        reply.code(200).send(response);
     }
 
-    const response = await userService.updateUser(req.user.id, req.body);
+    async logout(req: FastifyRequest, reply: FastifyReply) {
+        req.session.delete();
 
-    reply.code(200).send(response);
-  }
+        return reply.status(200).send({
+            status: "success",
+            message: "logged out successfully",
+        });
+    }
 
-  async logout(req: FastifyRequest, reply: FastifyReply) {
-    req.session.delete();
+    async getUser(req: FastifyRequest, reply: FastifyReply) {
+        const id = req.user.id;
 
-    return reply.status(200).send({
-      status: "success",
-      message: "logged out successfully",
-    });
-  }
+        const response = await userService.getUser(id);
 
-  async getUser(req: FastifyRequest, reply: FastifyReply) {
-    const id = req.user.id;
-
-    const response = await userService.getUser(id);
-
-    reply.code(200).send(response);
-  }
+        reply.code(200).send(response);
+    }
 }
 
 export default new UserController();

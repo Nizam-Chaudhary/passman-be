@@ -5,13 +5,13 @@ import AppError from "../lib/appError";
 import { globalErrorHandler } from "../lib/errorHandler";
 
 export default fastifyPlugin(
-  (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
-    fastify.setErrorHandler(
-      (error: AppError, request: FastifyRequest, reply: FastifyReply) => {
-        globalErrorHandler(fastify, error, request, reply);
-      }
-    );
+    (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
+        fastify.setErrorHandler(
+            (error: AppError, request: FastifyRequest, reply: FastifyReply) => {
+                globalErrorHandler(fastify, error, request, reply);
+            }
+        );
 
-    done();
-  }
+        done();
+    }
 );

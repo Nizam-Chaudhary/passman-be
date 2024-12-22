@@ -1,15 +1,15 @@
 services:
-  passman-be:
-    container_name: passman-be
-    build:
-      context: .
-    image: passman-be
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    environment:
-      - NODE_ENV=production
-      - LOGGER_TARGET=pino/file
-      - HOST=0.0.0.0
-    hostname: "passman-be"
+    passman-be:
+        container_name: passman-be
+        build:
+            context: .
+        image: passman-be
+        ports:
+            - "3000:3000"
+        env_file:
+            - .env
+        environment:
+            - NODE_ENV=production
+            - LOGGER_TARGET=pino/file
+            - HOST=0.0.0.0
+        hostname: "passman-be"
