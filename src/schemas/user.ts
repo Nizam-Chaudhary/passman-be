@@ -1,11 +1,17 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { users } from "../db/schema/user";
+import { statusSchema } from "../utils/basicSchema";
 
 const baseSchema = createInsertSchema(users, {
     userName: (schema) =>
-        schema.userName.min(2, "User name must be at least 4 characters"),
-    email: (schema) => schema.email.email("Invalid email format"),
+        schema.userName
+            .min(2, "User name must be at least 4 characters")
+            .describe("Username for the account"),
+    email: (schema) =>
+        schema.email
+            .email("Invalid email format")
+            .describe("Email address for the account"),
     password: (schema) =>
         schema.password
             .min(10, "Password must be at least 8 characters long")
@@ -20,7 +26,8 @@ const baseSchema = createInsertSchema(users, {
             })
             .refine((value) => /[$@$!%*?&_]/.test(value), {
                 message: "Password must contain at least one special character",
-            }),
+            })
+            .describe("Password for the account"),
 });
 
 // Signup
@@ -47,17 +54,19 @@ export const updateUserSchema = z.object({
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 
-const selectUserModel = createSelectSchema(users).pick({
-    id: true,
-    userName: true,
-    email: true,
-    createdAt: true,
-    updatedAt: true,
-});
+const selectUserModel = createSelectSchema(users)
+    .pick({
+        id: true,
+        userName: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+    })
+    .describe("User model with selected fields for responses");
 
 export type SelectUserModel = z.infer<typeof selectUserModel>;
 
 export const getUserResponseSchema = z.object({
-    status: z.string(),
+    status: statusSchema,
     data: selectUserModel,
 });
