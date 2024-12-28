@@ -4,7 +4,8 @@
     "main": "index.js",
     "packageManager": "pnpm@9.15.1",
     "scripts": {
-        "build": "rimraf ./dist && tsc",
+        "clean": "rimraf dist",
+        "build": "tsc",
         "start": "node dist/src/server.js",
         "dev": "tsx watch src/server.ts",
         "debug": "tsx watch --inspect src/server.ts",
