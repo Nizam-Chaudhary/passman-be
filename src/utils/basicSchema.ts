@@ -11,10 +11,23 @@ export const idParamsSchema = z.object({
     id: z.coerce.number().min(1),
 });
 
-export const errorSchema = z.object({
-    status: statusSchema.default("error"),
-    message: z.string().default("something went wrong"),
-    stack: z.string().optional(),
-});
+export const errorSchema = z.union([
+    z.object({
+        status: statusSchema.default("error"),
+        message: z.string().default("something went wrong"),
+        issues: z.any().optional().nullable().default(null),
+    }),
+    z.object({
+        status: statusSchema.default("error"),
+        message: z.string().default("something went wrong"),
+        stack: z.string(),
+    }),
+    z.object({
+        status: statusSchema.default("error"),
+        message: z.string().default("something went wrong"),
+    }),
+]);
+
+type errorSchema = z.infer<typeof errorSchema>;
 
 export type IdParamsType = z.infer<typeof idParamsSchema>;
