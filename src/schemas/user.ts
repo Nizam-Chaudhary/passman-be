@@ -8,20 +8,19 @@ const baseSchema = createInsertSchema(users, {
     email: (schema) => schema.email.email("Invalid email format"),
     password: (schema) =>
         schema.password
-            .min(8, "Password must be at least 8 characters long")
-            .regex(
-                /[A-Z]/,
-                "Password must contain at least one uppercase letter"
-            )
-            .regex(
-                /[a-z]/,
-                "Password must contain at least one lowercase letter"
-            )
-            .regex(/\d/, "Password must contain at least one number")
-            .regex(
-                /[$@$!%*?&_]/,
-                "Password must contain at least one special character"
-            ),
+            .min(10, "Password must be at least 8 characters long")
+            .refine((value) => /[A-Z]/.test(value), {
+                message: "Password must contain at least one uppercase letter",
+            })
+            .refine((value) => /[a-z]/.test(value), {
+                message: "Password must contain at least one lowercase letter",
+            })
+            .refine((value) => /\d/.test(value), {
+                message: "Password must contain at least one number",
+            })
+            .refine((value) => /[$@$!%*?&_]/.test(value), {
+                message: "Password must contain at least one special character",
+            }),
 });
 
 // Signup

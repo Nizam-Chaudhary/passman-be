@@ -20,6 +20,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/",
         schema: {
             tags: ["Password"],
+            summary: "Add a new password",
             description: "add password",
             security: [{ cookieAuth: [] }],
             body: addPasswordSchema,
@@ -38,6 +39,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/",
         schema: {
             tags: ["Password"],
+            summary: "Get all passwords",
             description: "fetch passwords",
             security: [{ cookieAuth: [] }],
             response: {
@@ -55,6 +57,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/:id",
         schema: {
             tags: ["Password"],
+            summary: "Get password by ID",
             description: "fetch password",
             security: [{ cookieAuth: [] }],
             params: idParamsSchema,
@@ -73,6 +76,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/:id",
         schema: {
             tags: ["Password"],
+            summary: "Update password by ID",
             description: "update password",
             security: [{ cookieAuth: [] }],
             params: idParamsSchema,
@@ -92,6 +96,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/:id",
         schema: {
             tags: ["Password"],
+            summary: "Delete password by ID",
             description: "delete password",
             security: [{ cookieAuth: [] }],
             params: idParamsSchema,
@@ -110,6 +115,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/import",
         schema: {
             tags: ["Password"],
+            summary: "Import multiple passwords",
             description: "import passwords",
             security: [{ cookieAuth: [] }],
             body: importPasswordsSchema,

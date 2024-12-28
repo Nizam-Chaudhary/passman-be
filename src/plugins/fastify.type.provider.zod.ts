@@ -6,8 +6,10 @@ import {
 } from "fastify-type-provider-zod";
 
 export default fastifyPlugin(
-    async (fastify: FastifyInstance, opts: FastifyPluginOptions) => {
+    (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
         fastify.setValidatorCompiler(validatorCompiler);
         fastify.setSerializerCompiler(serializerCompiler);
+
+        done();
     }
 );
