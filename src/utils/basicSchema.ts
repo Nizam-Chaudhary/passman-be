@@ -6,19 +6,13 @@ export const responseSchema = z.object({
 });
 
 export const idParamsSchema = z.object({
-    id: z.number().min(1),
+    id: z.coerce.number().min(1),
 });
 
-export const errorSchema = z.union([
-    z.object({
-        status: z.string(),
-        message: z.string(),
-    }),
-    z.object({
-        status: z.string(),
-        message: z.string(),
-        stack: z.string(),
-    }),
-]);
+export const errorSchema = z.object({
+    status: z.string().default("error"),
+    message: z.string().default("something went wrong"),
+    stack: z.string().optional(),
+});
 
 export type IdParamsType = z.infer<typeof idParamsSchema>;

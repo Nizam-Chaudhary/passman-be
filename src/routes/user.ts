@@ -15,6 +15,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/sign-up",
         schema: {
             tags: ["Auth"],
+            summary: "Sign up user",
             description: "Sign up user",
             body: signUpUserSchema,
             response: {
@@ -32,6 +33,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/sign-in",
         schema: {
             tags: ["Auth"],
+            summary: "Sign in user",
             description: "Sign in user",
             body: signInUserSchema,
             response: {
@@ -49,6 +51,7 @@ export default async (fastify: FastifyInstance) => {
 
         schema: {
             tags: ["User"],
+            summary: "Update user details",
             description: "update user details",
             security: [{ cookieAuth: [] }],
             body: updateUserSchema,
@@ -68,6 +71,7 @@ export default async (fastify: FastifyInstance) => {
         schema: {
             security: [{ cookieAuth: [] }],
             tags: ["User"],
+            summary: "Get logged in user detail",
             description: "fetch user details",
             response: {
                 200: getUserResponseSchema,
@@ -84,6 +88,7 @@ export default async (fastify: FastifyInstance) => {
         url: "/logout",
         schema: {
             tags: ["Auth"],
+            summary: "Logout user",
             description: "Log out user",
             response: {
                 200: responseSchema,

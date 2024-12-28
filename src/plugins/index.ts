@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
+import env from "../lib/env";
 import authenticate from "./authenticate";
 import cors from "./cors";
 import errorHandler from "./error.handler";
@@ -10,6 +11,7 @@ import swaggerDocs from "./swagger.docs";
 
 export default fastifyPlugin(
     (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
+        fastify.log.info(env, "Env");
         fastify.register(cors, opts);
         fastify.register(jwt, opts);
         fastify.register(fastifyTypeProviderZod, opts);

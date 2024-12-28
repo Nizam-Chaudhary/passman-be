@@ -8,6 +8,7 @@ export default async function health(fastify: FastifyInstance) {
         url: "/",
         schema: {
             tags: ["Health"],
+            summary: "Check server health",
             description: "Check Server health",
             response: {
                 200: z.object({

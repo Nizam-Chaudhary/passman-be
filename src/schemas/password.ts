@@ -17,16 +17,20 @@ const baseSchema = createInsertSchema(passwords, {
     notes: (schema) => schema.notes.optional().nullable(),
 });
 
-export const addPasswordSchema = z.object({
-    username: baseSchema.shape.username,
-    email: baseSchema.shape.email,
-    password: baseSchema.shape.password,
-    appName: baseSchema.shape.appName,
-    baseUrl: baseSchema.shape.baseUrl,
-    specificUrl: baseSchema.shape.specificUrl,
-    faviconUrl: baseSchema.shape.faviconUrl,
-    notes: baseSchema.shape.notes,
-});
+export const addPasswordSchema = z
+    .object({
+        username: baseSchema.shape.username,
+        email: baseSchema.shape.email,
+        password: baseSchema.shape.password,
+        appName: baseSchema.shape.appName,
+        baseUrl: baseSchema.shape.baseUrl,
+        specificUrl: baseSchema.shape.specificUrl,
+        faviconUrl: baseSchema.shape.faviconUrl,
+        notes: baseSchema.shape.notes,
+    })
+    .refine((data) => data.username != null || data.email != null, {
+        message: "Either username or email must be provided",
+    });
 
 export type AddPasswordInput = z.infer<typeof addPasswordSchema>;
 
