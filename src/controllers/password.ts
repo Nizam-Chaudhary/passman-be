@@ -1,22 +1,13 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import {
-    AddPasswordInput,
-    addPasswordSchema,
-    ImportPasswordsInput,
-    importPasswordsSchema,
-} from "../schemas/password";
+import { AddPasswordInput, ImportPasswordsInput } from "../schemas/password";
 import passwordService from "../services/password";
-import { idParamsSchema, IdParamsType } from "../utils/basicSchema";
+import { IdParamsType } from "../utils/basicSchema";
 
 class PasswordController {
     async addPassword(
         req: FastifyRequest<{ Body: AddPasswordInput }>,
         reply: FastifyReply
     ) {
-        if (req.validationError) {
-            addPasswordSchema.parse(req.body);
-        }
-
         const response = await passwordService.addPassword(
             req.user.id,
             req.body,
@@ -38,9 +29,6 @@ class PasswordController {
         req: FastifyRequest<{ Params: IdParamsType }>,
         reply: FastifyReply
     ) {
-        if (req.validationError) {
-            idParamsSchema.parse(req.params);
-        }
         const response = await passwordService.getPassword(
             req.user.id,
             req.user.encryptionKey,
@@ -53,12 +41,9 @@ class PasswordController {
         req: FastifyRequest<{ Body: AddPasswordInput; Params: IdParamsType }>,
         reply: FastifyReply
     ) {
-        const params = idParamsSchema.parse(req.params);
-        const body = addPasswordSchema.parse(req.body);
-
         const response = await passwordService.updatePassword(
-            params.id,
-            body,
+            req.params.id,
+            req.body,
             req.user.id,
             req.user.encryptionKey
         );
@@ -70,10 +55,8 @@ class PasswordController {
         req: FastifyRequest<{ Params: IdParamsType }>,
         reply: FastifyReply
     ) {
-        const params = idParamsSchema.parse(req.params);
-
         const response = await passwordService.deletePassword(
-            params.id,
+            req.params.id,
             req.user.id
         );
 
@@ -84,11 +67,9 @@ class PasswordController {
         req: FastifyRequest<{ Body: ImportPasswordsInput }>,
         reply: FastifyReply
     ) {
-        const body = importPasswordsSchema.parse(req.body);
-
         const response = await passwordService.importPasswords(
             req.user.id,
-            body,
+            req.body,
             req.user.encryptionKey
         );
 

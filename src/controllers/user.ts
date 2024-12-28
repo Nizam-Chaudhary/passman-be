@@ -1,24 +1,16 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import {
     SignInUserInput,
-    signInUserSchema,
     SignUpUserInput,
-    signUpUserSchema,
     UpdateUserInput,
-    updateUserSchema,
 } from "../schemas/user";
 import userService from "../services/user";
-import { idParamsSchema } from "../utils/basicSchema";
 
 class UserController {
     async signUpUser(
         req: FastifyRequest<{ Body: SignUpUserInput }>,
         reply: FastifyReply
     ) {
-        if (req.validationError) {
-            signUpUserSchema.parse(req.body);
-        }
-
         const response = await userService.signUpUser(req.body);
         await reply.code(200).send(response);
     }
@@ -27,10 +19,6 @@ class UserController {
         req: FastifyRequest<{ Body: SignInUserInput }>,
         reply: FastifyReply
     ) {
-        if (req.validationError) {
-            signInUserSchema.parse(req.body);
-        }
-
         const response = await userService.signInUser(req.body);
         const token = req.jwt.sign(response);
 
@@ -45,11 +33,6 @@ class UserController {
         req: FastifyRequest<{ Body: UpdateUserInput }>,
         reply: FastifyReply
     ) {
-        if (req.validationError) {
-            idParamsSchema.parse(req.params);
-            updateUserSchema.parse(req.body);
-        }
-
         const response = await userService.updateUser(req.user.id, req.body);
 
         reply.code(200).send(response);

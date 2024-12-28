@@ -25,7 +25,7 @@ const sendErrorDev = (error: any, reply: FastifyReply) => {
         error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
     const message = error.message || "something went wrong";
 
-    return reply.code(statusCode).send({
+    reply.code(statusCode).send({
         status: status,
         message: message,
         stack: error.stack,
@@ -45,7 +45,7 @@ const sendErrorProd = (error: any, reply: FastifyReply) => {
         });
     }
 
-    return reply.code(statusCode).send({
+    reply.code(statusCode).send({
         status: "error",
         message: "something went wrong",
     });

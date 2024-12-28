@@ -1,4 +1,5 @@
 import { SwaggerOptions } from "@fastify/swagger";
+import { jsonSchemaTransform } from "fastify-type-provider-zod";
 
 export const swaggerOptions: SwaggerOptions = {
     openapi: {
@@ -32,10 +33,7 @@ export const swaggerOptions: SwaggerOptions = {
                 name: "Passwords",
                 tags: ["Password"],
             },
-            {
-                name: "Schema",
-                tags: ["Model"],
-            },
         ],
     },
+    transform: jsonSchemaTransform,
 };

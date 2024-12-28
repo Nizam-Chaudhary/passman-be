@@ -1,28 +1,39 @@
 import { FastifyInstance } from "fastify";
+import { ZodTypeProvider } from "fastify-type-provider-zod";
 import passwordController from "../controllers/password";
-import { $ref } from "../lib/apiSchema";
+import {
+    addPasswordSchema,
+    getPasswordResponseSchema,
+    getPasswordsResponseSchema,
+    importPasswordsSchema,
+    updatePasswordSchema,
+} from "../schemas/password";
+import {
+    errorSchema,
+    idParamsSchema,
+    responseSchema,
+} from "../utils/basicSchema";
 
 export default async (fastify: FastifyInstance) => {
-    fastify.route({
+    fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "POST",
         url: "/",
-        attachValidation: true,
         schema: {
             tags: ["Password"],
             description: "add password",
             security: [{ cookieAuth: [] }],
-            body: $ref("addPasswordSchema"),
+            body: addPasswordSchema,
             response: {
-                200: $ref("responseSchema"),
-                "4xx": { $ref: "errorSchema#" },
-                "5xx": { $ref: "errorSchema#" },
+                200: responseSchema,
+                "4xx": errorSchema,
+                "5xx": errorSchema,
             },
         },
         preHandler: [fastify.authenticate],
         handler: passwordController.addPassword,
     });
 
-    fastify.route({
+    fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "GET",
         url: "/",
         schema: {
@@ -30,84 +41,82 @@ export default async (fastify: FastifyInstance) => {
             description: "fetch passwords",
             security: [{ cookieAuth: [] }],
             response: {
-                200: $ref("getPasswordsResponseSchema"),
+                200: getPasswordsResponseSchema,
+                "4xx": errorSchema,
+                "5xx": errorSchema,
             },
         },
         preHandler: [fastify.authenticate],
         handler: passwordController.getPasswords,
     });
 
-    fastify.route({
+    fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "GET",
         url: "/:id",
-        attachValidation: true,
         schema: {
             tags: ["Password"],
             description: "fetch password",
             security: [{ cookieAuth: [] }],
-            params: $ref("idParamsSchema"),
+            params: idParamsSchema,
             response: {
-                200: $ref("getPasswordResponseSchema"),
-                "4xx": { $ref: "errorSchema#" },
-                "5xx": { $ref: "errorSchema#" },
+                200: getPasswordResponseSchema,
+                "4xx": errorSchema,
+                "5xx": errorSchema,
             },
         },
         preHandler: [fastify.authenticate],
         handler: passwordController.getPassword,
     });
 
-    fastify.route({
+    fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "PUT",
         url: "/:id",
-        attachValidation: true,
         schema: {
             tags: ["Password"],
             description: "update password",
             security: [{ cookieAuth: [] }],
-            params: $ref("idParamsSchema"),
-            body: $ref("updatePasswordSchema"),
+            params: idParamsSchema,
+            body: updatePasswordSchema,
             response: {
-                200: $ref("responseSchema"),
-                "4xx": { $ref: "errorSchema#" },
-                "5xx": { $ref: "errorSchema#" },
+                200: responseSchema,
+                "4xx": errorSchema,
+                "5xx": errorSchema,
             },
         },
         preHandler: [fastify.authenticate],
         handler: passwordController.updatePassword,
     });
 
-    fastify.route({
+    fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "DELETE",
         url: "/:id",
-        attachValidation: true,
         schema: {
             tags: ["Password"],
             description: "delete password",
             security: [{ cookieAuth: [] }],
-            params: $ref("idParamsSchema"),
+            params: idParamsSchema,
             response: {
-                200: $ref("responseSchema"),
-                "4xx": { $ref: "errorSchema#" },
-                "5xx": { $ref: "errorSchema#" },
+                200: responseSchema,
+                "4xx": errorSchema,
+                "5xx": errorSchema,
             },
         },
         preHandler: [fastify.authenticate],
         handler: passwordController.deletePassword,
     });
 
-    fastify.route({
+    fastify.withTypeProvider<ZodTypeProvider>().route({
         method: "POST",
         url: "/import",
-        attachValidation: true,
         schema: {
             tags: ["Password"],
             description: "import passwords",
             security: [{ cookieAuth: [] }],
-            body: $ref("importPasswordsSchema"),
+            body: importPasswordsSchema,
             response: {
-                200: $ref("responseSchema"),
-                "4xx": { $ref: "errorSchema#" },
-                "5xx": { $ref: "errorSchema#" },
+                200: responseSchema,
+                "4xx": errorSchema,
+                "5xx": errorSchema,
             },
         },
         preHandler: [fastify.authenticate],
