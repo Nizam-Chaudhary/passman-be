@@ -2,6 +2,7 @@
     "name": "passman-be",
     "version": "1.0.0",
     "main": "index.js",
+    "packageManager": "pnpm@9.15.1",
     "scripts": {
         "build": "rimraf ./dist && tsc",
         "start": "node dist/src/server.js",
