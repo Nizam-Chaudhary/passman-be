@@ -72,7 +72,7 @@ export default async (fastify: FastifyInstance) => {
     });
 
     fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "PUT",
+        method: "PATCH",
         url: "/:id",
         schema: {
             tags: ["Password"],
