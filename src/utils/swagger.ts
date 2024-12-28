@@ -21,19 +21,19 @@ export const swaggerOptions: SwaggerOptions = {
         // @ts-ignore
         "x-tagGroups": [
             {
-                name: "Default API's",
-                tags: ["Default"],
+                name: "Health",
+                tags: ["Health"],
             },
             {
-                name: "User API's",
+                name: "Users",
                 tags: ["User", "Auth"],
             },
             {
-                name: "Password API's",
+                name: "Passwords",
                 tags: ["Password"],
             },
             {
-                name: "Schema's",
+                name: "Schema",
                 tags: ["Model"],
             },
         ],

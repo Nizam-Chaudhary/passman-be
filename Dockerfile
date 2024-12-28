@@ -7,30 +7,25 @@ WORKDIR /app
 
 # Install prod dependencies
 FROM base AS prod-deps
-COPY package.json /app/package.json
-COPY pnpm-lock.yaml /app/pnpm-lock.yaml
-# below run command giving error while building image on railway
-# RUN --mount=type=cache,id=s/passman-/pnpm/store,target=/pnpm/store pnpm install --prod --frozen-lockfile
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --prod  --frozen-lockfile
 
 # Build stage
 FROM base AS build
-COPY package.json /app/package.json
-COPY pnpm-lock.yaml /app/pnpm-lock.yaml
-# below run command giving error while building image on railway
-# RUN --mount=type=cache,id=s/passman-/pnpm/store,target=/pnpm/store pnpm install --frozen-lockfile
+COPY package.json pnpm-lock.yaml ./
 RUN pnpm install  --frozen-lockfile
-
-COPY . /app/
+COPY . .
 RUN pnpm run build
 
 # Main build
 FROM base
+
+# copy required files
+COPY package.json .
+COPY drizzle.config.ts .
 COPY --from=prod-deps /app/node_modules node_modules
 COPY --from=build /app/dist dist
 
-COPY package.json .
-COPY drizzle.config.ts .
-
+# start server
 EXPOSE 3000
-CMD [ "npm" , "start" ]
+CMD [ "pnpm" , "start" ]
