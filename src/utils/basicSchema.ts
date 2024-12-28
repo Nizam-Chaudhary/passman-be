@@ -1,7 +1,9 @@
 import { z } from "zod";
 
+export const statusSchema = z.enum(["success", "fail", "error"]);
+
 export const responseSchema = z.object({
-    status: z.string(),
+    status: statusSchema,
     message: z.string(),
 });
 
@@ -10,7 +12,7 @@ export const idParamsSchema = z.object({
 });
 
 export const errorSchema = z.object({
-    status: z.string().default("error"),
+    status: statusSchema.default("error"),
     message: z.string().default("something went wrong"),
     stack: z.string().optional(),
 });
