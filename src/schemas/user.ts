@@ -14,7 +14,7 @@ const baseSchema = createInsertSchema(users, {
             .describe("Email address for the account"),
     password: (schema) =>
         schema.password
-            .min(10, "Password must be at least 8 characters long")
+            .min(10, "Password must be at least 10 characters long")
             .refine((value) => /[A-Z]/.test(value), {
                 message: "Password must contain at least one uppercase letter",
             })
