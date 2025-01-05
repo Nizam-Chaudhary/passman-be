@@ -8,8 +8,18 @@ services:
             - "3000:3000"
         env_file:
             - .env
+
+    postgres:
+        container_name: postgres
+        image: postgres
+        restart: always
+        ports:
+            - "5432:5432"
         environment:
-            - NODE_ENV=production
-            - LOGGER_TARGET=pino/file
-            - HOST=0.0.0.0
-        hostname: "passman-be"
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+
+volumes:
+    pgdata:

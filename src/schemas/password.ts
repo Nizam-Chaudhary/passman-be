@@ -17,7 +17,7 @@ const baseSchema = createInsertSchema(passwords, {
             .describe("Email address for the account"),
     password: (schema) =>
         schema.password
-            .min(1, "Password cannot be empty")
+            .min(10, "Password cannot be empty")
             .describe("Password for the account"),
     appName: (schema) =>
         schema.appName
