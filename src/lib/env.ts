@@ -6,6 +6,7 @@ const envSchema = z.object({
     PORT: z.coerce.number().min(1),
     HOST: z.string().min(1),
     NODE_ENV: z.enum(["development", "production"]),
+    FE_URL: z.string().url().min(1),
     DB_HOST: z.string().min(1),
     DB_USERNAME: z.string().min(1),
     DB_PASSWORD: z.string().min(1),

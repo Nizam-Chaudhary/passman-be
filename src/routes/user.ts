@@ -3,11 +3,15 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 import userController from "../controllers/user";
 import {
     getUserResponseSchema,
+    refreshTokenBodySchema,
+    signInResponseSchema,
     signInUserSchema,
+    signUpUserResponseSchema,
     signUpUserSchema,
+    updateUserResponseSchema,
     updateUserSchema,
 } from "../schemas/user";
-import { errorSchema, responseSchema } from "../utils/basicSchema";
+import { errorSchema } from "../utils/basicSchema";
 
 export default async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -19,7 +23,7 @@ export default async (fastify: FastifyInstance) => {
             description: "Sign up user",
             body: signUpUserSchema,
             response: {
-                200: responseSchema,
+                200: signUpUserResponseSchema,
                 "4xx": errorSchema,
                 "5xx": errorSchema,
             },
@@ -37,12 +41,29 @@ export default async (fastify: FastifyInstance) => {
             description: "Sign in user",
             body: signInUserSchema,
             response: {
-                200: responseSchema,
+                200: signInResponseSchema,
                 "4xx": errorSchema,
                 "5xx": errorSchema,
             },
         },
         handler: userController.signInUser,
+    });
+
+    fastify.withTypeProvider<ZodTypeProvider>().route({
+        method: "PATCH",
+        url: "/refresh-token",
+        schema: {
+            tags: ["Auth"],
+            summary: "Refresh access token",
+            description: "Refresh access token",
+            body: refreshTokenBodySchema,
+            response: {
+                200: signInResponseSchema,
+                "4xx": errorSchema,
+                "5xx": errorSchema,
+            },
+        },
+        handler: userController.refreshToken,
     });
 
     fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -53,10 +74,10 @@ export default async (fastify: FastifyInstance) => {
             tags: ["User"],
             summary: "Update user details",
             description: "update user details",
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             body: updateUserSchema,
             response: {
-                200: responseSchema,
+                200: updateUserResponseSchema,
                 "4xx": errorSchema,
                 "5xx": errorSchema,
             },
@@ -69,7 +90,7 @@ export default async (fastify: FastifyInstance) => {
         method: "GET",
         url: "/",
         schema: {
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             tags: ["User"],
             summary: "Get logged in user detail",
             description: "fetch user details",
@@ -81,21 +102,5 @@ export default async (fastify: FastifyInstance) => {
         },
         preHandler: [fastify.authenticate],
         handler: userController.getUser,
-    });
-
-    fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "GET",
-        url: "/logout",
-        schema: {
-            tags: ["Auth"],
-            summary: "Logout user",
-            description: "Log out user",
-            response: {
-                200: responseSchema,
-                "4xx": errorSchema,
-                "5xx": errorSchema,
-            },
-        },
-        handler: userController.logout,
     });
 };

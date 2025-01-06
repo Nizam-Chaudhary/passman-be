@@ -10,7 +10,6 @@ import {
     UpdateUserInput,
 } from "../schemas/user";
 import { generateOtp, generateSalt } from "../utils/generator";
-import { deriveKey } from "../utils/passwordEncryption";
 
 class UserService {
     async signUpUser(input: SignUpUserInput) {
@@ -30,18 +29,22 @@ class UserService {
 
         const otp = generateOtp();
 
-        await db.insert(users).values({
-            email: input.email,
-            userName: input.userName,
-            password: hashedPassword,
-            otp: otp,
-            isVerified: true,
-            saltValue: generateSalt(),
-        });
+        const user = await db
+            .insert(users)
+            .values({
+                email: input.email,
+                userName: input.userName,
+                password: hashedPassword,
+                otp: otp,
+                isVerified: true,
+                saltValue: generateSalt(),
+            })
+            .returning();
 
         return {
             status: "success",
             message: "User signed up successfully",
+            data: user[0],
         };
     }
 
@@ -87,16 +90,10 @@ class UserService {
             );
         }
 
-        const encryptionKey = deriveKey(
-            input.password,
-            userData.saltValue
-        ).toString("hex");
-
         return {
             id: userData.id,
             email: userData.email,
             userName: userData.userName,
-            encryptionKey: encryptionKey,
         };
     }
 
@@ -119,16 +116,18 @@ class UserService {
     }
 
     async updateUser(id: number, input: UpdateUserInput) {
-        await db
+        const user = await db
             .update(users)
             .set({
                 userName: input.userName,
             })
-            .where(eq(users.id, id));
+            .where(eq(users.id, id))
+            .returning();
 
         return {
             status: "success",
             message: "user name updated successfully",
+            data: user[0],
         };
     }
 }

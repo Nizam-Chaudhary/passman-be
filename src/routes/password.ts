@@ -2,17 +2,15 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import passwordController from "../controllers/password";
 import {
+    addOrUpdateOrDeletePasswordResponseSchema,
     addPasswordSchema,
     getPasswordResponseSchema,
     getPasswordsResponseSchema,
+    importPasswordResponseSchema,
     importPasswordsSchema,
     updatePasswordSchema,
 } from "../schemas/password";
-import {
-    errorSchema,
-    idParamsSchema,
-    responseSchema,
-} from "../utils/basicSchema";
+import { errorSchema, idParamsSchema } from "../utils/basicSchema";
 
 export default async (fastify: FastifyInstance) => {
     fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -22,10 +20,10 @@ export default async (fastify: FastifyInstance) => {
             tags: ["Password"],
             summary: "Add a new password",
             description: "add password",
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             body: addPasswordSchema,
             response: {
-                200: responseSchema,
+                200: addOrUpdateOrDeletePasswordResponseSchema,
                 "4xx": errorSchema,
                 "5xx": errorSchema,
             },
@@ -41,7 +39,7 @@ export default async (fastify: FastifyInstance) => {
             tags: ["Password"],
             summary: "Get all passwords",
             description: "fetch passwords",
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             response: {
                 200: getPasswordsResponseSchema,
                 "4xx": errorSchema,
@@ -59,7 +57,7 @@ export default async (fastify: FastifyInstance) => {
             tags: ["Password"],
             summary: "Get password by ID",
             description: "fetch password",
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             params: idParamsSchema,
             response: {
                 200: getPasswordResponseSchema,
@@ -68,7 +66,7 @@ export default async (fastify: FastifyInstance) => {
             },
         },
         preHandler: [fastify.authenticate],
-        handler: passwordController.getPassword,
+        handler: passwordController.getPasswordById,
     });
 
     fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -78,11 +76,11 @@ export default async (fastify: FastifyInstance) => {
             tags: ["Password"],
             summary: "Update password by ID",
             description: "update password",
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             params: idParamsSchema,
             body: updatePasswordSchema,
             response: {
-                200: responseSchema,
+                200: addOrUpdateOrDeletePasswordResponseSchema,
                 "4xx": errorSchema,
                 "5xx": errorSchema,
             },
@@ -98,10 +96,10 @@ export default async (fastify: FastifyInstance) => {
             tags: ["Password"],
             summary: "Delete password by ID",
             description: "delete password",
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             params: idParamsSchema,
             response: {
-                200: responseSchema,
+                200: addOrUpdateOrDeletePasswordResponseSchema,
                 "4xx": errorSchema,
                 "5xx": errorSchema,
             },
@@ -117,10 +115,10 @@ export default async (fastify: FastifyInstance) => {
             tags: ["Password"],
             summary: "Import multiple passwords",
             description: "import passwords",
-            security: [{ cookieAuth: [] }],
+            security: [{ jwtAuth: [] }],
             body: importPasswordsSchema,
             response: {
-                200: responseSchema,
+                200: importPasswordResponseSchema,
                 "4xx": errorSchema,
                 "5xx": errorSchema,
             },

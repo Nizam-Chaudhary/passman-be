@@ -1,5 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import AppError from "../lib/appError";
 import {
+    RefreshTokenBodySchema,
     SignInUserInput,
     SignUpUserInput,
     UpdateUserInput,
@@ -20,12 +22,39 @@ class UserController {
         reply: FastifyReply
     ) {
         const response = await userService.signInUser(req.body);
-        const token = req.jwt.sign(response);
+        const token = req.jwt.sign(response, { expiresIn: "7d" });
+        const refreshToken = req.jwt.sign(response, { expiresIn: "180d" });
 
-        req.session.set("access_token", token);
         reply.code(200).send({
             status: "success",
             message: "Used signed in successfully",
+            data: {
+                token,
+                refresh_token: refreshToken,
+            },
+        });
+    }
+
+    async refreshToken(
+        req: FastifyRequest<{ Body: RefreshTokenBodySchema }>,
+        reply: FastifyReply
+    ) {
+        const userData = req.jwt.verify(req.body.refresh_token);
+
+        if (!userData) {
+            throw new AppError("UNAUTORIZED", "Refresh token is invalid", 401);
+        }
+
+        const token = req.jwt.sign(userData, { expiresIn: "7d" });
+        const refreshToken = req.jwt.sign(userData, { expiresIn: "180d" });
+
+        reply.code(200).send({
+            status: "success",
+            message: "Used signed in successfully",
+            data: {
+                token,
+                refresh_token: refreshToken,
+            },
         });
     }
 
@@ -36,15 +65,6 @@ class UserController {
         const response = await userService.updateUser(req.user.id, req.body);
 
         reply.code(200).send(response);
-    }
-
-    async logout(req: FastifyRequest, reply: FastifyReply) {
-        req.session.delete();
-
-        return reply.status(200).send({
-            status: "success",
-            message: "logged out successfully",
-        });
     }
 
     async getUser(req: FastifyRequest, reply: FastifyReply) {

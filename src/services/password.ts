@@ -2,52 +2,36 @@ import { and, eq } from "drizzle-orm";
 import { db } from "../db/index";
 import { passwords } from "../db/schema/password";
 import AppError from "../lib/appError";
-import {
-    AddPasswordInput,
-    ImportPasswordsInput,
-    SelectPasswordsModel,
-} from "../schemas/password";
-import { decryptPassword, encryptPassword } from "../utils/passwordEncryption";
+import { AddPasswordInput, ImportPasswordsInput } from "../schemas/password";
 
 class PasswordService {
-    async addPassword(userId: number, input: AddPasswordInput, key: string) {
-        const encryptedData = encryptPassword(input.password, key);
-
-        await db.insert(passwords).values({
-            userId: userId,
-            appName: input.appName,
-            email: input.email,
-            username: input.username,
-            iv: encryptedData.iv,
-            password: encryptedData.content,
-            baseUrl: input.baseUrl,
-            specificUrl: input.specificUrl,
-            faviconUrl: input.faviconUrl,
-            notes: input.notes,
-        });
+    async addPassword(userId: number, input: AddPasswordInput) {
+        const password = await db
+            .insert(passwords)
+            .values({
+                userId: userId,
+                appName: input.appName,
+                email: input.email,
+                username: input.username,
+                iv: input.iv,
+                password: input.password,
+                baseUrl: input.baseUrl,
+                specificUrl: input.specificUrl,
+                faviconUrl: input.faviconUrl,
+                notes: input.notes,
+            })
+            .returning();
 
         return {
             status: "success",
             message: "password added successfully",
+            data: password[0],
         };
     }
 
     async getPasswords(userId: number, key: string) {
-        const passwordsData = (
-            await db.query.passwords.findMany({
-                where: eq(passwords.userId, userId),
-            })
-        ).map((password: SelectPasswordsModel) => {
-            const decryptedPassword = decryptPassword(
-                password.iv,
-                password.password,
-                key
-            );
-
-            return {
-                ...password,
-                password: decryptedPassword,
-            };
+        const passwordsData = await db.query.passwords.findMany({
+            where: eq(passwords.userId, userId),
         });
 
         return {
@@ -56,19 +40,14 @@ class PasswordService {
         };
     }
 
-    async getPassword(userId: number, key: string, id: number) {
+    async getPassword(userId: number, id: number) {
         const password = await db.query.passwords.findFirst({
             where: and(eq(passwords.id, id), eq(passwords.userId, userId)),
         });
 
         if (!password) {
-            throw new AppError("PASSWORD_NOT_FOUND", "Password not found", 400);
+            throw new AppError("PASSWORD_NOT_FOUND", "Password not found", 404);
         }
-        password.password = decryptPassword(
-            password.iv,
-            password.password,
-            key
-        );
 
         return {
             status: "success",
@@ -76,12 +55,7 @@ class PasswordService {
         };
     }
 
-    async updatePassword(
-        id: number,
-        input: AddPasswordInput,
-        userId: number,
-        key: string
-    ) {
+    async updatePassword(id: number, input: AddPasswordInput, userId: number) {
         const password = await db.query.passwords.findFirst({
             where: and(eq(passwords.id, id), eq(passwords.userId, userId)),
         });
@@ -90,64 +64,48 @@ class PasswordService {
             throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
         }
 
-        const encryptedData = encryptPassword(input.password, key);
-
-        await db.update(passwords).set({
-            password: encryptedData.content || password.password,
-            iv: encryptedData.iv || password.iv,
-            email: input.email || password.email,
-            username: input.username || password.username,
-            appName: input.appName || password.appName,
-            baseUrl: input.baseUrl || password.baseUrl,
-            specificUrl: input.specificUrl || password.specificUrl,
-            faviconUrl: input.faviconUrl || password.faviconUrl,
-            notes: input.notes || password.notes,
-        });
+        const updatedPassword = await db
+            .update(passwords)
+            .set(input)
+            .returning();
 
         return {
             status: "success",
             message: "password updated successfully",
+            data: updatedPassword[0],
         };
     }
 
     async deletePassword(id: number, userId: number) {
-        await db
+        const password = await db
             .delete(passwords)
-            .where(and(eq(passwords.id, id), eq(passwords.userId, userId)));
+            .where(and(eq(passwords.id, id), eq(passwords.userId, userId)))
+            .returning();
 
         return {
             status: "success",
             message: "password deleted successfully",
+            data: password[0],
         };
     }
 
     async importPasswords(
         userId: number,
-        inputPasswords: ImportPasswordsInput,
-        key: string
+        inputPasswords: ImportPasswordsInput
     ) {
-        const inputData = inputPasswords.map((input) => {
-            const encryptedData = encryptPassword(input.password, key);
-
-            return {
-                userId: userId,
-                appName: input.appName,
-                email: input.email,
-                username: input.username,
-                iv: encryptedData.iv,
-                password: encryptedData.content,
-                baseUrl: input.baseUrl,
-                specificUrl: input.specificUrl,
-                faviconUrl: input.faviconUrl,
-                notes: input.notes,
-            };
-        });
-
-        await db.insert(passwords).values(inputData);
+        const allPasswords = inputPasswords.map((password) => ({
+            ...password,
+            userId,
+        }));
+        const importedPasswords = await db
+            .insert(passwords)
+            .values(allPasswords)
+            .returning();
 
         return {
             status: "success",
             message: "passwords imported successfully",
+            data: importedPasswords,
         };
     }
 }

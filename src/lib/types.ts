@@ -10,12 +10,6 @@ declare module "fastify" {
     }
 }
 
-declare module "@fastify/secure-session" {
-    interface SessionData {
-        access_token?: string;
-    }
-}
-
 type userPayload = {
     id: number;
     email: string;

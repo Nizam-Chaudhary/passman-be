@@ -13,7 +13,8 @@ export default fastifyPlugin(
         fastify.decorate(
             "authenticate",
             async (req: FastifyRequest, _reply: FastifyReply) => {
-                const token = req.session.get("access_token");
+                const token = req.headers.authorization?.replace("Bearer ", "");
+                console.log("token", token);
 
                 if (!token) {
                     throw new AppError(
@@ -23,8 +24,12 @@ export default fastifyPlugin(
                     );
                 }
 
-                const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
-                req.user = decoded;
+                try {
+                    const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
+                    req.user = decoded;
+                } catch (error: any) {
+                    console.log("error", error);
+                }
             }
         );
 

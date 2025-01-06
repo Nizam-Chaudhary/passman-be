@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { users } from "../db/schema/user";
-import { statusSchema } from "../utils/basicSchema";
+import { responseSchema, statusSchema } from "../utils/basicSchema";
 
 const baseSchema = createInsertSchema(users, {
     userName: (schema) =>
@@ -66,7 +66,28 @@ const selectUserModel = createSelectSchema(users)
 
 export type SelectUserModel = z.infer<typeof selectUserModel>;
 
+export const signUpUserResponseSchema = responseSchema.and(
+    z.object({ data: selectUserModel })
+);
+
+export const updateUserResponseSchema = signUpUserResponseSchema;
+
 export const getUserResponseSchema = z.object({
     status: statusSchema,
     data: selectUserModel,
 });
+
+export const signInResponseSchema = z
+    .object({
+        data: z.object({
+            token: z.string().min(1, "token is required"),
+            refresh_token: z.string().min(1, "refresh token is required"),
+        }),
+    })
+    .and(responseSchema);
+
+export const refreshTokenBodySchema = z.object({
+    refresh_token: z.string().min(1, "Refresh token is required"),
+});
+
+export type RefreshTokenBodySchema = z.infer<typeof refreshTokenBodySchema>;

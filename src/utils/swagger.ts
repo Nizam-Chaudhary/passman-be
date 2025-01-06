@@ -11,10 +11,9 @@ export const swaggerOptions: SwaggerOptions = {
         },
         components: {
             securitySchemes: {
-                cookieAuth: {
-                    type: "apiKey",
-                    name: "session",
-                    in: "cookie",
+                jwtAuth: {
+                    type: "http",
+                    scheme: "bearer",
                 },
             },
         },

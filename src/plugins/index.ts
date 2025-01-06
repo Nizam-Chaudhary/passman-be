@@ -5,7 +5,6 @@ import cors from "./cors";
 import errorHandler from "./error.handler";
 import fastifyTypeProviderZod from "./fastify.type.provider.zod";
 import jwt from "./jwt";
-import secureSession from "./secure.session";
 import swaggerDocs from "./swagger.docs";
 
 export default fastifyPlugin(
@@ -14,7 +13,6 @@ export default fastifyPlugin(
         fastify.register(jwt, opts);
         fastify.register(fastifyTypeProviderZod, opts);
         fastify.register(errorHandler, opts);
-        fastify.register(secureSession, opts);
         fastify.register(swaggerDocs, opts);
         fastify.register(authenticate, opts);
 

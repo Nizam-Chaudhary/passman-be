@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { passwords } from "../db/schema/password";
-import { statusSchema } from "../utils/basicSchema";
+import { responseSchema, statusSchema } from "../utils/basicSchema";
 
 const baseSchema = createInsertSchema(passwords, {
     username: (schema) =>
@@ -17,7 +17,7 @@ const baseSchema = createInsertSchema(passwords, {
             .describe("Email address for the account"),
     password: (schema) =>
         schema.password
-            .min(10, "Password cannot be empty")
+            .min(1, "Password cannot be empty")
             .describe("Password for the account"),
     appName: (schema) =>
         schema.appName
@@ -53,6 +53,7 @@ export const addPasswordSchema = z
     .object({
         username: baseSchema.shape.username,
         email: baseSchema.shape.email,
+        iv: baseSchema.shape.iv,
         password: baseSchema.shape.password,
         appName: baseSchema.shape.appName,
         baseUrl: baseSchema.shape.baseUrl,
@@ -97,6 +98,7 @@ export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>;
 const selectPasswordsModel = createSelectSchema(passwords, {
     id: (schema) =>
         schema.id.describe("Unique identifier for the password record"),
+    userId: (schema) => schema.userId.describe("User id"),
     username: (schema) => schema.username.describe("Username for the account"),
     email: (schema) => schema.email.describe("Email address for the account"),
     password: (schema) => schema.password.describe("Password for the account"),
@@ -126,3 +128,15 @@ export const getPasswordResponseSchema = z.object({
     status: statusSchema,
     data: selectPasswordsModel,
 });
+
+export const addOrUpdateOrDeletePasswordResponseSchema = responseSchema.and(
+    z.object({
+        data: selectPasswordsModel,
+    })
+);
+
+export const importPasswordResponseSchema = responseSchema.and(
+    z.object({
+        data: selectPasswordsModel,
+    })
+);
