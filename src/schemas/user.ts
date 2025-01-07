@@ -3,6 +3,13 @@ import { z } from "zod";
 import { users } from "../db/schema/user";
 import { responseSchema, statusSchema } from "../utils/basicSchema";
 
+export const masterKeySchema = z.object({
+    iv: z.string().min(1, "iv is required"),
+    encrypted: z.string().min(1, "key is required"),
+});
+
+export type Masterkey = z.infer<typeof masterKeySchema>;
+
 const baseSchema = createInsertSchema(users, {
     userName: (schema) =>
         schema.userName
@@ -28,6 +35,8 @@ const baseSchema = createInsertSchema(users, {
                 message: "Password must contain at least one special character",
             })
             .describe("Password for the account"),
+    masterKey: (schema) => masterKeySchema,
+    recoveryMasterKey: (schema) => masterKeySchema,
 });
 
 // Signup
@@ -35,6 +44,8 @@ export const signUpUserSchema = z.object({
     userName: baseSchema.shape.userName,
     email: baseSchema.shape.email,
     password: baseSchema.shape.password,
+    masterKey: baseSchema.shape.masterKey,
+    recoveryMasterKey: baseSchema.shape.recoveryMasterKey,
 });
 
 export type SignUpUserInput = z.infer<typeof signUpUserSchema>;
@@ -59,6 +70,7 @@ const selectUserModel = createSelectSchema(users)
         id: true,
         userName: true,
         email: true,
+        masterKey: true,
         createdAt: true,
         updatedAt: true,
     })

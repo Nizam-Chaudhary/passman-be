@@ -66,7 +66,7 @@ class PasswordService {
 
         const updatedPassword = await db
             .update(passwords)
-            .set(input)
+            .set({ ...input, updatedAt: new Date() })
             .returning();
 
         return {

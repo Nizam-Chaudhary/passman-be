@@ -1,13 +1,13 @@
 {
-    "version": "7",
-    "dialect": "postgresql",
-    "entries": [
-        {
-            "idx": 0,
-            "version": "7",
-            "when": 1729275485428,
-            "tag": "0000_loose_bug",
-            "breakpoints": true
-        }
-    ]
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1736271477493,
+      "tag": "0000_sudden_nick_fury",
+      "breakpoints": true
+    }
+  ]
 }

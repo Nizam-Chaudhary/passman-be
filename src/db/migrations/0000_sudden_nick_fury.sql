@@ -19,9 +19,10 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"user_name" varchar(255) NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,
+	"master_key" varchar(255) NOT NULL,
+	"recovery_master_key" varchar(255) NOT NULL,
 	"is_verified" boolean DEFAULT false NOT NULL,
 	"otp" varchar(6) NOT NULL,
-	"salt_value" varchar(255) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")

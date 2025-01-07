@@ -9,7 +9,7 @@ import {
     SignUpUserInput,
     UpdateUserInput,
 } from "../schemas/user";
-import { generateOtp, generateSalt } from "../utils/generator";
+import { generateOtp } from "../utils/generator";
 
 class UserService {
     async signUpUser(input: SignUpUserInput) {
@@ -35,9 +35,10 @@ class UserService {
                 email: input.email,
                 userName: input.userName,
                 password: hashedPassword,
+                masterKey: input.masterKey,
+                recoveryMasterKey: input.recoveryMasterKey,
                 otp: otp,
                 isVerified: true,
-                saltValue: generateSalt(),
             })
             .returning();
 
@@ -55,8 +56,8 @@ class UserService {
                 userName: true,
                 email: true,
                 password: true,
+                masterKey: true,
                 isVerified: true,
-                saltValue: true,
             },
             where: eq(users.email, input.email),
         });
@@ -94,6 +95,7 @@ class UserService {
             id: userData.id,
             email: userData.email,
             userName: userData.userName,
+            masterKey: userData.masterKey,
         };
     }
 
@@ -103,6 +105,7 @@ class UserService {
                 id: true,
                 userName: true,
                 email: true,
+                masterKey: true,
                 createdAt: true,
                 updatedAt: true,
             },
@@ -120,6 +123,7 @@ class UserService {
             .update(users)
             .set({
                 userName: input.userName,
+                updatedAt: new Date(),
             })
             .where(eq(users.id, id))
             .returning();
