@@ -12,14 +12,13 @@ export default fastifyPlugin(
     (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
         fastify.decorate(
             "authenticate",
-            async (req: FastifyRequest, _reply: FastifyReply) => {
+            async (req: FastifyRequest, reply: FastifyReply) => {
                 const token = req.headers.authorization?.replace("Bearer ", "");
-                console.log("token", token);
 
                 if (!token) {
                     throw new AppError(
                         "UNAUTHORIZED",
-                        "please sign in first",
+                        "please provide access token",
                         401
                     );
                 }
@@ -28,7 +27,20 @@ export default fastifyPlugin(
                     const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
                     req.user = decoded;
                 } catch (error: any) {
-                    console.log("error", error);
+                    if (error.code === "FAST_JWT_EXPIRED") {
+                        throw new AppError(
+                            "UNAUTHORIZED",
+                            "access token expired",
+                            401
+                        );
+                    } else if (error.code === "FAST_JWT_INVALID_SIGNATURE") {
+                        throw new AppError(
+                            "UNAUTHORIZED",
+                            "access token has invalid signature",
+                            401
+                        );
+                    }
+                    throw new AppError("UNAUTHORIZED", "Unauthorized...", 401);
                 }
             }
         );
