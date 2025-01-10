@@ -2,7 +2,7 @@
     "name": "passman-be",
     "version": "1.0.0",
     "main": "index.js",
-    "packageManager": "pnpm@9.15.2",
+    "packageManager": "pnpm@9.15.3",
     "scripts": {
         "clean": "rimraf dist",
         "build": "tsc",
