@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, ilike, or } from "drizzle-orm";
 import { db } from "../db/index";
 import { passwords } from "../db/schema/password";
 import AppError from "../lib/appError";
@@ -25,9 +25,17 @@ class PasswordService {
         };
     }
 
-    async getPasswords(userId: number) {
+    async getPasswords(userId: number, search?: string) {
+        const searchCondition = search
+            ? or(
+                  ilike(passwords.site, `%${search}%`),
+                  ilike(passwords.username, `%${search}%`),
+                  ilike(passwords.note, `%${search}%`)
+              )
+            : undefined;
+
         const passwordsData = await db.query.passwords.findMany({
-            where: eq(passwords.userId, userId),
+            where: and(eq(passwords.userId, userId), searchCondition),
         });
 
         return {
@@ -63,6 +71,7 @@ class PasswordService {
         const updatedPassword = await db
             .update(passwords)
             .set({ ...input, updatedAt: new Date() })
+            .where(eq(passwords.id, id))
             .returning();
 
         return {

@@ -5,6 +5,7 @@ import {
     addOrUpdateOrDeletePasswordResponseSchema,
     addPasswordSchema,
     getPasswordResponseSchema,
+    getPasswordsQueryStringSchema,
     getPasswordsResponseSchema,
     importPasswordResponseSchema,
     importPasswordsSchema,
@@ -40,6 +41,7 @@ export default async (fastify: FastifyInstance) => {
             summary: "Get all passwords",
             description: "fetch passwords",
             security: [{ jwtAuth: [] }],
+            querystring: getPasswordsQueryStringSchema,
             response: {
                 200: getPasswordsResponseSchema,
                 "4xx": errorSchema,
@@ -70,7 +72,7 @@ export default async (fastify: FastifyInstance) => {
     });
 
     fastify.withTypeProvider<ZodTypeProvider>().route({
-        method: "PATCH",
+        method: "PUT",
         url: "/:id",
         schema: {
             tags: ["Password"],

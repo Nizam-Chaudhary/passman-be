@@ -48,9 +48,7 @@ export type ImportPasswordsInput = z.infer<typeof importPasswordsSchema>;
 
 export const updatePasswordSchema = z.object({
     username: baseSchema.shape.username.describe("Username for the account"),
-    password: encryptedPasswordSchema
-        .optional()
-        .describe("Password for the account"),
+    password: encryptedPasswordSchema.describe("Password for the account"),
     site: baseSchema.shape.site.describe("Name of the application or website"),
     faviconUrl: baseSchema.shape.faviconUrl.describe(
         "URL of the service favicon"
@@ -85,6 +83,14 @@ export const getPasswordsResponseSchema = z.object({
     status: statusSchema,
     data: z.array(selectPasswordsModel),
 });
+
+export const getPasswordsQueryStringSchema = z.object({
+    search: z.string().min(1, "provide atleast one character").optional(),
+});
+
+export type getPasswordsQueryOptions = z.infer<
+    typeof getPasswordsQueryStringSchema
+>;
 
 export const getPasswordResponseSchema = z.object({
     status: statusSchema,

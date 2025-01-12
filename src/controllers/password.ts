@@ -1,5 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { AddPasswordInput, ImportPasswordsInput } from "../schemas/password";
+import {
+    AddPasswordInput,
+    getPasswordsQueryOptions,
+    ImportPasswordsInput,
+} from "../schemas/password";
 import passwordService from "../services/password";
 import { IdParamsType } from "../utils/basicSchema";
 
@@ -16,8 +20,15 @@ class PasswordController {
         reply.code(201).send(response);
     }
 
-    async getPasswords(req: FastifyRequest, reply: FastifyReply) {
-        const response = await passwordService.getPasswords(req.user.id);
+    async getPasswords(
+        req: FastifyRequest<{ Querystring: getPasswordsQueryOptions }>,
+        reply: FastifyReply
+    ) {
+        const { search } = req.query;
+        const response = await passwordService.getPasswords(
+            req.user.id,
+            search
+        );
         reply.code(200).send(response);
     }
 
