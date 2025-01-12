@@ -10,15 +10,11 @@ class PasswordService {
             .insert(passwords)
             .values({
                 userId: userId,
-                appName: input.appName,
-                email: input.email,
+                site: input.site,
                 username: input.username,
-                iv: input.iv,
                 password: input.password,
-                baseUrl: input.baseUrl,
-                specificUrl: input.specificUrl,
                 faviconUrl: input.faviconUrl,
-                notes: input.notes,
+                note: input.note,
             })
             .returning();
 

@@ -8,8 +8,6 @@ export const masterKeySchema = z.object({
     encrypted: z.string().min(1, "key is required"),
 });
 
-export type Masterkey = z.infer<typeof masterKeySchema>;
-
 const baseSchema = createInsertSchema(users, {
     userName: (schema) =>
         schema.userName

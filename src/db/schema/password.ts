@@ -1,11 +1,13 @@
 import { relations } from "drizzle-orm";
 import {
     integer,
+    json,
     pgTable,
     serial,
     timestamp,
     varchar,
 } from "drizzle-orm/pg-core";
+import { EncryptedValueType } from "../../utils/basicSchema";
 import { users } from "./user";
 
 export const passwords = pgTable("passwords", {
@@ -13,15 +15,11 @@ export const passwords = pgTable("passwords", {
     userId: integer("user_id")
         .notNull()
         .references(() => users.id),
-    username: varchar("username", { length: 255 }),
-    email: varchar("email", { length: 255 }),
-    password: varchar("password", { length: 255 }).notNull(),
-    iv: varchar("iv", { length: 255 }).notNull(),
-    appName: varchar("app_name", { length: 255 }),
-    baseUrl: varchar("base_url", { length: 255 }),
-    specificUrl: varchar("specific_url", { length: 255 }),
+    site: varchar("site", { length: 255 }).notNull(),
+    username: varchar("username", { length: 255 }).notNull(),
+    password: json("password").$type<EncryptedValueType>().notNull(),
     faviconUrl: varchar("favicon_url", { length: 255 }),
-    notes: varchar("notes", { length: 500 }),
+    note: varchar("note", { length: 500 }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

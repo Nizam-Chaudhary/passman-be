@@ -3,67 +3,42 @@ import { z } from "zod";
 import { passwords } from "../db/schema/password";
 import { responseSchema, statusSchema } from "../utils/basicSchema";
 
+const encryptedPasswordSchema = z.object({
+    iv: z.string().min(1, "iv is required"),
+    encrypted: z.string().min(1, "password is required"),
+});
+
 const baseSchema = createInsertSchema(passwords, {
     username: (schema) =>
         schema.username
-            .optional()
-            .nullable()
+            .min(1, "Username is required")
             .describe("Username for the account"),
-    email: (schema) =>
-        schema.email
-            .email("invalid email")
-            .optional()
-            .nullable()
-            .describe("Email address for the account"),
     password: (schema) =>
-        schema.password
-            .min(1, "Password cannot be empty")
-            .describe("Password for the account"),
-    appName: (schema) =>
-        schema.appName
-            .optional()
-            .nullable()
-            .describe("Name of the application or service"),
-    baseUrl: (schema) =>
-        schema.baseUrl
-            .url("invalid url")
-            .optional()
-            .nullable()
-            .describe("Base URL of the service"),
-    specificUrl: (schema) =>
-        schema.specificUrl
-            .url("invalid url")
-            .optional()
-            .nullable()
-            .describe("Specific login URL for the service"),
+        encryptedPasswordSchema.describe("Password for the account"),
+    site: (schema) =>
+        schema.site
+            .min(1, "Site is required")
+            .describe("Name of the application or website"),
     faviconUrl: (schema) =>
-        schema.specificUrl
+        schema.faviconUrl
             .url("invalid url")
             .optional()
             .nullable()
             .describe("URL of the service favicon"),
-    notes: (schema) =>
-        schema.notes
+    note: (schema) =>
+        schema.note
             .optional()
             .nullable()
             .describe("Additional notes about the account"),
 });
 
-export const addPasswordSchema = z
-    .object({
-        username: baseSchema.shape.username,
-        email: baseSchema.shape.email,
-        iv: baseSchema.shape.iv,
-        password: baseSchema.shape.password,
-        appName: baseSchema.shape.appName,
-        baseUrl: baseSchema.shape.baseUrl,
-        specificUrl: baseSchema.shape.specificUrl,
-        faviconUrl: baseSchema.shape.faviconUrl,
-        notes: baseSchema.shape.notes,
-    })
-    .refine((data) => data.username != null || data.email != null, {
-        message: "Either username or email must be provided",
-    });
+export const addPasswordSchema = z.object({
+    username: baseSchema.shape.username,
+    password: encryptedPasswordSchema,
+    site: baseSchema.shape.site,
+    faviconUrl: baseSchema.shape.faviconUrl,
+    note: baseSchema.shape.note,
+});
 
 export type AddPasswordInput = z.infer<typeof addPasswordSchema>;
 
@@ -73,24 +48,14 @@ export type ImportPasswordsInput = z.infer<typeof importPasswordsSchema>;
 
 export const updatePasswordSchema = z.object({
     username: baseSchema.shape.username.describe("Username for the account"),
-    email: baseSchema.shape.email.describe("Email address for the account"),
-    password: baseSchema.shape.password
-        .min(1, "Password cannot be empty")
+    password: encryptedPasswordSchema
         .optional()
         .describe("Password for the account"),
-    appName: baseSchema.shape.appName.describe(
-        "Name of the application or service"
-    ),
-    baseUrl: baseSchema.shape.baseUrl.describe("Base URL of the service"),
-    specificUrl: baseSchema.shape.specificUrl.describe(
-        "Specific login URL for the service"
-    ),
+    site: baseSchema.shape.site.describe("Name of the application or website"),
     faviconUrl: baseSchema.shape.faviconUrl.describe(
         "URL of the service favicon"
     ),
-    notes: baseSchema.shape.notes.describe(
-        "Additional notes about the account"
-    ),
+    note: baseSchema.shape.note.describe("Additional notes about the account"),
 });
 
 export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>;
@@ -100,17 +65,14 @@ const selectPasswordsModel = createSelectSchema(passwords, {
         schema.id.describe("Unique identifier for the password record"),
     userId: (schema) => schema.userId.describe("User id"),
     username: (schema) => schema.username.describe("Username for the account"),
-    email: (schema) => schema.email.describe("Email address for the account"),
-    password: (schema) => schema.password.describe("Password for the account"),
-    appName: (schema) =>
-        schema.appName.describe("Name of the application or service"),
-    baseUrl: (schema) => schema.baseUrl.describe("Base URL of the service"),
-    specificUrl: (schema) =>
-        schema.specificUrl.describe("Specific login URL for the service"),
+    password: (schema) =>
+        encryptedPasswordSchema.describe("Password for the account"),
+    site: (schema) =>
+        schema.site.describe("Name of the application or website"),
     faviconUrl: (schema) =>
         schema.faviconUrl.describe("URL of the service favicon"),
-    notes: (schema) =>
-        schema.notes.describe("Additional notes about the account"),
+    note: (schema) =>
+        schema.note.describe("Additional notes about the account"),
     createdAt: (schema) =>
         schema.createdAt.describe("Timestamp when the record was created"),
     updatedAt: (schema) =>

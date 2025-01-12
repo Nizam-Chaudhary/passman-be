@@ -31,3 +31,10 @@ export const errorSchema = z.union([
 type errorSchema = z.infer<typeof errorSchema>;
 
 export type IdParamsType = z.infer<typeof idParamsSchema>;
+
+export const encryptedValueSchema = z.object({
+    iv: z.string().min(1, "iv is required"),
+    encrypted: z.string().min(1, "key is required"),
+});
+
+export type EncryptedValueType = z.infer<typeof encryptedValueSchema>;
