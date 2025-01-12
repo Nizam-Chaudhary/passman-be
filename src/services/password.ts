@@ -29,7 +29,7 @@ class PasswordService {
         };
     }
 
-    async getPasswords(userId: number, key: string) {
+    async getPasswords(userId: number) {
         const passwordsData = await db.query.passwords.findMany({
             where: eq(passwords.userId, userId),
         });
