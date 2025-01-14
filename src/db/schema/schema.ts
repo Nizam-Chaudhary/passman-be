@@ -1,2 +1,4 @@
-export { passwordRelations, passwords } from "./password";
-export { userRelations, users } from "./user";
+export { notes, notesRelations } from "./notes";
+export { passwords, passwordsRelations } from "./passwords";
+export { users, usersRelations } from "./users";
+export { vaults, vaultsRelations } from "./vaults";

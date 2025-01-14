@@ -1,6 +1,7 @@
 import { fastifyBasicAuth } from "@fastify/basic-auth";
 import fastifySwagger from "@fastify/swagger";
 import ScalarApiReference from "@scalar/fastify-api-reference";
+import { timingSafeEqual } from "crypto";
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import env from "../lib/env";
@@ -14,8 +15,14 @@ export default fastifyPlugin(
         fastify.register(fastifyBasicAuth, {
             validate(username, password, req, reply, done) {
                 if (
-                    username === env.DOC_USERNAME &&
-                    password === env.DOC_PASSWORD
+                    timingSafeEqual(
+                        Buffer.from(username),
+                        Buffer.from(env.DOC_USERNAME)
+                    ) &&
+                    timingSafeEqual(
+                        Buffer.from(password),
+                        Buffer.from(env.DOC_PASSWORD)
+                    )
                 ) {
                     done(); // Access granted
                 } else {

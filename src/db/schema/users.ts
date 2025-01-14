@@ -8,7 +8,8 @@ import {
     varchar,
 } from "drizzle-orm/pg-core";
 import { EncryptedValueType } from "../../utils/basicSchema";
-import { passwords } from "./password";
+import { passwords } from "./passwords";
+import { vaults } from "./vaults";
 
 export const users = pgTable("users", {
     id: serial("id").primaryKey(),
@@ -22,9 +23,13 @@ export const users = pgTable("users", {
     isVerified: boolean("is_verified").default(false).notNull(),
     otp: varchar("otp", { length: 6 }).notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at")
+        .notNull()
+        .defaultNow()
+        .$onUpdateFn(() => new Date()),
 });
 
-export const userRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many }) => ({
     passwords: many(passwords),
+    vaults: many(vaults),
 }));
