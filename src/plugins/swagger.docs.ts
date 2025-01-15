@@ -15,14 +15,8 @@ export default fastifyPlugin(
         fastify.register(fastifyBasicAuth, {
             validate(username, password, req, reply, done) {
                 if (
-                    timingSafeEqual(
-                        Buffer.from(username),
-                        Buffer.from(env.DOC_USERNAME)
-                    ) &&
-                    timingSafeEqual(
-                        Buffer.from(password),
-                        Buffer.from(env.DOC_PASSWORD)
-                    )
+                    compare(username, env.DOC_USERNAME) &&
+                    compare(password, env.DOC_PASSWORD)
                 ) {
                     done(); // Access granted
                 } else {
@@ -34,14 +28,9 @@ export default fastifyPlugin(
 
         fastify.register(ScalarApiReference, {
             routePrefix: "/",
-            // Additional hooks for the API reference routes. You can provide the onRequest and preHandler hooks
             hooks: {
-                onRequest: function (request, reply, done) {
+                onRequest: (request, reply, done) => {
                     fastify.basicAuth(request, reply, done);
-                    done();
-                },
-                preHandler: function (request, reply, done) {
-                    done();
                 },
             },
             configuration: {
@@ -64,3 +53,11 @@ export default fastifyPlugin(
         done();
     }
 );
+
+function compare(a: any, b: any): boolean {
+    try {
+        return timingSafeEqual(Buffer.from(a), Buffer.from(b));
+    } catch (error: any) {
+        return false;
+    }
+}

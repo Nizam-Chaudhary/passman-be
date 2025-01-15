@@ -24,9 +24,10 @@ class PasswordController {
         req: FastifyRequest<{ Querystring: getPasswordsQueryOptions }>,
         reply: FastifyReply
     ) {
-        const { search } = req.query;
+        const { search, vaultId } = req.query;
         const response = await passwordService.getPasswords(
             req.user.id,
+            vaultId,
             search
         );
         reply.code(200).send(response);

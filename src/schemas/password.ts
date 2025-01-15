@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { passwords } from "../db/schema/password";
+import { passwords } from "../db/schema/passwords";
 import { responseSchema, statusSchema } from "../utils/basicSchema";
 
 const encryptedPasswordSchema = z.object({
@@ -9,6 +9,7 @@ const encryptedPasswordSchema = z.object({
 });
 
 const baseSchema = createInsertSchema(passwords, {
+    vaultId: (schema) => schema.vaultId.min(0, "Vault id is required"),
     username: (schema) =>
         schema.username
             .min(1, "Username is required")
@@ -33,6 +34,7 @@ const baseSchema = createInsertSchema(passwords, {
 });
 
 export const addPasswordSchema = z.object({
+    vaultId: baseSchema.shape.vaultId,
     username: baseSchema.shape.username,
     password: encryptedPasswordSchema,
     site: baseSchema.shape.site,
@@ -85,6 +87,7 @@ export const getPasswordsResponseSchema = z.object({
 });
 
 export const getPasswordsQueryStringSchema = z.object({
+    vaultId: z.coerce.number().min(0, "Please provide vaultId"),
     search: z.string().min(1, "provide atleast one character").optional(),
 });
 

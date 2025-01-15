@@ -1,7 +1,8 @@
 import { compare, hash } from "bcrypt";
 import { eq } from "drizzle-orm";
 import { db } from "../db/index";
-import { users } from "../db/schema/user";
+import { vaults } from "../db/schema/schema";
+import { users } from "../db/schema/users";
 import AppError from "../lib/appError";
 import env from "../lib/env";
 import {
@@ -29,24 +30,31 @@ class UserService {
 
         const otp = generateOtp();
 
-        const user = await db
-            .insert(users)
-            .values({
-                email: input.email,
-                userName: input.userName,
-                password: hashedPassword,
-                masterKey: input.masterKey,
-                recoveryMasterKey: input.recoveryMasterKey,
-                otp: otp,
-                isVerified: true,
-            })
-            .returning();
+        return await db.transaction(async (tx) => {
+            const user = await tx
+                .insert(users)
+                .values({
+                    email: input.email,
+                    userName: input.userName,
+                    password: hashedPassword,
+                    masterKey: input.masterKey,
+                    recoveryMasterKey: input.recoveryMasterKey,
+                    otp: otp,
+                    isVerified: true,
+                })
+                .returning();
 
-        return {
-            status: "success",
-            message: "User signed up successfully",
-            data: user[0],
-        };
+            await tx.insert(vaults).values({
+                name: "Default",
+                userId: user[0].id,
+            });
+
+            return {
+                status: "success",
+                message: "User signed up successfully",
+                data: user[0],
+            };
+        });
     }
 
     async signInUser(input: SignInUserInput) {

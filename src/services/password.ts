@@ -1,6 +1,6 @@
 import { and, eq, ilike, or } from "drizzle-orm";
 import { db } from "../db/index";
-import { passwords } from "../db/schema/password";
+import { passwords } from "../db/schema/passwords";
 import AppError from "../lib/appError";
 import { AddPasswordInput, ImportPasswordsInput } from "../schemas/password";
 
@@ -9,6 +9,7 @@ class PasswordService {
         const password = await db
             .insert(passwords)
             .values({
+                vaultId: input.vaultId,
                 userId: userId,
                 site: input.site,
                 username: input.username,
@@ -25,7 +26,7 @@ class PasswordService {
         };
     }
 
-    async getPasswords(userId: number, search?: string) {
+    async getPasswords(userId: number, vaultId: number, search?: string) {
         const searchCondition = search
             ? or(
                   ilike(passwords.site, `%${search}%`),
@@ -35,7 +36,11 @@ class PasswordService {
             : undefined;
 
         const passwordsData = await db.query.passwords.findMany({
-            where: and(eq(passwords.userId, userId), searchCondition),
+            where: and(
+                eq(passwords.userId, userId),
+                eq(passwords.vaultId, vaultId),
+                searchCondition
+            ),
         });
 
         return {

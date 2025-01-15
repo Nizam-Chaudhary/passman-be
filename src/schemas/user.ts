@@ -1,6 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { users } from "../db/schema/user";
+import { users } from "../db/schema/users";
 import { responseSchema, statusSchema } from "../utils/basicSchema";
 
 export const masterKeySchema = z.object({
