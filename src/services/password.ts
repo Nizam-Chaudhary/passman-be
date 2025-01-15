@@ -1,4 +1,4 @@
-import { and, eq, ilike, or } from "drizzle-orm";
+import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { db } from "../db/index";
 import { passwords } from "../db/schema/passwords";
 import AppError from "../lib/appError";
@@ -41,6 +41,7 @@ class PasswordService {
                 eq(passwords.vaultId, vaultId),
                 searchCondition
             ),
+            orderBy: [desc(passwords.updatedAt)],
         });
 
         return {
