@@ -4,12 +4,12 @@ import fastifyPlugin from "fastify-plugin";
 import env from "../lib/env";
 
 export default fastifyPlugin(
-    (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
-        fastify.register(fastifyCors, {
-            origin: env.FE_URL,
-            credentials: true,
-        });
+  (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
+    fastify.register(fastifyCors, {
+      origin: env.FE_URL,
+      credentials: true,
+    });
 
-        done();
-    }
+    done();
+  }
 );

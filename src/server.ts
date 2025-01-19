@@ -5,17 +5,17 @@ import plugins from "./plugins";
 import routes from "./routes";
 
 const fastify = Fastify({
-    logger: loggerOptions,
+  logger: loggerOptions,
 });
 
 fastify.register(plugins);
 fastify.register(routes);
 
 async function main() {
-    await fastify.listen({
-        port: env.PORT,
-        host: env.HOST,
-    });
+  await fastify.listen({
+    port: env.PORT,
+    host: env.HOST,
+  });
 }
 
 main();
@@ -23,8 +23,8 @@ main();
 // graceful shutdown
 const listeners = ["SIGINT", "SIGTERM"];
 listeners.forEach((signal) => {
-    process.on(signal, async () => {
-        await fastify.close();
-        process.exit(0);
-    });
+  process.on(signal, async () => {
+    await fastify.close();
+    process.exit(0);
+  });
 });
