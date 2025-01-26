@@ -8,6 +8,8 @@ export default fastifyPlugin(
     fastify.register(fastifyCors, {
       origin: env.FE_URL,
       credentials: true,
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+      allowedHeaders: ["Content-Type", "Authorization"],
     });
 
     done();

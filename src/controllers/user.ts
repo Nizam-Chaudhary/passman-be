@@ -1,10 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import AppError from "../lib/appError";
 import {
-  RefreshTokenBodySchema,
+  RefreshTokenBody,
   SignInUserInput,
   SignUpUserInput,
   UpdateUserInput,
+  VerifyUserEmailBody,
 } from "../schemas/user";
 import userService from "../services/user";
 
@@ -21,41 +22,56 @@ class UserController {
     req: FastifyRequest<{ Body: SignInUserInput }>,
     reply: FastifyReply
   ) {
-    const response = await userService.signInUser(req.body);
-    const token = req.jwt.sign(response, { expiresIn: "7d" });
-    const refreshToken = req.jwt.sign(response, { expiresIn: "180d" });
+    const userData = await userService.signInUser(req.body);
+    const tokenPayload = {
+      id: userData.id,
+      email: userData.email,
+      userName: userData.userName,
+    };
+    const token = req.jwt.sign(tokenPayload, { expiresIn: "15m" });
+    const refreshToken = req.jwt.sign(tokenPayload, { expiresIn: "90d" });
 
     reply.code(200).send({
       status: "success",
-      message: "Used signed in successfully",
+      message: "User signed in successfully",
       data: {
         token,
-        refresh_token: refreshToken,
+        refreshToken,
+        ...userData,
       },
     });
   }
 
   async refreshToken(
-    req: FastifyRequest<{ Body: RefreshTokenBodySchema }>,
+    req: FastifyRequest<{ Body: RefreshTokenBody }>,
     reply: FastifyReply
   ) {
-    const userData = req.jwt.verify(req.body.refresh_token);
+    const refresh_token = req.body.refreshToken;
+    const userData = req.jwt.verify(refresh_token);
 
     if (!userData) {
       throw new AppError("UNAUTORIZED", "Refresh token is invalid", 401);
     }
 
-    const token = req.jwt.sign(userData, { expiresIn: "7d" });
-    const refreshToken = req.jwt.sign(userData, { expiresIn: "180d" });
+    const token = req.jwt.sign(userData, { expiresIn: "15m" });
+    const refreshToken = req.jwt.sign(userData, { expiresIn: "90d" });
 
     reply.code(200).send({
       status: "success",
-      message: "Used signed in successfully",
+      message: "Token refreshed successfully",
       data: {
         token,
-        refresh_token: refreshToken,
+        refreshToken,
       },
     });
+  }
+
+  async verifyUserEmail(
+    req: FastifyRequest<{ Body: VerifyUserEmailBody }>,
+    reply: FastifyReply
+  ) {
+    const response = await userService.verifyUserEmail(req.body);
+    reply.code(200).send(response);
   }
 
   async updateUser(

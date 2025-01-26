@@ -4,14 +4,16 @@ import userController from "../controllers/user";
 import {
   getUserResponseSchema,
   refreshTokenBodySchema,
+  refreshTokenResponseSchema,
   signInResponseSchema,
   signInUserSchema,
   signUpUserResponseSchema,
   signUpUserSchema,
   updateUserResponseSchema,
   updateUserSchema,
+  verifyUserEmailBodySchema,
 } from "../schemas/user";
-import { errorSchema } from "../utils/basicSchema";
+import { errorSchema, responseSchema } from "../utils/basicSchema";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -50,20 +52,37 @@ export default async (fastify: FastifyInstance) => {
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
-    method: "PATCH",
+    method: "POST",
     url: "/refresh-token",
     schema: {
       tags: ["Auth"],
       summary: "Refresh access token",
-      description: "Refresh access token",
       body: refreshTokenBodySchema,
+      description: "Refresh access token",
       response: {
-        200: signInResponseSchema,
+        200: refreshTokenResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
     },
     handler: userController.refreshToken,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "PATCH",
+    url: "/verify",
+    schema: {
+      tags: ["Auth"],
+      summary: "Verify user email",
+      description: "Verify user email",
+      body: verifyUserEmailBodySchema,
+      response: {
+        200: responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    handler: userController.verifyUserEmail,
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({

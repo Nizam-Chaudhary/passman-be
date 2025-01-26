@@ -19,7 +19,7 @@ const baseSchema = createInsertSchema(users, {
       .describe("Email address for the account"),
   password: (schema) =>
     schema.password
-      .min(10, "Password must be at least 10 characters long")
+      .min(10, "Password must be at least 8 characters long")
       .refine((value) => /[A-Z]/.test(value), {
         message: "Password must contain at least one uppercase letter",
       })
@@ -42,8 +42,6 @@ export const signUpUserSchema = z.object({
   userName: baseSchema.shape.userName,
   email: baseSchema.shape.email,
   password: baseSchema.shape.password,
-  masterKey: baseSchema.shape.masterKey,
-  recoveryMasterKey: baseSchema.shape.recoveryMasterKey,
 });
 
 export type SignUpUserInput = z.infer<typeof signUpUserSchema>;
@@ -87,17 +85,43 @@ export const getUserResponseSchema = z.object({
   data: selectUserModel,
 });
 
-export const signInResponseSchema = z
-  .object({
+export const signInResponseSchema = responseSchema.and(
+  z.object({
     data: z.object({
       token: z.string().min(1, "token is required"),
-      refresh_token: z.string().min(1, "refresh token is required"),
+      refreshToken: z.string().min(1, "refreshToken is required"),
+      id: z.number().min(1, "id is required"),
+      email: z.string().email(),
+      userName: z.string().min(1, "userName is required"),
+      masterKey: z
+        .object({
+          iv: z.string(),
+          encrypted: z.string(),
+        })
+        .nullable(),
+      isVerified: z.boolean(),
     }),
   })
-  .and(responseSchema);
+);
 
 export const refreshTokenBodySchema = z.object({
-  refresh_token: z.string().min(1, "Refresh token is required"),
+  refreshToken: z.string(),
 });
 
-export type RefreshTokenBodySchema = z.infer<typeof refreshTokenBodySchema>;
+export type RefreshTokenBody = z.infer<typeof refreshTokenBodySchema>;
+
+export const refreshTokenResponseSchema = responseSchema.and(
+  z.object({
+    data: z.object({
+      token: z.string().min(1, "token is required"),
+      refreshToken: z.string().min(1, "refreshToken is required"),
+    }),
+  })
+);
+
+export const verifyUserEmailBodySchema = z.object({
+  email: z.string().email("Invalid email format").min(1, "Email is required"),
+  otp: z.string().length(6, "OTP must be 6 characters long"),
+});
+
+export type VerifyUserEmailBody = z.infer<typeof verifyUserEmailBodySchema>;

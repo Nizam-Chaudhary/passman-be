@@ -6,9 +6,10 @@ import { users } from "../db/schema/users";
 import AppError from "../lib/appError";
 import env from "../lib/env";
 import {
-  SignInUserInput,
-  SignUpUserInput,
-  UpdateUserInput,
+    SignInUserInput,
+    SignUpUserInput,
+    UpdateUserInput,
+    VerifyUserEmailBody,
 } from "../schemas/user";
 import { generateOtp } from "../utils/generator";
 
@@ -37,10 +38,8 @@ class UserService {
           email: input.email,
           userName: input.userName,
           password: hashedPassword,
-          masterKey: input.masterKey,
-          recoveryMasterKey: input.recoveryMasterKey,
           otp: otp,
-          isVerified: true,
+          isVerified: false,
         })
         .returning();
 
@@ -79,9 +78,15 @@ class UserService {
       );
     }
 
-    if (!userData?.isVerified) {
-      throw new AppError("USER_NOT_VERIFIED", "Email not verified", 401, true);
+    if (!userData.isVerified) {
+      throw new AppError(
+        "EMAIL_NOT_VERIFIED",
+        "Email not verified. Please verify first!",
+        401,
+        true
+      );
     }
+
     const isMatch =
       userData && (await compare(input.password, userData.password));
 
@@ -99,6 +104,42 @@ class UserService {
       email: userData.email,
       userName: userData.userName,
       masterKey: userData.masterKey,
+      isVerified: userData.isVerified,
+    };
+  }
+
+  async verifyUserEmail(input: VerifyUserEmailBody) {
+    const userData = await db.query.users.findFirst({
+      columns: {
+        id: true,
+        email: true,
+        otp: true,
+      },
+      where: eq(users.email, input.email),
+    });
+
+    if (!userData) {
+      throw new AppError(
+        "USER_NOT_REGISTERED",
+        "Email not registered. Please register first!",
+        400
+      );
+    }
+
+    if (input.otp !== userData.otp) {
+      throw new AppError("INVALID_OTP", "Invalid OTP", 400);
+    }
+
+    await db
+      .update(users)
+      .set({
+        isVerified: true,
+      })
+      .where(eq(users.id, userData.id));
+
+    return {
+      status: "success",
+      message: "Email verified successfully",
     };
   }
 

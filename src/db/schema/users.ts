@@ -16,10 +16,8 @@ export const users = pgTable("users", {
   userName: varchar("user_name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
-  masterKey: json("master_key").$type<EncryptedValueType>().notNull(),
-  recoveryMasterKey: json("recovery_master_key")
-    .$type<EncryptedValueType>()
-    .notNull(),
+  masterKey: json("master_key").$type<EncryptedValueType>(),
+  recoveryMasterKey: json("recovery_master_key").$type<EncryptedValueType>(),
   isVerified: boolean("is_verified").default(false).notNull(),
   otp: varchar("otp", { length: 6 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
