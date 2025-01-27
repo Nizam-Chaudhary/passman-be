@@ -6,10 +6,10 @@ import { users } from "../db/schema/users";
 import AppError from "../lib/appError";
 import env from "../lib/env";
 import {
-    SignInUserInput,
-    SignUpUserInput,
-    UpdateUserInput,
-    VerifyUserEmailBody,
+  SignInUserInput,
+  SignUpUserInput,
+  UpdateUserInput,
+  VerifyUserEmailBody,
 } from "../schemas/user";
 import { generateOtp } from "../utils/generator";
 
