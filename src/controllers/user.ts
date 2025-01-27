@@ -27,6 +27,7 @@ class UserController {
       id: userData.id,
       email: userData.email,
       userName: userData.userName,
+      masterKeyCreated: !!userData.masterKey,
     };
     const token = req.jwt.sign(tokenPayload, { expiresIn: "15m" });
     const refreshToken = req.jwt.sign(tokenPayload, { expiresIn: "90d" });
