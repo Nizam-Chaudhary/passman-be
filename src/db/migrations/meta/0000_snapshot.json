@@ -1,5 +1,5 @@
 {
-  "id": "96b0409d-fc10-4c27-a301-47ead81ba906",
+  "id": "a70d1d7f-06d7-4549-abdf-d9e8d8308026",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -59,8 +59,12 @@
           "name": "notes_userId_users_id_fk",
           "tableFrom": "notes",
           "tableTo": "users",
-          "columnsFrom": ["userId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -68,8 +72,12 @@
           "name": "notes_vaultId_vaults_id_fk",
           "tableFrom": "notes",
           "tableTo": "vaults",
-          "columnsFrom": ["vaultId"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "vaultId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -150,8 +158,12 @@
           "name": "passwords_user_id_users_id_fk",
           "tableFrom": "passwords",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -159,8 +171,12 @@
           "name": "passwords_vault_id_vaults_id_fk",
           "tableFrom": "passwords",
           "tableTo": "vaults",
-          "columnsFrom": ["vault_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "vault_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -200,13 +216,13 @@
           "name": "master_key",
           "type": "json",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "recovery_master_key": {
-          "name": "recovery_master_key",
+        "recovery_key": {
+          "name": "recovery_key",
           "type": "json",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "is_verified": {
           "name": "is_verified",
@@ -243,7 +259,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       }
     },
@@ -290,8 +308,12 @@
           "name": "vaults_user_id_users_id_fk",
           "tableFrom": "vaults",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

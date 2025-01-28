@@ -7,7 +7,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { EncryptedValueType } from "../../utils/basicSchema";
+import { MasterKeyType } from "../../utils/basicSchema";
 import { passwords } from "./passwords";
 import { vaults } from "./vaults";
 
@@ -16,8 +16,8 @@ export const users = pgTable("users", {
   userName: varchar("user_name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
-  masterKey: json("master_key").$type<EncryptedValueType>(),
-  recoveryMasterKey: json("recovery_master_key").$type<EncryptedValueType>(),
+  masterKey: json("master_key").$type<MasterKeyType>(),
+  recoveryKey: json("recovery_key").$type<MasterKeyType>(),
   isVerified: boolean("is_verified").default(false).notNull(),
   otp: varchar("otp", { length: 6 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),

@@ -1,9 +1,13 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 import { users } from "../db/schema/users";
-import { responseSchema, statusSchema } from "../utils/basicSchema";
+import {
+  masterKeySchema,
+  responseSchema,
+  statusSchema,
+} from "../utils/basicSchema";
 
-export const masterKeySchema = z.object({
+export const ecryptedValueSchema = z.object({
   iv: z.string().min(1, "iv is required"),
   encrypted: z.string().min(1, "key is required"),
 });
@@ -19,7 +23,7 @@ const baseSchema = createInsertSchema(users, {
       .describe("Email address for the account"),
   password: (schema) =>
     schema.password
-      .min(10, "Password must be at least 8 characters long")
+      .min(8, "Password must be at least 8 characters long")
       .refine((value) => /[A-Z]/.test(value), {
         message: "Password must contain at least one uppercase letter",
       })
@@ -33,8 +37,8 @@ const baseSchema = createInsertSchema(users, {
         message: "Password must contain at least one special character",
       })
       .describe("Password for the account"),
-  masterKey: (schema) => masterKeySchema,
-  recoveryMasterKey: (schema) => masterKeySchema,
+  masterKey: (schema) => ecryptedValueSchema,
+  recoveryKey: (schema) => ecryptedValueSchema,
 });
 
 // Signup
@@ -49,7 +53,7 @@ export type SignUpUserInput = z.infer<typeof signUpUserSchema>;
 // SignIn
 export const signInUserSchema = z.object({
   email: baseSchema.shape.email,
-  password: baseSchema.shape.password,
+  password: z.string().min(8, "At least 8 characters"),
 });
 
 export type SignInUserInput = z.infer<typeof signInUserSchema>;
@@ -93,12 +97,7 @@ export const signInResponseSchema = responseSchema.and(
       id: z.number().min(1, "id is required"),
       email: z.string().email(),
       userName: z.string().min(1, "userName is required"),
-      masterKey: z
-        .object({
-          iv: z.string(),
-          encrypted: z.string(),
-        })
-        .nullable(),
+      masterKey: masterKeySchema.nullable(),
       isVerified: z.boolean(),
     }),
   })
@@ -125,3 +124,19 @@ export const verifyUserEmailBodySchema = z.object({
 });
 
 export type VerifyUserEmailBody = z.infer<typeof verifyUserEmailBodySchema>;
+
+export const createMasterKeyBodySchema = z.object({
+  masterKey: masterKeySchema,
+  recoveryKey: masterKeySchema,
+});
+
+export type CreateMasterKeyBody = z.infer<typeof createMasterKeyBodySchema>;
+
+export type JwtUserData = {
+  id: number;
+  userName: string;
+  email: string;
+  masterKeyCreated: boolean;
+  exp: number;
+  iat: number;
+};

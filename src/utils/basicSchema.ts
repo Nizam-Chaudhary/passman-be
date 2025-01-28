@@ -38,3 +38,11 @@ export const encryptedValueSchema = z.object({
 });
 
 export type EncryptedValueType = z.infer<typeof encryptedValueSchema>;
+
+export const masterKeySchema = z.object({
+  iv: z.string().min(1, "iv is required"),
+  encrypted: z.string().min(1, "key is required"),
+  salt: z.string().min(1, "salt is required"),
+});
+
+export type MasterKeyType = z.infer<typeof masterKeySchema>;

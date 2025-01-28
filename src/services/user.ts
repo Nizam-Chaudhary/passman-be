@@ -6,6 +6,7 @@ import { users } from "../db/schema/users";
 import AppError from "../lib/appError";
 import env from "../lib/env";
 import {
+  CreateMasterKeyBody,
   SignInUserInput,
   SignUpUserInput,
   UpdateUserInput,
@@ -108,6 +109,29 @@ class UserService {
     };
   }
 
+  async refreshToken(id: number) {
+    const userData = await db.query.users.findFirst({
+      columns: {
+        id: true,
+        userName: true,
+        email: true,
+        masterKey: true,
+      },
+      where: eq(users.id, id),
+    });
+
+    if (!userData) {
+      throw new AppError("UNAUTORIZED", "Refresh token is invalid", 401);
+    }
+
+    return {
+      id: userData.id,
+      email: userData.email,
+      userName: userData.userName,
+      masterKeyCreated: !!userData.masterKey,
+    };
+  }
+
   async verifyUserEmail(input: VerifyUserEmailBody) {
     const userData = await db.query.users.findFirst({
       columns: {
@@ -176,6 +200,21 @@ class UserService {
       status: "success",
       message: "user name updated successfully",
       data: user[0],
+    };
+  }
+
+  async createMasterKey(id: number, input: CreateMasterKeyBody) {
+    const user = await db
+      .update(users)
+      .set({
+        masterKey: input.masterKey,
+        recoveryKey: input.recoveryKey,
+      })
+      .where(eq(users.id, id));
+
+    return {
+      status: "success",
+      message: "Master key created successfully",
     };
   }
 }

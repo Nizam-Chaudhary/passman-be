@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import AppError from "../lib/appError";
 import {
+  CreateMasterKeyBody,
+  JwtUserData,
   RefreshTokenBody,
   SignInUserInput,
   SignUpUserInput,
@@ -48,11 +50,13 @@ class UserController {
     reply: FastifyReply
   ) {
     const refresh_token = req.body.refreshToken;
-    const userData = req.jwt.verify(refresh_token);
+    const tokenPayload = req.jwt.verify<JwtUserData>(refresh_token);
 
-    if (!userData) {
+    if (!tokenPayload) {
       throw new AppError("UNAUTORIZED", "Refresh token is invalid", 401);
     }
+
+    const userData = await userService.refreshToken(tokenPayload.id);
 
     const token = req.jwt.sign(userData, { expiresIn: "15m" });
     const refreshToken = req.jwt.sign(userData, { expiresIn: "90d" });
@@ -88,6 +92,17 @@ class UserController {
     const id = req.user.id;
 
     const response = await userService.getUser(id);
+
+    reply.code(200).send(response);
+  }
+
+  async createMasterKey(
+    req: FastifyRequest<{ Body: CreateMasterKeyBody }>,
+    reply: FastifyReply
+  ) {
+    const id = req.user.id;
+
+    const response = await userService.createMasterKey(id, req.body);
 
     reply.code(200).send(response);
   }

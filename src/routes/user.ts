@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import userController from "../controllers/user";
 import {
+  createMasterKeyBodySchema,
   getUserResponseSchema,
   refreshTokenBodySchema,
   refreshTokenResponseSchema,
@@ -121,5 +122,24 @@ export default async (fastify: FastifyInstance) => {
     },
     preHandler: [fastify.authenticate],
     handler: userController.getUser,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "PATCH",
+    url: "/create-master-key",
+    schema: {
+      security: [{ jwtAuth: [] }],
+      tags: ["User"],
+      body: createMasterKeyBodySchema,
+      summary: "Create master key for user",
+      description: "creates master key for user",
+      response: {
+        200: responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    preHandler: [fastify.authenticate],
+    handler: userController.createMasterKey,
   });
 };
