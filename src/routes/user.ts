@@ -12,6 +12,8 @@ import {
   signUpUserSchema,
   updateUserResponseSchema,
   updateUserSchema,
+  verifyMasterPasswordBodySchema,
+  verifyMasterPasswordResponseSchema,
   verifyUserEmailBodySchema,
 } from "../schemas/user";
 import { errorSchema, responseSchema } from "../utils/basicSchema";
@@ -141,5 +143,24 @@ export default async (fastify: FastifyInstance) => {
     },
     preHandler: [fastify.authenticate],
     handler: userController.createMasterKey,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "POST",
+    url: "/verify-master-password",
+    schema: {
+      security: [{ jwtAuth: [] }],
+      tags: ["User"],
+      body: verifyMasterPasswordBodySchema,
+      summary: "Verify Master password for user",
+      description: "Verify master password for user",
+      response: {
+        200: verifyMasterPasswordResponseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    preHandler: [fastify.authenticate],
+    handler: userController.verifyMasterPassword,
   });
 };

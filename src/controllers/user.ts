@@ -7,6 +7,7 @@ import {
   SignInUserInput,
   SignUpUserInput,
   UpdateUserInput,
+  VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "../schemas/user";
 import userService from "../services/user";
@@ -103,6 +104,17 @@ class UserController {
     const id = req.user.id;
 
     const response = await userService.createMasterKey(id, req.body);
+
+    reply.code(200).send(response);
+  }
+
+  async verifyMasterPassword(
+    req: FastifyRequest<{ Body: VerifyMasterPasswordBody }>,
+    reply: FastifyReply
+  ) {
+    const id = req.user.id;
+
+    const response = await userService.verifyMasterPassword(id, req.body);
 
     reply.code(200).send(response);
   }

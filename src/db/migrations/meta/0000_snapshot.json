@@ -1,5 +1,5 @@
 {
-  "id": "a70d1d7f-06d7-4549-abdf-d9e8d8308026",
+  "id": "7f61ea25-a6c4-4266-b325-f6bd185ffde7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -211,6 +211,12 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "master_password": {
+          "name": "master_password",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         },
         "master_key": {
           "name": "master_key",

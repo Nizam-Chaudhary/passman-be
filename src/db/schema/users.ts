@@ -16,6 +16,7 @@ export const users = pgTable("users", {
   userName: varchar("user_name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
+  masterPassword: varchar("master_password", { length: 255 }),
   masterKey: json("master_key").$type<MasterKeyType>(),
   recoveryKey: json("recovery_key").$type<MasterKeyType>(),
   isVerified: boolean("is_verified").default(false).notNull(),

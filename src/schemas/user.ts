@@ -126,6 +126,22 @@ export const verifyUserEmailBodySchema = z.object({
 export type VerifyUserEmailBody = z.infer<typeof verifyUserEmailBodySchema>;
 
 export const createMasterKeyBodySchema = z.object({
+  masterPassword: z
+    .string()
+    .min(10, "Master password must be at least 10 characters")
+    .refine((value) => /[A-Z]/.test(value), {
+      message: "Master password must contain at least one uppercase letter",
+    })
+    .refine((value) => /[a-z]/.test(value), {
+      message: "Master password must contain at least one lowercase letter",
+    })
+    .refine((value) => /\d/.test(value), {
+      message: "Master password must contain at least one number",
+    })
+    .refine((value) => /[$@$!%*?&_]/.test(value), {
+      message: "Master password must contain at least one special character",
+    })
+    .describe("Master password for the account"),
   masterKey: masterKeySchema,
   recoveryKey: masterKeySchema,
 });
@@ -140,3 +156,16 @@ export type JwtUserData = {
   exp: number;
   iat: number;
 };
+
+export const verifyMasterPasswordBodySchema = z.object({
+  masterPassword: z.string().min(1, "Master password is required"),
+});
+
+export type VerifyMasterPasswordBody = z.infer<
+  typeof verifyMasterPasswordBodySchema
+>;
+
+export const verifyMasterPasswordResponseSchema = z.object({
+  status: z.literal("success"),
+  data: z.object({ masterKey: masterKeySchema }),
+});

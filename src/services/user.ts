@@ -1,4 +1,4 @@
-import { compare, hash } from "bcrypt";
+import { compare, compareSync, hash } from "bcrypt";
 import { eq } from "drizzle-orm";
 import { db } from "../db/index";
 import { vaults } from "../db/schema/schema";
@@ -10,6 +10,7 @@ import {
   SignInUserInput,
   SignUpUserInput,
   UpdateUserInput,
+  VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "../schemas/user";
 import { generateOtp } from "../utils/generator";
@@ -204,9 +205,33 @@ class UserService {
   }
 
   async createMasterKey(id: number, input: CreateMasterKeyBody) {
+    const hashedMasterPassword = await hash(
+      input.masterPassword,
+      env.SALT_ROUNDS
+    );
+
+    const userPassword = await db.query.users.findFirst({
+      where: eq(users.id, id),
+      columns: {
+        password: true,
+      },
+    });
+
+    if (!userPassword?.password) {
+      throw new AppError("USER_NOT_FOUND", "user not found", 400);
+    }
+    if (compareSync(input.masterPassword, userPassword.password)) {
+      throw new AppError(
+        "MASTER_PASSWORD_AND_PASSWORD_MATCH",
+        "Master password and user password cannot be same",
+        400
+      );
+    }
+
     const user = await db
       .update(users)
       .set({
+        masterPassword: hashedMasterPassword,
         masterKey: input.masterKey,
         recoveryKey: input.recoveryKey,
       })
@@ -215,6 +240,45 @@ class UserService {
     return {
       status: "success",
       message: "Master key created successfully",
+    };
+  }
+
+  async verifyMasterPassword(id: number, input: VerifyMasterPasswordBody) {
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, id),
+      columns: {
+        masterKey: true,
+        masterPassword: true,
+      },
+    });
+
+    if (!user?.masterPassword) {
+      throw new AppError(
+        "MASTER_PASSWORD_NOT_EXISTS",
+        "Master password not created yet",
+        400
+      );
+    }
+
+    const isMasterPasswordValid = compareSync(
+      input.masterPassword,
+      user.masterPassword
+    );
+
+    if (!isMasterPasswordValid) {
+      throw new AppError(
+        "INCORRECT_MASTER_PASSWORD",
+        "Incorrect master password",
+        400
+      );
+    }
+
+    return {
+      status: "success",
+      message: "Master password verified successfully",
+      data: {
+        masterKey: user.masterKey,
+      },
     };
   }
 }

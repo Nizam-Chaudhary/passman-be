@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"user_name" varchar(255) NOT NULL,
 	"email" varchar(255) NOT NULL,
 	"password" varchar(255) NOT NULL,
+	"master_password" varchar(255),
 	"master_key" json,
 	"recovery_key" json,
 	"is_verified" boolean DEFAULT false NOT NULL,
