@@ -220,13 +220,14 @@ class UserService {
     if (!userPassword?.password) {
       throw new AppError("USER_NOT_FOUND", "user not found", 400);
     }
-    if (compareSync(input.masterPassword, userPassword.password)) {
-      throw new AppError(
-        "MASTER_PASSWORD_AND_PASSWORD_MATCH",
-        "Master password and user password cannot be same",
-        400
-      );
-    }
+
+    // if (compareSync(input.masterPassword, userPassword.password)) {
+    //   throw new AppError(
+    //     "MASTER_PASSWORD_AND_PASSWORD_MATCH",
+    //     "Master password and user password cannot be same",
+    //     400
+    //   );
+    // }
 
     const user = await db
       .update(users)
