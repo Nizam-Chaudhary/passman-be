@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache Docker layers
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache # Path to cache Docker layers
           key: ${{ runner.os }}-buildx-${{ github.sha }} # Unique key for caching
@@ -45,17 +45,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create .env file from JSON secret
+      - name: Create .env file from secret
         run: |
           echo "${{ secrets.APP_ENV_FILE }}" > .env
-          cat .env
 
       - name: Docker stack deploy
-        uses: cssnr/stack-deploy-action@v1
-        with:
-          name: passman-be
-          file: docker-compose.yml
-          host: ec2-13-203-78-142.ap-south-1.compute.amazonaws.com
-          user: ubuntu
-          ssh_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
-          env_file: .env
+        run: |
+          echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" > private_key.pem
+          chmod 400 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@ec2-13-203-78-142.ap-south-1.compute.amazonaws.com "docker stack deploy -c docker-compose.yml passman-be --with-registry-auth"
