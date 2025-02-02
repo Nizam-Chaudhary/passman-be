@@ -18,7 +18,7 @@ export default async function health(fastify: FastifyInstance) {
     },
     prefixTrailingSlash: "both",
     handler: (_request: FastifyRequest, reply: FastifyReply) => {
-      reply.status(200).send({ status: "ok" });
+      reply.status(200).send({ status: "Hello, World!" });
     },
   });
 }
