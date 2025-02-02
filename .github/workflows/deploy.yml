@@ -54,4 +54,5 @@ jobs:
         run: |
           echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 400 private_key.pem
+          ls -la
           ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@ec2-13-203-78-142.ap-south-1.compute.amazonaws.com "docker stack deploy -c docker-stack.yml passman-be --with-registry-auth"
