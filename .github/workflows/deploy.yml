@@ -40,13 +40,14 @@ jobs:
       - name: Create .env file from JSON secret
         run: |
           echo "${{ secrets.APP_ENV_FILE }}" > .env
+          cat .env
 
       - name: Docker stack deploy
         uses: cssnr/stack-deploy-action@v1
         with:
           name: passman-be
           file: docker-compose.yml
-          host: "${{ secrets.DOCKER_HOST }}"
-          user: "${{ secrets.DOCKER_HOST_USERNAME }}"
+          host: ec2-13-203-78-142.ap-south-1.compute.amazonaws.com
+          user: ubuntu
           # ssh_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           env_file: .env
