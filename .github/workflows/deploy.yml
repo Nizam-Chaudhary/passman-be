@@ -13,14 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache # Path to cache Docker layers
-          key: ${{ runner.os }}-buildx-${{ github.sha }} # Unique key for caching
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: Log in to Container Registry
         uses: docker/login-action@v3
         with:
@@ -32,6 +24,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
           push: true
           tags: |
             ghcr.io/nizam-chaudhary/passman-be:latest
@@ -45,6 +39,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+
       - name: Create .env file from secret
         run: |
           echo "${{ secrets.APP_ENV_FILE }}" > .env
@@ -52,6 +51,7 @@ jobs:
 
       - name: Docker stack deploy
         run: |
-          echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" > private_key.pem
-          chmod 400 private_key.pem
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ubuntu@ec2-13-203-78-142.ap-south-1.compute.amazonaws.com "docker stack deploy -c docker-stack.yml passman-be --with-registry-auth"
+          ssh-keyscan -H ec2-13-203-78-142.ap-south-1.compute.amazonaws.com >> ~/.ssh/known_hosts
+          docker context create passman-be --docker "host=ssh://ubuntu@ec2-13-203-78-142.ap-south-1.compute.amazonaws.com"
+          docker context use passman-be
+          docker stack config -c docker-stack.yml | docker stack deploy -c - passman --with-registry-auth

@@ -1,8 +1,10 @@
 services:
   passman-be:
     image: ghcr.io/nizam-chaudhary/passman-be:${GIT_COMMIT_HASH:-latest}
+    env_file:
+      - .env
     ports:
-      - "3000:3000"
+      - 3000:3000
     deploy:
       update_config:
         order: start-first
