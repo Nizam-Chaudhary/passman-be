@@ -2,6 +2,7 @@
 FROM node:22-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV PNPM_DISABLE_SIGNATURE=true
 LABEL org.opencontainers.image.source=https://github.com/Nizam-Chaudhary/passman-be
 
 # Ensure the latest pnpm is active
