@@ -45,7 +45,7 @@ jobs:
         uses: cssnr/stack-deploy-action@v1
         with:
           name: passman-be
-          files: docker-compose.yml
+          file: docker-compose.yml
           host: "${{ secrets.DOCKER_HOST }}"
           user: "${{ secrets.DOCKER_HOST_USERNAME }}"
           # ssh_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
