@@ -12,7 +12,7 @@ export default async function health(fastify: FastifyInstance) {
       description: "Check Server health",
       response: {
         200: z.object({
-          status: z.literal("ok"),
+          status: z.literal("Hello, World!"),
         }),
       },
     },

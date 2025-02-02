@@ -47,7 +47,7 @@ jobs:
       - name: Create .env file from secret
         run: |
           echo "${{ secrets.APP_ENV_FILE }}" > .env.prod
-          echo "GIT_COMMIT_HASH=${{ github.sha }}" >> .env.prod
+          export GIT_COMMIT_HASH=${{ github.sha }}
 
       - name: Docker stack deploy
         run: |
