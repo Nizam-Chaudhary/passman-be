@@ -1,7 +1,6 @@
 services:
   passman-be:
-    # image: ghcr.io/nizam-chaudhary/passman-be:${GIT_COMMIT_HASH:-latest}
-    image: ghcr.io/nizam-chaudhary/passman-be:latest
+    image: ghcr.io/nizam-chaudhary/passman-be:${GIT_COMMIT_HASH:-latest}
     env_file:
       - .env
     ports:
