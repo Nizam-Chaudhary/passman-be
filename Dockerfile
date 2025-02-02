@@ -57,12 +57,12 @@ WORKDIR /app
 # Install prod dependencies
 FROM base AS prod-deps
 COPY package.json .
-RUN npm install --production
+RUN npm install --omit=dev --force
 
 # Build stage
 FROM base AS build
 COPY package.json .
-RUN npm install
+RUN npm install --force
 COPY . .
 RUN npm run build
 
