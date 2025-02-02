@@ -3,7 +3,7 @@ name: Build and Deploy Passman to Docker Swarm
 on:
   push:
     branches:
-      - "dev-nizam/feat-cicd"
+      - main
 
 jobs:
   build-and-publish-docker-image:
