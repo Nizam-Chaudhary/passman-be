@@ -2,7 +2,7 @@ services:
   passman-be:
     image: ghcr.io/nizam-chaudhary/passman-be:${GIT_COMMIT_HASH:-latest}
     env_file:
-      - .env
+      - .env.prod
     ports:
       - 3000:3000
     deploy:

@@ -1,12 +1,8 @@
 services:
   passman-be:
-    image: nizamchaudhary/passman-be:latest
+    image: passman-be:1.0.0
     ports:
       - "3000:3000"
     env_file:
-      - .env
-    environment:
-      - NODE_ENV=production
-      - LOGGER_TARGET=pino/file
-      - HOST=0.0.0.0
+      - .env.prod
     hostname: "passman-be"

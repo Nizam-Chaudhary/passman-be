@@ -1,5 +1,5 @@
 # Base stage
-FROM node:20-slim AS base
+FROM node:22-slim AS base
 LABEL org.opencontainers.image.source=https://github.com/Nizam-Chaudhary/passman-be
 WORKDIR /app
 
