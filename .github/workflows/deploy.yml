@@ -46,7 +46,7 @@ jobs:
         with:
           name: passman-be
           files: docker-compose.yml
-          host: "${{ secret.DOCKER_HOST }}"
-          user: "${{ secret.DOCKER_HOST_USERNAME }}"
+          host: "${{ secrets.DOCKER_HOST }}"
+          user: "${{ secrets.DOCKER_HOST_USERNAME }}"
           # ssh_key: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
           env_file: .env
