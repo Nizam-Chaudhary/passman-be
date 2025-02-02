@@ -24,8 +24,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          # cache-from: type=gha
+          # cache-to: type=gha,mode=max
           push: true
           tags: |
             ghcr.io/nizam-chaudhary/passman-be:latest
