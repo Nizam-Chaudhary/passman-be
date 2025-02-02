@@ -4,6 +4,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 LABEL org.opencontainers.image.source=https://github.com/Nizam-Chaudhary/passman-be
 RUN corepack enable
+RUN pnpm store prune  # Clear the pnpm store
 WORKDIR /app
 
 # Install prod dependencies
