@@ -64,4 +64,4 @@ jobs:
 
       - name: Docker stack deploy
         run: |
-          docker stack config -c docker-stack.yml | docker stack deploy -c - passman --with-registry-auth
+          docker stack config -c docker-stack.yml | docker stack deploy -c - passman -d --with-registry-auth
