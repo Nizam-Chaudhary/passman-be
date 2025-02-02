@@ -1,9 +1,6 @@
 services:
   passman-be:
-    container_name: passman-be
-    build:
-      context: .
-    image: passman-be:latest
+    image: nizamchaudhary/passman-be:latest
     ports:
       - "3000:3000"
     env_file:
