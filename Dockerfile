@@ -3,7 +3,9 @@ FROM node:22-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 LABEL org.opencontainers.image.source=https://github.com/Nizam-Chaudhary/passman-be
-RUN corepack enable
+
+# Ensure the latest pnpm is active
+RUN npm install -g pnpm@latest && corepack prepare pnpm@latest --activate
 WORKDIR /app
 
 # Install prod dependencies
