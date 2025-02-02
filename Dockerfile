@@ -5,12 +5,12 @@ WORKDIR /app
 
 # Install prod dependencies
 FROM base AS prod-deps
-COPY package.json .
+COPY package.json yarn.lock ./
 RUN yarn install --prod
 
 # Build stage
 FROM base AS build
-COPY package.json .
+COPY package.json yarn.lock ./
 RUN yarn install
 COPY . .
 RUN yarn run build

@@ -3,16 +3,14 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default [
-  { files: ["**/*.{js,mjs,cjs,ts}"] },
   {
+    files: ["**/*.{js,mjs,cjs,ts}"],
+    languageOptions: {
+      globals: globals.node,
+    },
+    parser: "@typescript-eslint/parser",
+    plugins: ["@typescript-eslint"],
     extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  },
-  { parser: "@typescript-eslint/parser" },
-  { plugins: ["@typescript-eslint"] },
-  { languageOptions: { globals: globals.node } },
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
     rules: {
       "@typescript-eslint/no-unused-vars": [
         "error",
@@ -23,4 +21,6 @@ export default [
       "no-undef": "error",
     },
   },
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
 ];
