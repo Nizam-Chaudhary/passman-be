@@ -30,7 +30,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.passman-be.loadbalancer.server.port=3000"
-      - "traefik.http.routers.passman-be.rule=Host(`api.ec2-13-203-78-142.ap-south-1.compute.amazonaws.com`)"
+      - "traefik.http.routers.passman-be.rule=Host(`13.203.78.142`)"
       - "traefik.http.routers.passman-be.entrypoints=websecure"
       - "traefik.http.routers.passman-be.tls.certresolver=myresolver"
     env_file:
