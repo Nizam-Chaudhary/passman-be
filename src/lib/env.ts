@@ -12,7 +12,7 @@ const envSchema = z.object({
   DB_PASSWORD: z.string().min(1),
   DB_NAME: z.string().min(1),
   DB_PORT: z.coerce.number().min(1),
-  DB_URL: z.string().min(1),
+  DB_SSL: z.string().default(""),
   SALT_ROUNDS: z.coerce.number().min(6),
   JWT_SECRET: z.string().min(1),
   ENC_KEY_LENGTH: z.coerce.number().min(1),

@@ -4,7 +4,7 @@ import env from "../lib/env";
 import * as schema from "./schema/schema";
 
 const pool = new Pool({
-  connectionString: env.DB_URL,
+  connectionString: `postgresql://${env.DB_USERNAME}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}${env.DB_SSL}`,
 });
 
 export const db = drizzle(pool, {
