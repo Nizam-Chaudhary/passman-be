@@ -1,7 +1,6 @@
 services:
   traefik:
     image: traefik:v3.3
-    container_name: traefik
     command:
       - "--providers.docker"
       - "--providers.docker.exposedbydefault=false"
@@ -24,6 +23,8 @@ services:
     volumes:
       - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - web
 
   passman-be:
     image: ghcr.io/nizam-chaudhary/passman-be:${GIT_COMMIT_HASH:-latest}
@@ -35,9 +36,15 @@ services:
       - "traefik.http.routers.passman-be.tls.certresolver=myresolver"
     env_file:
       - .env.prod
+    networks:
+      - web
     deploy:
       update_config:
         order: start-first
 
 volumes:
   letsencrypt:
+
+networks:
+  web:
+    external: true

@@ -16,6 +16,8 @@ services:
     ports:
       - 80:80
       - 8080:8080
+    networks:
+      - web
     volumes:
       # - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
@@ -33,5 +35,11 @@ services:
       # - "traefik.http.routers.passman-be.tls.certresolver=myresolver"
     env_file:
       - .env
+    networks:
+      - web
+
+networks:
+  web:
+    external: true
 # volumes:
 #   letsencrypt:
