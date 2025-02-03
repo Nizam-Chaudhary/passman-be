@@ -19,8 +19,7 @@ RUN yarn run build
 FROM base
 
 # copy required files
-COPY package.json .
-COPY drizzle.config.ts .
+COPY package.json drizzle.config.ts rds-ca-rsa2048-g1.pem ./
 COPY --from=prod-deps /app/node_modules node_modules
 COPY --from=build /app/dist dist
 
