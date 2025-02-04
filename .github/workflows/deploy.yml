@@ -52,7 +52,7 @@ jobs:
       - name: Create Docker context and set in use
         run: |
           ssh-keyscan -H ec2-13-203-78-142.ap-south-1.compute.amazonaws.com >> ~/.ssh/known_hosts
-          docker context create passman --docker "host=ssh://ubuntu@ec2-13-203-78-142.ap-south-1.compute.amazonaws.com"
+          docker context create passman --docker "host=ssh://ubuntu@passman.live"
           docker context use passman
           docker network ls | grep -q "web" || docker network create --driver overlay web
 
