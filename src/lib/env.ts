@@ -21,6 +21,9 @@ const envSchema = z.object({
   LOGGER_TARGET: z.string().min(1),
   DOC_USERNAME: z.string().min(1),
   DOC_PASSWORD: z.string().min(1),
+  AWS_ACCESS_KEY_ID: z.string().min(1),
+  AWS_SECRET_ACCESS_KEY: z.string().min(1),
+  FROM_EMAIL_ADDR: z.string().email(),
 });
 
 expand(config());

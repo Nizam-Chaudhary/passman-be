@@ -5,6 +5,7 @@ import { vaults } from "../db/schema/schema";
 import { users } from "../db/schema/users";
 import AppError from "../lib/appError";
 import env from "../lib/env";
+import { deliverEmail } from "../lib/mailer";
 import {
   CreateMasterKeyBody,
   SignInUserInput,
@@ -13,6 +14,7 @@ import {
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "../schemas/user";
+import { signUp } from "../templates/user";
 import { generateOtp } from "../utils/generator";
 
 class UserService {
@@ -21,7 +23,7 @@ class UserService {
       columns: {
         id: true,
       },
-      where: eq(users.email, input.email),
+      where: eq(users.email, input.email.toLowerCase()),
     });
 
     if (alreadyRegistered) {
@@ -50,6 +52,17 @@ class UserService {
         userId: user[0].id,
       });
 
+      const signUpEmailBody = signUp({
+        userName: input.userName,
+        otp: otp,
+      });
+
+      deliverEmail(
+        input.email,
+        "Passman account verfication OTP",
+        signUpEmailBody
+      );
+
       return {
         status: "success",
         message: "User signed up successfully",
@@ -68,7 +81,7 @@ class UserService {
         masterKey: true,
         isVerified: true,
       },
-      where: eq(users.email, input.email),
+      where: eq(users.email, input.email.toLowerCase()),
     });
 
     if (!userData) {
