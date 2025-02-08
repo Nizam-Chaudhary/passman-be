@@ -12,6 +12,8 @@ import {
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "./auth.schema";
+import { deliverEmail } from "../../lib/mailer";
+import { signUp } from "../../templates/user";
 
 class AuthService {
   async signUpUser(input: SignUpUserInput) {
@@ -47,6 +49,17 @@ class AuthService {
         name: "Default",
         userId: user[0].id,
       });
+
+      const signUpEmailBody = signUp({
+        userName: input.userName,
+        otp: otp,
+      });
+
+      deliverEmail(
+        input.email,
+        "Passman account verfication OTP",
+        signUpEmailBody
+      );
 
       return {
         status: "success",
