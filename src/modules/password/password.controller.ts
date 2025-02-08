@@ -1,11 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { IdParamsType } from "../../utils/basicSchema";
 import {
   AddPasswordInput,
   getPasswordsQueryOptions,
   ImportPasswordsInput,
-} from "../schemas/password";
-import passwordService from "../services/password";
-import { IdParamsType } from "../utils/basicSchema";
+} from "./password.schema";
+import passwordService from "./password.service";
 
 class PasswordController {
   async addPassword(

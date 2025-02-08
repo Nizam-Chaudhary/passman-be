@@ -2,7 +2,7 @@ import Fastify from "fastify";
 import env from "./lib/env";
 import loggerOptions from "./lib/logger.options";
 import plugins from "./plugins";
-import routes from "./routes";
+import routes from "./route";
 
 const fastify = Fastify({
   logger: loggerOptions,

@@ -1,14 +1,14 @@
 import { FastifyReply } from "fastify/types/reply";
 import { FastifyRequest } from "fastify/types/request";
-import { getVaultResourceQueryOptions } from "../schemas/vault";
-import userService from "../services/vault";
+import { getVaultResourceQueryOptions } from "./vault.schema";
+import vaultService from "./vault.service";
 
 class VaultController {
   async getVaults(
     request: FastifyRequest<{ Querystring: getVaultResourceQueryOptions }>,
     reply: FastifyReply
   ) {
-    const response = await userService.getVaults(request.user.id);
+    const response = await vaultService.getVaults(request.user.id);
 
     reply.status(200).send(response);
   }
@@ -17,7 +17,7 @@ class VaultController {
     request: FastifyRequest<{ Body: { name: string } }>,
     reply: FastifyReply
   ) {
-    const response = await userService.addVault(
+    const response = await vaultService.addVault(
       request.body.name,
       request.user.id
     );
@@ -32,7 +32,7 @@ class VaultController {
     }>,
     reply: FastifyReply
   ) {
-    const response = await userService.updateVault(
+    const response = await vaultService.updateVault(
       request.params.id,
       request.body.name,
       request.user.id
@@ -47,7 +47,7 @@ class VaultController {
     }>,
     reply: FastifyReply
   ) {
-    const response = await userService.deleteVault(
+    const response = await vaultService.deleteVault(
       request.params.id,
       request.user.id
     );
