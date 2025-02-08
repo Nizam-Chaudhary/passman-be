@@ -7,8 +7,8 @@ const ses = new aws.SES({
   apiVersion: "2010-12-01",
   region: "ap-south-1",
   credentials: {
-    accessKeyId: env.AWS_SES_ACCESS_KEY_ID,
-    secretAccessKey: env.AWS_SES_SECRET_ACCESS_KEY,
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_ACCESS_KEY_ID,
   },
 });
 
