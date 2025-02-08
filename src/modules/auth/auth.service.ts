@@ -1,9 +1,12 @@
 import { compare, compareSync, hash, hashSync } from "bcrypt";
 import { eq, ilike } from "drizzle-orm";
+import * as moment from "moment";
 import { db } from "../../db";
 import { users, vaults } from "../../db/schema/schema";
 import AppError from "../../lib/appError";
 import env from "../../lib/env";
+import { sendMail } from "../../lib/mailer";
+import * as userTemplates from "../../templates/user";
 import { generateOtp } from "../../utils/generator";
 import {
   CreateMasterKeyBody,
@@ -12,8 +15,6 @@ import {
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "./auth.schema";
-import { deliverEmail } from "../../lib/mailer";
-import { signUp } from "../../templates/user";
 
 class AuthService {
   async signUpUser(input: SignUpUserInput) {
@@ -50,16 +51,16 @@ class AuthService {
         userId: user[0].id,
       });
 
-      const signUpEmailBody = signUp({
+      const signUpEmailBody = userTemplates.signUp({
         userName: input.userName,
         otp: otp,
       });
 
-      deliverEmail(
-        input.email,
-        "Passman account verfication OTP",
-        signUpEmailBody
-      );
+      sendMail({
+        toAddresses: input.email,
+        subject: "Passman account verfication OTP",
+        emailBody: signUpEmailBody,
+      });
 
       return {
         status: "success",
@@ -150,6 +151,7 @@ class AuthService {
         id: true,
         email: true,
         otp: true,
+        updatedAt: true,
       },
       where: ilike(users.email, input.email),
     });
@@ -162,6 +164,9 @@ class AuthService {
       );
     }
 
+    if (moment(userData.updatedAt).isBefore(moment().subtract(5, "minutes"))) {
+      throw new AppError("OTP_EXPIRED", "Entered otp is expired", 400);
+    }
     if (input.otp !== userData.otp) {
       throw new AppError("INVALID_OTP", "Invalid OTP", 400);
     }
@@ -255,6 +260,83 @@ class AuthService {
       data: {
         masterKey: user.masterKey,
       },
+    };
+  }
+
+  async resendOtp(email: string) {
+    const user = await db.query.users.findFirst({
+      where: ilike(users.email, email),
+    });
+
+    if (!user) {
+      throw new AppError("USER_NOT_FOUND", "No user found for email", 400);
+    }
+
+    const otp = generateOtp();
+
+    const updateOtp = await db
+      .update(users)
+      .set({
+        otp: otp,
+      })
+      .where(ilike(users.email, email));
+
+    if (!updateOtp.rowCount || updateOtp.rowCount <= 0) {
+      throw new AppError("UNABLE_TO_UPDATE_OTP", "Error sending otp", 400);
+    }
+
+    const emailBody = userTemplates.resendOtp({ otp });
+
+    sendMail({
+      toAddresses: email,
+      subject: "Passman's OTP (One time password)",
+      emailBody: emailBody,
+    });
+
+    return {
+      status: "success",
+      message: "otp sent successfully",
+    };
+  }
+
+  async sendResetPasswordEmail(email: string, token: string) {
+    const user = await db.query.users.findFirst({
+      where: ilike(users.email, email),
+    });
+
+    if (!user) {
+      throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
+    }
+
+    const url = `${env.FE_URL}/reset-password?token=${token}`;
+    const emailBody = userTemplates.resetLoginPassword({ url });
+
+    sendMail({
+      toAddresses: email,
+      subject: "Reset login password",
+      emailBody: emailBody,
+    });
+
+    return {
+      status: "success",
+      message: "reset password email sent successfully",
+    };
+  }
+
+  async resetPassword(email: string, password: string) {
+    const hashedPassword = hashSync(password, env.SALT_ROUNDS);
+
+    const passwordUpdate = await db.update(users).set({
+      password: hashedPassword,
+    });
+
+    if (!passwordUpdate.rowCount || passwordUpdate.rowCount <= 0) {
+      throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
+    }
+
+    return {
+      status: "success",
+      message: "password updated successfully",
     };
   }
 }

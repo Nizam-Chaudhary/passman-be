@@ -5,10 +5,10 @@ import env from "./env";
 // configuring AWS SDK
 const ses = new aws.SES({
   apiVersion: "2010-12-01",
-  region: "ap-south-1",
+  region: env.AWS_REGION,
   credentials: {
     accessKeyId: env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
   },
 });
 
@@ -19,18 +19,26 @@ const transporter = nodemailer.createTransport({
   maxConnections: 1,
 });
 
-export const deliverEmail = (
-  toAddresses: string,
-  subject: string,
-  emailBody: string
-) => {
+/**
+ * Sends an email using the configured email transporter
+ * @param options - Object containing email options
+ * @param options.toAddresses - Email address(es) of the recipient(s)
+ * @param options.subject - Subject line of the email
+ * @param options.emailBody - HTML content of the email body
+ * @returns Promise that resolves to true when email is sent
+ */
+export const sendMail = (options: {
+  toAddresses: string;
+  subject: string;
+  emailBody: string;
+}) => {
   return new Promise(async (resolve, reject) => {
     transporter.sendMail(
       {
         from: env.FROM_EMAIL_ADDR,
-        to: toAddresses,
-        subject,
-        html: emailBody,
+        to: options.toAddresses,
+        subject: options.subject,
+        html: options.emailBody,
       },
       (err, info) => {
         transporter.close();

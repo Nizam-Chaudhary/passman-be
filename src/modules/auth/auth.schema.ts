@@ -8,6 +8,23 @@ export const ecryptedValueSchema = z.object({
   encrypted: z.string().min(1, "key is required"),
 });
 
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters long")
+  .refine((value) => /[A-Z]/.test(value), {
+    message: "Password must contain at least one uppercase letter",
+  })
+  .refine((value) => /[a-z]/.test(value), {
+    message: "Password must contain at least one lowercase letter",
+  })
+  .refine((value) => /\d/.test(value), {
+    message: "Password must contain at least one number",
+  })
+  .refine((value) => /[$@$!%*?&_]/.test(value), {
+    message: "Password must contain at least one special character",
+  })
+  .describe("Password for the account");
+
 const baseSchema = createInsertSchema(users, {
   userName: (schema) =>
     schema.userName
@@ -17,22 +34,7 @@ const baseSchema = createInsertSchema(users, {
     schema.email
       .email("Invalid email format")
       .describe("Email address for the account"),
-  password: (schema) =>
-    schema.password
-      .min(8, "Password must be at least 8 characters long")
-      .refine((value) => /[A-Z]/.test(value), {
-        message: "Password must contain at least one uppercase letter",
-      })
-      .refine((value) => /[a-z]/.test(value), {
-        message: "Password must contain at least one lowercase letter",
-      })
-      .refine((value) => /\d/.test(value), {
-        message: "Password must contain at least one number",
-      })
-      .refine((value) => /[$@$!%*?&_]/.test(value), {
-        message: "Password must contain at least one special character",
-      })
-      .describe("Password for the account"),
+  password: passwordSchema,
   masterKey: () => ecryptedValueSchema,
   recoveryKey: () => ecryptedValueSchema,
 });
@@ -151,3 +153,22 @@ export const verifyMasterPasswordResponseSchema = z.object({
   status: z.literal("success"),
   data: z.object({ masterKey: masterKeySchema }),
 });
+
+export const resendOtpBodySchema = z.object({
+  email: z.string().email("Please provide valid email"),
+});
+
+export const sendResetPasswordEmailBodySchema = resendOtpBodySchema;
+
+export type ResetPasswordJwtTokenPayload = {
+  email: string;
+  exp: number;
+  iat: number;
+};
+
+export const resetPasswordBodySchema = z.object({
+  token: z.string().jwt(),
+  password: passwordSchema,
+});
+
+export type ResetPasswordBody = z.infer<typeof resetPasswordBodySchema>;
