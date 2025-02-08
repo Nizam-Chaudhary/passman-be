@@ -1,22 +1,19 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import userController from "../controllers/user";
+import { errorSchema, responseSchema } from "../../utils/basicSchema";
+import authController from "./auth.controller";
 import {
   createMasterKeyBodySchema,
-  getUserResponseSchema,
   refreshTokenBodySchema,
   refreshTokenResponseSchema,
   signInResponseSchema,
   signInUserSchema,
   signUpUserResponseSchema,
   signUpUserSchema,
-  updateUserResponseSchema,
-  updateUserSchema,
   verifyMasterPasswordBodySchema,
   verifyMasterPasswordResponseSchema,
   verifyUserEmailBodySchema,
-} from "../schemas/user";
-import { errorSchema, responseSchema } from "../utils/basicSchema";
+} from "./auth.schema";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -34,7 +31,7 @@ export default async (fastify: FastifyInstance) => {
       },
       required: ["email"],
     },
-    handler: userController.signUpUser,
+    handler: authController.signUpUser,
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -51,7 +48,7 @@ export default async (fastify: FastifyInstance) => {
         "5xx": errorSchema,
       },
     },
-    handler: userController.signInUser,
+    handler: authController.signInUser,
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -68,7 +65,7 @@ export default async (fastify: FastifyInstance) => {
         "5xx": errorSchema,
       },
     },
-    handler: userController.refreshToken,
+    handler: authController.refreshToken,
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -85,45 +82,7 @@ export default async (fastify: FastifyInstance) => {
         "5xx": errorSchema,
       },
     },
-    handler: userController.verifyUserEmail,
-  });
-
-  fastify.withTypeProvider<ZodTypeProvider>().route({
-    method: "POST",
-    url: "/update",
-
-    schema: {
-      tags: ["User"],
-      summary: "Update user details",
-      description: "update user details",
-      security: [{ jwtAuth: [] }],
-      body: updateUserSchema,
-      response: {
-        200: updateUserResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
-      },
-    },
-    preHandler: [fastify.authenticate],
-    handler: userController.updateUser,
-  });
-
-  fastify.withTypeProvider<ZodTypeProvider>().route({
-    method: "GET",
-    url: "/",
-    schema: {
-      security: [{ jwtAuth: [] }],
-      tags: ["User"],
-      summary: "Get logged in user detail",
-      description: "fetch user details",
-      response: {
-        200: getUserResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
-      },
-    },
-    preHandler: [fastify.authenticate],
-    handler: userController.getUser,
+    handler: authController.verifyUserEmail,
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -131,7 +90,7 @@ export default async (fastify: FastifyInstance) => {
     url: "/create-master-key",
     schema: {
       security: [{ jwtAuth: [] }],
-      tags: ["User"],
+      tags: ["Auth"],
       body: createMasterKeyBodySchema,
       summary: "Create master key for user",
       description: "creates master key for user",
@@ -142,7 +101,7 @@ export default async (fastify: FastifyInstance) => {
       },
     },
     preHandler: [fastify.authenticate],
-    handler: userController.createMasterKey,
+    handler: authController.createMasterKey,
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -150,7 +109,7 @@ export default async (fastify: FastifyInstance) => {
     url: "/verify-master-password",
     schema: {
       security: [{ jwtAuth: [] }],
-      tags: ["User"],
+      tags: ["Auth"],
       body: verifyMasterPasswordBodySchema,
       summary: "Verify Master password for user",
       description: "Verify master password for user",
@@ -161,6 +120,6 @@ export default async (fastify: FastifyInstance) => {
       },
     },
     preHandler: [fastify.authenticate],
-    handler: userController.verifyMasterPassword,
+    handler: authController.verifyMasterPassword,
   });
 };

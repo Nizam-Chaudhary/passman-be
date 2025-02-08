@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
-import authenticate from "./authenticate";
+import auth from "./auth";
 import cors from "./cors";
 import errorHandler from "./error.handler";
 import fastifyTypeProviderZod from "./fastify.type.provider.zod";
@@ -14,7 +14,7 @@ export default fastifyPlugin(
     fastify.register(fastifyTypeProviderZod, opts);
     fastify.register(errorHandler, opts);
     fastify.register(swaggerDocs, opts);
-    fastify.register(authenticate, opts);
+    fastify.register(auth, opts);
 
     done();
   }

@@ -1,27 +1,25 @@
-import { compare, compareSync, hash } from "bcrypt";
-import { eq } from "drizzle-orm";
-import { db } from "../db/index";
-import { vaults } from "../db/schema/schema";
-import { users } from "../db/schema/users";
-import AppError from "../lib/appError";
-import env from "../lib/env";
+import { compare, compareSync, hash, hashSync } from "bcrypt";
+import { eq, ilike } from "drizzle-orm";
+import { db } from "../../db";
+import { users, vaults } from "../../db/schema/schema";
+import AppError from "../../lib/appError";
+import env from "../../lib/env";
+import { generateOtp } from "../../utils/generator";
 import {
   CreateMasterKeyBody,
   SignInUserInput,
   SignUpUserInput,
-  UpdateUserInput,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "../schemas/user";
-import { generateOtp } from "../utils/generator";
+} from "./auth.schema";
 
-class UserService {
+class AuthService {
   async signUpUser(input: SignUpUserInput) {
     const alreadyRegistered = await db.query.users.findFirst({
       columns: {
         id: true,
       },
-      where: eq(users.email, input.email),
+      where: ilike(users.email, input.email),
     });
 
     if (alreadyRegistered) {
@@ -29,7 +27,7 @@ class UserService {
       throw new AppError("EMAIL_ALREADY_REGISTERED", newLocal, 400);
     }
 
-    const hashedPassword = await hash(input.password, env.SALT_ROUNDS);
+    const hashedPassword = hashSync(input.password, env.SALT_ROUNDS);
 
     const otp = generateOtp();
 
@@ -68,7 +66,7 @@ class UserService {
         masterKey: true,
         isVerified: true,
       },
-      where: eq(users.email, input.email),
+      where: ilike(users.email, input.email),
     });
 
     if (!userData) {
@@ -140,7 +138,7 @@ class UserService {
         email: true,
         otp: true,
       },
-      where: eq(users.email, input.email),
+      where: ilike(users.email, input.email),
     });
 
     if (!userData) {
@@ -165,42 +163,6 @@ class UserService {
     return {
       status: "success",
       message: "Email verified successfully",
-    };
-  }
-
-  async getUser(id: number) {
-    const userData = await db.query.users.findFirst({
-      columns: {
-        id: true,
-        userName: true,
-        email: true,
-        masterKey: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-      where: eq(users.id, id),
-    });
-
-    return {
-      status: "success",
-      data: userData,
-    };
-  }
-
-  async updateUser(id: number, input: UpdateUserInput) {
-    const user = await db
-      .update(users)
-      .set({
-        userName: input.userName,
-        updatedAt: new Date(),
-      })
-      .where(eq(users.id, id))
-      .returning();
-
-    return {
-      status: "success",
-      message: "user name updated successfully",
-      data: user[0],
     };
   }
 
@@ -284,4 +246,4 @@ class UserService {
   }
 }
 
-export default new UserService();
+export default new AuthService();
