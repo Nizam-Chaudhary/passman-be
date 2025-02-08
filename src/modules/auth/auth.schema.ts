@@ -1,11 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { users } from "../db/schema/users";
-import {
-  masterKeySchema,
-  responseSchema,
-  statusSchema,
-} from "../utils/basicSchema";
+import { users } from "../../db/schema/users";
+import { masterKeySchema, responseSchema } from "../../utils/basicSchema";
 
 export const ecryptedValueSchema = z.object({
   iv: z.string().min(1, "iv is required"),
@@ -37,8 +33,8 @@ const baseSchema = createInsertSchema(users, {
         message: "Password must contain at least one special character",
       })
       .describe("Password for the account"),
-  masterKey: (schema) => ecryptedValueSchema,
-  recoveryKey: (schema) => ecryptedValueSchema,
+  masterKey: () => ecryptedValueSchema,
+  recoveryKey: () => ecryptedValueSchema,
 });
 
 // Signup
@@ -58,14 +54,9 @@ export const signInUserSchema = z.object({
 
 export type SignInUserInput = z.infer<typeof signInUserSchema>;
 
-// Update
-export const updateUserSchema = z.object({
-  userName: baseSchema.shape.userName,
-});
-
-export type UpdateUserInput = z.infer<typeof updateUserSchema>;
-
-const selectUserModel = createSelectSchema(users)
+const selectUserModel = createSelectSchema(users, {
+  masterKey: () => masterKeySchema,
+})
   .pick({
     id: true,
     userName: true,
@@ -76,18 +67,9 @@ const selectUserModel = createSelectSchema(users)
   })
   .describe("User model with selected fields for responses");
 
-export type SelectUserModel = z.infer<typeof selectUserModel>;
-
 export const signUpUserResponseSchema = responseSchema.and(
   z.object({ data: selectUserModel })
 );
-
-export const updateUserResponseSchema = signUpUserResponseSchema;
-
-export const getUserResponseSchema = z.object({
-  status: statusSchema,
-  data: selectUserModel,
-});
 
 export const signInResponseSchema = responseSchema.and(
   z.object({

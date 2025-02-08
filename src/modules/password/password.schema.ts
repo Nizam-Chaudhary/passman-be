@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { passwords } from "../db/schema/passwords";
-import { responseSchema, statusSchema } from "../utils/basicSchema";
+import { passwords } from "../../db/schema/schema";
+import { responseSchema, statusSchema } from "../../utils/basicSchema";
 
 const encryptedPasswordSchema = z.object({
   iv: z.string().min(1, "iv is required"),

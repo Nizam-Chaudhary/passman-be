@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
-import authRoute from "./auth";
-import healthRoute from "./health";
-import passwordRoute from "./password";
-import userRoute from "./user";
-import vaultRoute from "./vault";
+import authRoute from "./modules/auth/auth.route";
+import healthRoute from "./modules/health/health.route";
+import passwordRoute from "./modules/password/password.route";
+import userRoute from "./modules/user/user.route";
+import vaultRoute from "./modules/vault/vault.route";
 
 export default async (fastify: FastifyInstance) => {
   fastify.register(healthRoute, { prefix: "health" });

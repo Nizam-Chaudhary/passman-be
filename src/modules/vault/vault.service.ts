@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
-import { db } from "../db";
-import * as schema from "../db/schema/schema";
-import AppError from "../lib/appError";
+import { db } from "../../db";
+import * as schema from "../../db/schema/schema";
+import AppError from "../../lib/appError";
 
 class UserService {
   async getVaults(userId: number) {

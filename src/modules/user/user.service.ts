@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
-import { db } from "../db/index";
-import { users } from "../db/schema/users";
-import { UpdateUserInput } from "../schemas/user";
+import { db } from "../../db";
+import { users } from "../../db/schema/schema";
+import { UpdateUserInput } from "./user.schema";
 
 class UserService {
   async getUser(id: number) {

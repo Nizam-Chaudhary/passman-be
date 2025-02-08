@@ -20,6 +20,9 @@
 - [ ] multiple moving of passwords from one vault to another by selecting multiple at once
 - [ ] Animations
 
+## Bug List
+- [ ] make email matching ignore case in db
+
 
 ### generate openssl tls certificate
 ```bash

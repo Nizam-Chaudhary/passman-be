@@ -1,12 +1,12 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import userController from "../controllers/user";
+import { errorSchema } from "../../utils/basicSchema";
+import userController from "./user.controller";
 import {
   getUserResponseSchema,
   updateUserResponseSchema,
   updateUserSchema,
-} from "../schemas/user";
-import { errorSchema } from "../utils/basicSchema";
+} from "./user.schema";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({

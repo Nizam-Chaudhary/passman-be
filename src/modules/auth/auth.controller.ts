@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import AppError from "../lib/appError";
+import AppError from "../../lib/appError";
 import {
   CreateMasterKeyBody,
   JwtUserData,
@@ -8,15 +8,15 @@ import {
   SignUpUserInput,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "../schemas/user";
-import userService from "../services/user";
+} from "./auth.schema";
+import authService from "./auth.service";
 
 class UserController {
   async signUpUser(
     req: FastifyRequest<{ Body: SignUpUserInput }>,
     reply: FastifyReply
   ) {
-    const response = await userService.signUpUser(req.body);
+    const response = await authService.signUpUser(req.body);
     await reply.code(200).send(response);
   }
 
@@ -24,7 +24,7 @@ class UserController {
     req: FastifyRequest<{ Body: SignInUserInput }>,
     reply: FastifyReply
   ) {
-    const userData = await userService.signInUser(req.body);
+    const userData = await authService.signInUser(req.body);
     const tokenPayload = {
       id: userData.id,
       email: userData.email,
@@ -56,7 +56,7 @@ class UserController {
       throw new AppError("UNAUTORIZED", "Refresh token is invalid", 401);
     }
 
-    const userData = await userService.refreshToken(tokenPayload.id);
+    const userData = await authService.refreshToken(tokenPayload.id);
 
     const token = req.jwt.sign(userData, { expiresIn: "15m" });
     const refreshToken = req.jwt.sign(userData, { expiresIn: "90d" });
@@ -75,7 +75,7 @@ class UserController {
     req: FastifyRequest<{ Body: VerifyUserEmailBody }>,
     reply: FastifyReply
   ) {
-    const response = await userService.verifyUserEmail(req.body);
+    const response = await authService.verifyUserEmail(req.body);
     reply.code(200).send(response);
   }
 
@@ -85,7 +85,7 @@ class UserController {
   ) {
     const id = req.user.id;
 
-    const response = await userService.createMasterKey(id, req.body);
+    const response = await authService.createMasterKey(id, req.body);
 
     reply.code(200).send(response);
   }
@@ -96,7 +96,7 @@ class UserController {
   ) {
     const id = req.user.id;
 
-    const response = await userService.verifyMasterPassword(id, req.body);
+    const response = await authService.verifyMasterPassword(id, req.body);
 
     reply.code(200).send(response);
   }
