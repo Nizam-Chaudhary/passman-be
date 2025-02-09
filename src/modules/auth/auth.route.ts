@@ -6,10 +6,14 @@ import {
   createMasterKeyBodySchema,
   refreshTokenBodySchema,
   refreshTokenResponseSchema,
+  resendOtpBodySchema,
+  resetPasswordBodySchema,
+  sendResetPasswordEmailBodySchema,
   signInResponseSchema,
   signInUserSchema,
   signUpUserResponseSchema,
   signUpUserSchema,
+  updateMasterPasswordBodySchema,
   verifyMasterPasswordBodySchema,
   verifyMasterPasswordResponseSchema,
   verifyUserEmailBodySchema,
@@ -121,5 +125,73 @@ export default async (fastify: FastifyInstance) => {
     },
     preHandler: [fastify.authenticate],
     handler: authController.verifyMasterPassword,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "POST",
+    url: "/resend-otp",
+    schema: {
+      tags: ["Auth"],
+      body: resendOtpBodySchema,
+      summary: "Resend otp to user's email",
+      description: "Resend otp to user's email",
+      response: {
+        200: responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    handler: authController.resendOtp,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "POST",
+    url: "/reset-password-mail",
+    schema: {
+      tags: ["Auth"],
+      body: sendResetPasswordEmailBodySchema,
+      summary: "send reset password email",
+      description: "send reset password email",
+      response: {
+        200: responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    handler: authController.sendResetPasswordEmail,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "PATCH",
+    url: "/reset-password",
+    schema: {
+      tags: ["Auth"],
+      body: resetPasswordBodySchema,
+      summary: "reset login password",
+      description: "reset login password",
+      response: {
+        200: responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    handler: authController.resetPassword,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "PATCH",
+    url: "/master-password",
+    schema: {
+      tags: ["Auth"],
+      body: updateMasterPasswordBodySchema,
+      summary: "Update master password",
+      description: "Update master password",
+      response: {
+        200: responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    handler: authController.updateMasterPassword,
   });
 };

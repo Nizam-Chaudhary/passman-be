@@ -4,8 +4,11 @@ import {
   CreateMasterKeyBody,
   JwtUserData,
   RefreshTokenBody,
+  ResetPasswordBody,
+  ResetPasswordJwtTokenPayload,
   SignInUserInput,
   SignUpUserInput,
+  UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "./auth.schema";
@@ -97,6 +100,57 @@ class UserController {
     const id = req.user.id;
 
     const response = await authService.verifyMasterPassword(id, req.body);
+
+    reply.code(200).send(response);
+  }
+
+  async resendOtp(
+    req: FastifyRequest<{ Body: { email: string } }>,
+    reply: FastifyReply
+  ) {
+    const email = req.body.email;
+
+    const response = await authService.resendOtp(email);
+
+    reply.code(200).send(response);
+  }
+
+  async sendResetPasswordEmail(
+    req: FastifyRequest<{ Body: { email: string } }>,
+    reply: FastifyReply
+  ) {
+    const email = req.body.email;
+
+    const token = req.jwt.sign({ email }, { expiresIn: "15m" });
+
+    const response = await authService.sendResetPasswordEmail(email, token);
+
+    reply.code(200).send(response);
+  }
+
+  async resetPassword(
+    req: FastifyRequest<{ Body: ResetPasswordBody }>,
+    reply: FastifyReply
+  ) {
+    const { token, password } = req.body;
+    const tokenData = req.jwt.verify<ResetPasswordJwtTokenPayload>(token);
+
+    if (!tokenData) {
+      throw new AppError("TOKEN_EXPIRED", "Reset password token expired", 400);
+    }
+
+    const response = await authService.resetPassword(tokenData.email, password);
+
+    reply.code(200).send(response);
+  }
+
+  async updateMasterPassword(
+    req: FastifyRequest<{ Body: UpdateMasterPasswordBody }>,
+    reply: FastifyReply
+  ) {
+    const userId = req.user.id;
+    const body = req.body;
+    const response = await authService.updateMasterPassword(userId, body);
 
     reply.code(200).send(response);
   }

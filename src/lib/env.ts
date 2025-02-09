@@ -23,6 +23,7 @@ const envSchema = z.object({
   DOC_PASSWORD: z.string().min(1),
   AWS_ACCESS_KEY_ID: z.string().min(1),
   AWS_SECRET_ACCESS_KEY: z.string().min(1),
+  AWS_REGION: z.string().min(1),
   FROM_EMAIL_ADDR: z.string().email(),
 });
 
