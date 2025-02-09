@@ -309,7 +309,7 @@ class AuthService {
       throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
     }
 
-    const url = `${env.FE_URL}/reset-password?token=${token}`;
+    const url = `${env.FE_URL}/reset-password/update?token=${token}`;
     const emailBody = userTemplates.resetLoginPassword({ url });
 
     sendMail({
