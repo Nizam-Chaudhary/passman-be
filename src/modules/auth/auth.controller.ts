@@ -8,6 +8,7 @@ import {
   ResetPasswordJwtTokenPayload,
   SignInUserInput,
   SignUpUserInput,
+  UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "./auth.schema";
@@ -139,6 +140,17 @@ class UserController {
     }
 
     const response = await authService.resetPassword(tokenData.email, password);
+
+    reply.code(200).send(response);
+  }
+
+  async updateMasterPassword(
+    req: FastifyRequest<{ Body: UpdateMasterPasswordBody }>,
+    reply: FastifyReply
+  ) {
+    const userId = req.user.id;
+    const body = req.body;
+    const response = await authService.updateMasterPassword(userId, body);
 
     reply.code(200).send(response);
   }

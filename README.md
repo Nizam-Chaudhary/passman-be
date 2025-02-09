@@ -1,10 +1,10 @@
 # Passman BE
 
 ## Features List
-- [ ] resend otp
-- [ ] expire otp
-- [ ] forgot login password
-- [ ] forgot master password
+- [x] resend otp
+- [x] expire otp
+- [x] forgot login password
+- [x] forgot master password
 - [ ] settings page
   - [ ] update user name
   - [ ] manage vault
@@ -12,7 +12,7 @@
   - [ ] add vault
   - [ ] migrate vault
   - [ ] reset password
-  - [ ] reset master password
+  - [x] reset master password
   - [ ] import multiple passwords from chrome or firefox
   - [ ] add more providers to import from
   - [ ] delete account

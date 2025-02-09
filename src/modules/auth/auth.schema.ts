@@ -172,3 +172,12 @@ export const resetPasswordBodySchema = z.object({
 });
 
 export type ResetPasswordBody = z.infer<typeof resetPasswordBodySchema>;
+
+export const updateMasterPasswordBodySchema = z.object({
+  masterKey: masterKeySchema,
+  recoveryKey: masterKeySchema,
+});
+
+export type UpdateMasterPasswordBody = z.infer<
+  typeof updateMasterPasswordBodySchema
+>;

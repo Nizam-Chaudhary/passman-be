@@ -13,6 +13,7 @@ import {
   signInUserSchema,
   signUpUserResponseSchema,
   signUpUserSchema,
+  updateMasterPasswordBodySchema,
   verifyMasterPasswordBodySchema,
   verifyMasterPasswordResponseSchema,
   verifyUserEmailBodySchema,
@@ -161,7 +162,7 @@ export default async (fastify: FastifyInstance) => {
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
-    method: "POST",
+    method: "PATCH",
     url: "/reset-password",
     schema: {
       tags: ["Auth"],
@@ -175,5 +176,22 @@ export default async (fastify: FastifyInstance) => {
       },
     },
     handler: authController.resetPassword,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "PATCH",
+    url: "/master-password",
+    schema: {
+      tags: ["Auth"],
+      body: updateMasterPasswordBodySchema,
+      summary: "Update master password",
+      description: "Update master password",
+      response: {
+        200: responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    handler: authController.updateMasterPassword,
   });
 };

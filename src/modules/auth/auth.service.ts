@@ -12,6 +12,7 @@ import {
   CreateMasterKeyBody,
   SignInUserInput,
   SignUpUserInput,
+  UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "./auth.schema";
@@ -337,6 +338,22 @@ class AuthService {
     return {
       status: "success",
       message: "password updated successfully",
+    };
+  }
+
+  async updateMasterPassword(userId: number, body: UpdateMasterPasswordBody) {
+    const updateUser = await db
+      .update(users)
+      .set(body)
+      .where(eq(users.id, userId));
+
+    if (!updateUser.rowCount || updateUser.rowCount <= 0) {
+      throw new AppError("USER_NOT_FOUND", "User not found", 400);
+    }
+
+    return {
+      status: "success",
+      message: "master password updated successfully",
     };
   }
 }
