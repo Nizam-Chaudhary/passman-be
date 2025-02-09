@@ -1,5 +1,5 @@
 import * as aws from "@aws-sdk/client-ses";
-import nodemailer from "nodemailer";
+import { createTransport } from "nodemailer";
 import env from "./env";
 
 // configuring AWS SDK
@@ -13,7 +13,7 @@ const ses = new aws.SES({
 });
 
 // create Nodemailer SES transporter
-const transporter = nodemailer.createTransport({
+const transporter = createTransport({
   SES: { ses, aws },
   sendingRate: 1, // max 1 messages/second,
   maxConnections: 1,
