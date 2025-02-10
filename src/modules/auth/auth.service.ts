@@ -1,6 +1,6 @@
 import { compare, compareSync, hash, hashSync } from "bcrypt";
 import { eq, ilike } from "drizzle-orm";
-import * as moment from "moment";
+import moment from "moment";
 import { db } from "../../db";
 import { users, vaults } from "../../db/schema/schema";
 import AppError from "../../lib/appError";
@@ -342,9 +342,17 @@ class AuthService {
   }
 
   async updateMasterPassword(userId: number, body: UpdateMasterPasswordBody) {
+    const hashedMasterPassword = await hash(
+      body.masterPassword,
+      env.SALT_ROUNDS
+    );
+
     const updateUser = await db
       .update(users)
-      .set(body)
+      .set({
+        ...body,
+        masterPassword: hashedMasterPassword,
+      })
       .where(eq(users.id, userId));
 
     if (!updateUser.rowCount || updateUser.rowCount <= 0) {
