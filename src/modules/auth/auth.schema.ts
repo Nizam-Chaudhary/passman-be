@@ -109,23 +109,25 @@ export const verifyUserEmailBodySchema = z.object({
 
 export type VerifyUserEmailBody = z.infer<typeof verifyUserEmailBodySchema>;
 
+const masterPasswordSchema = z
+  .string()
+  .min(10, "Master password must be at least 10 characters")
+  .refine((value) => /[A-Z]/.test(value), {
+    message: "Master password must contain at least one uppercase letter",
+  })
+  .refine((value) => /[a-z]/.test(value), {
+    message: "Master password must contain at least one lowercase letter",
+  })
+  .refine((value) => /\d/.test(value), {
+    message: "Master password must contain at least one number",
+  })
+  .refine((value) => /[$@$!%*?&_]/.test(value), {
+    message: "Master password must contain at least one special character",
+  })
+  .describe("Master password for the account");
+
 export const createMasterKeyBodySchema = z.object({
-  masterPassword: z
-    .string()
-    .min(10, "Master password must be at least 10 characters")
-    .refine((value) => /[A-Z]/.test(value), {
-      message: "Master password must contain at least one uppercase letter",
-    })
-    .refine((value) => /[a-z]/.test(value), {
-      message: "Master password must contain at least one lowercase letter",
-    })
-    .refine((value) => /\d/.test(value), {
-      message: "Master password must contain at least one number",
-    })
-    .refine((value) => /[$@$!%*?&_]/.test(value), {
-      message: "Master password must contain at least one special character",
-    })
-    .describe("Master password for the account"),
+  masterPassword: masterPasswordSchema,
   masterKey: masterKeySchema,
   recoveryKey: masterKeySchema,
 });
@@ -174,6 +176,7 @@ export const resetPasswordBodySchema = z.object({
 export type ResetPasswordBody = z.infer<typeof resetPasswordBodySchema>;
 
 export const updateMasterPasswordBodySchema = z.object({
+  masterPassword: masterPasswordSchema,
   masterKey: masterKeySchema,
   recoveryKey: masterKeySchema,
 });

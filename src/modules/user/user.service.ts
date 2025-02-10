@@ -11,6 +11,7 @@ class UserService {
         userName: true,
         email: true,
         masterKey: true,
+        recoveryKey: true,
         createdAt: true,
         updatedAt: true,
       },

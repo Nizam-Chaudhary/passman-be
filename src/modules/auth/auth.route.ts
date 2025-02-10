@@ -192,6 +192,7 @@ export default async (fastify: FastifyInstance) => {
         "5xx": errorSchema,
       },
     },
+    preHandler: [fastify.authenticate],
     handler: authController.updateMasterPassword,
   });
 };

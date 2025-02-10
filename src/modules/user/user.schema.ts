@@ -23,12 +23,14 @@ export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 
 const selectUserModel = createSelectSchema(users, {
   masterKey: masterKeySchema,
+  recoveryKey: masterKeySchema,
 })
   .pick({
     id: true,
     userName: true,
     email: true,
     masterKey: true,
+    recoveryKey: true,
     createdAt: true,
     updatedAt: true,
   })
