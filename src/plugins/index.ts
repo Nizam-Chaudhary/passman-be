@@ -1,3 +1,4 @@
+import fastifySensible from "@fastify/sensible";
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
 import auth from "./auth";
@@ -9,6 +10,7 @@ import swaggerDocs from "./swagger.docs";
 
 export default fastifyPlugin(
   (fastify: FastifyInstance, opts: FastifyPluginOptions, done: any) => {
+    fastify.register(fastifySensible, opts);
     fastify.register(cors, opts);
     fastify.register(jwt, opts);
     fastify.register(fastifyTypeProviderZod, opts);
