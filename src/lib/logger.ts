@@ -12,8 +12,7 @@ const logger = {
         },
       },
       {
-        target: "pino-pretty",
-        options: { colorize: true },
+        target: env.NODE_ENV === "production" ? "pino/file" : "pino-pretty",
       },
     ],
   },

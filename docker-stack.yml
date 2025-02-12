@@ -23,6 +23,9 @@ services:
     volumes:
       - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      update_config:
+        order: start-first
     networks:
       - web
 
@@ -42,47 +45,9 @@ services:
       update_config:
         order: start-first
 
-  loki:
-    image: grafana/loki:latest
-    container_name: loki
-    expose:
-      - 3100
-    command: -config.file=/etc/loki/local-config.yaml
-
-  grafana:
-    image: grafana/grafana:10.1.5
-    container_name: grafana
-    expose:
-      - 3000
-    depends_on:
-      - loki
-      # - tempo
-      # - prometheus
-    secrets:
-      - grafana_username
-      - grafana_password
-    environment:
-      - GF_SECURITY_ADMIN_USER=/run/secrets/grafana_username
-      - GF_SECURITY_ADMIN_PASSWORD=/run/secrets/grafana_password
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.passman-be.loadbalancer.server.port=3000"
-      - "traefik.http.routers.passman-be.rule=Host(`observe.passman.live`)"
-      - "traefik.http.routers.passman-be.entrypoints=websecure"
-      - "traefik.http.routers.passman-be.tls.certresolver=myresolver"
-    volumes:
-      - grafana-data:/var/lib/grafana
-
 volumes:
   letsencrypt:
-  grafana-data:
 
 networks:
   web:
-    external: true
-
-secrets:
-  grafana_username:
-    external: true
-  grafana_password:
     external: true

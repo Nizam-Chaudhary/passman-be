@@ -5,6 +5,7 @@ import { Resource } from "@opentelemetry/resources";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
+import env from "./env";
 
 const otelSDK = new NodeSDK({
   resource: new Resource({
@@ -12,11 +13,11 @@ const otelSDK = new NodeSDK({
   }),
   instrumentations: [getNodeAutoInstrumentations()],
   traceExporter: new OTLPTraceExporter({
-    url: "http://localhost:4318/v1/traces", // Tempo endpoint
+    url: env.TEMPO_URL, // Tempo endpoint
   }),
   metricReader: new PeriodicExportingMetricReader({
     exporter: new OTLPMetricExporter({
-      url: "http://localhost:4318/v1/metrics", // Prometheus endpoint
+      url: env.PROMETHEUS_URL, // Prometheus endpoint
     }),
   }),
 });
