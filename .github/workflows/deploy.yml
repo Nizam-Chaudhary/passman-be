@@ -54,7 +54,8 @@ jobs:
           ssh-keyscan -H passman.live >> ~/.ssh/known_hosts
           docker context create passman --docker "host=ssh://ubuntu@passman.live"
           docker context use passman
-          docker network ls | grep -q "web" || docker network create --driver overlay web
+          # echo ${{ secrets.GRAFANA_USERNAME }} | docker secret create grafana_username -
+          # echo ${{ secrets.GRAFANA_PASSWORD }} | docker secret create grafana_password -
 
       - name: Log in to Container Registry
         uses: docker/login-action@v3
