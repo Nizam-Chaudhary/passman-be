@@ -1,7 +1,6 @@
 import Fastify from "fastify";
 import env from "./lib/env";
 import logger from "./lib/logger";
-import otelSDK from "./lib/otel";
 import plugins from "./plugins";
 import routes from "./route";
 
@@ -10,10 +9,9 @@ const fastify = Fastify({
 });
 
 async function main() {
-  otelSDK.start();
-
-  fastify.register(plugins);
-  fastify.register(routes);
+  // otelSDK.start()
+  await fastify.register(plugins);
+  await fastify.register(routes);
   await fastify.listen({
     port: env.PORT,
     host: env.HOST,
