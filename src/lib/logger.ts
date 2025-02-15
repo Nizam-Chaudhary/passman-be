@@ -3,6 +3,8 @@ import env from "./env";
 const lokiTransport = {
   target: "pino-loki",
   options: {
+    batching: true,
+    interval: 10,
     host: env.LOKI_URL,
     labels: { app: "passman" },
   },
