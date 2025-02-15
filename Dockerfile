@@ -1,5 +1,5 @@
 # Base stage
-FROM node:22-slim AS base
+FROM node:22-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -18,8 +18,12 @@ RUN pnpm install -r --offline
 RUN pnpm run build
 
 # Main stage
-FROM base
-COPY drizzle.config.ts rds-ca-rsa2048-g1.pem /app/
+FROM node:22-alpine
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+WORKDIR /app
+COPY package.json drizzle.config.ts rds-ca-rsa2048-g1.pem /app/
 COPY --from=prod-deps /app/node_modules node_modules
 COPY --from=builder /app/dist dist
 EXPOSE 3000
