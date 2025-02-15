@@ -22,3 +22,8 @@ dist/
 docker-compose.yml
 Dockerfile
 
+# github
+.github
+
+# md
+*.md

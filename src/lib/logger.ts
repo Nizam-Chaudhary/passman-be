@@ -9,11 +9,11 @@ const lokiTransport = {
 };
 
 const pinoPrettyLogger = {
-  target: "pino-pretty",
+  target: env.LOGGER_TARGET,
 };
 
 const logger = {
-  level: env.PINO_LOG_LEVEL,
+  level: env.LOG_LEVEL,
   transport: {
     targets: [env.NODE_ENV === "production" ? lokiTransport : pinoPrettyLogger],
   },

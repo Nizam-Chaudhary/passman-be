@@ -17,7 +17,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1),
   ENC_KEY_LENGTH: z.coerce.number().min(1),
   ENC_IV_LENGTH: z.coerce.number().min(1),
-  PINO_LOG_LEVEL: z.string().min(1),
+  LOG_LEVEL: z.string().min(1),
   LOGGER_TARGET: z.string().min(1),
   DOC_USERNAME: z.string().min(1),
   DOC_PASSWORD: z.string().min(1),
