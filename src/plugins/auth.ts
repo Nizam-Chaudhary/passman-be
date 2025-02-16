@@ -28,7 +28,7 @@ export default fastifyPlugin(
           req.user = decoded;
         } catch (error: any) {
           if (error.code === "FAST_JWT_EXPIRED") {
-            throw new AppError("UNAUTHORIZED", "access token expired", 401);
+            throw new AppError("UNAUTHORIZED", "Access token expired", 401);
           } else if (error.code === "FAST_JWT_INVALID_SIGNATURE") {
             throw new AppError(
               "UNAUTHORIZED",

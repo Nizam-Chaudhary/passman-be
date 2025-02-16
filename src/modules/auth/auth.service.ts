@@ -273,6 +273,14 @@ class AuthService {
       throw new AppError("USER_NOT_FOUND", "No user found for email", 400);
     }
 
+    if (moment(user.updatedAt).isAfter(moment().subtract(2, "minutes"))) {
+      throw new AppError(
+        "OTP_RESEND_LIMIT_REACHED",
+        "OTP resend limit reached",
+        400
+      );
+    }
+
     const otp = generateOtp();
 
     const updateOtp = await db
@@ -307,6 +315,14 @@ class AuthService {
 
     if (!user) {
       throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
+    }
+
+    if (moment(user.updatedAt).isAfter(moment().subtract(2, "minutes"))) {
+      throw new AppError(
+        "EMAIL_SEND_LIMIT_REACHED",
+        "Email sending limit reached",
+        400
+      );
     }
 
     const url = `${env.FE_URL}/reset-password/update?token=${token}`;
