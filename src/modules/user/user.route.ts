@@ -10,8 +10,8 @@ import {
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
-    method: "POST",
-    url: "/update",
+    method: "PATCH",
+    url: "/",
 
     schema: {
       tags: ["User"],

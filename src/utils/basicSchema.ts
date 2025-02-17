@@ -20,7 +20,7 @@ export const errorSchema = z.union([
   z.object({
     status: statusSchema.default("error"),
     message: z.string().default("something went wrong"),
-    stack: z.string(),
+    stack: z.string().optional().nullable(),
   }),
   z.object({
     status: statusSchema.default("error"),

@@ -9,28 +9,23 @@ const encryptedPasswordSchema = z.object({
 });
 
 const baseSchema = createInsertSchema(passwords, {
-  vaultId: (schema) => schema.vaultId.min(0, "Vault id is required"),
+  vaultId: (schema) => schema.min(0, "Vault id is required"),
   username: (schema) =>
-    schema.username
-      .min(1, "Username is required")
-      .describe("Username for the account"),
+    schema.min(1, "Username is required").describe("Username for the account"),
   password: (schema) =>
     encryptedPasswordSchema.describe("Password for the account"),
   site: (schema) =>
-    schema.site
+    schema
       .min(1, "Site is required")
       .describe("Name of the application or website"),
   faviconUrl: (schema) =>
-    schema.faviconUrl
+    schema
       .url("invalid url")
       .optional()
       .nullable()
       .describe("URL of the service favicon"),
   note: (schema) =>
-    schema.note
-      .optional()
-      .nullable()
-      .describe("Additional notes about the account"),
+    schema.optional().nullable().describe("Additional notes about the account"),
 });
 
 export const addPasswordSchema = z.object({
@@ -61,20 +56,18 @@ export const updatePasswordSchema = z.object({
 export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>;
 
 const selectPasswordsModel = createSelectSchema(passwords, {
-  id: (schema) =>
-    schema.id.describe("Unique identifier for the password record"),
-  userId: (schema) => schema.userId.describe("User id"),
-  username: (schema) => schema.username.describe("Username for the account"),
+  id: (schema) => schema.describe("Unique identifier for the password record"),
+  userId: (schema) => schema.describe("User id"),
+  username: (schema) => schema.describe("Username for the account"),
   password: (schema) =>
     encryptedPasswordSchema.describe("Password for the account"),
-  site: (schema) => schema.site.describe("Name of the application or website"),
-  faviconUrl: (schema) =>
-    schema.faviconUrl.describe("URL of the service favicon"),
-  note: (schema) => schema.note.describe("Additional notes about the account"),
+  site: (schema) => schema.describe("Name of the application or website"),
+  faviconUrl: (schema) => schema.describe("URL of the service favicon"),
+  note: (schema) => schema.describe("Additional notes about the account"),
   createdAt: (schema) =>
-    schema.createdAt.describe("Timestamp when the record was created"),
+    schema.describe("Timestamp when the record was created"),
   updatedAt: (schema) =>
-    schema.updatedAt.describe("Timestamp when the record was last updated"),
+    schema.describe("Timestamp when the record was last updated"),
 });
 
 export type SelectPasswordsModel = z.infer<typeof selectPasswordsModel>;

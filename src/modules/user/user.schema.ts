@@ -9,7 +9,7 @@ import {
 
 const baseSchema = createInsertSchema(users, {
   userName: (schema) =>
-    schema.userName
+    schema
       .min(2, "User name must be at least 4 characters")
       .describe("Username for the account"),
 });

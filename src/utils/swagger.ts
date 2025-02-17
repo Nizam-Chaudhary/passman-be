@@ -36,6 +36,10 @@ export const swaggerOptions: SwaggerOptions = {
         name: "Vaults",
         tags: ["Vaults"],
       },
+      {
+        name: "Files",
+        tags: ["Files"],
+      },
     ],
   },
   transform: jsonSchemaTransform,
