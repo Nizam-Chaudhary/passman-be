@@ -1,10 +1,10 @@
-import { FastifyInstance } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
+import type { FastifyInstance } from "fastify";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { errorSchema } from "../../utils/basicSchema";
 import fileController from "./file.controller";
 import { uploadFileResponseSchema } from "./file.schema";
 
-export default async (fastify: FastifyInstance) => {
+export default (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "POST",
     url: "/upload",

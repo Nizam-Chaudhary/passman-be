@@ -1,4 +1,4 @@
-import { SwaggerOptions } from "@fastify/swagger";
+import type { SwaggerOptions } from "@fastify/swagger";
 import { jsonSchemaTransform } from "fastify-type-provider-zod";
 
 export const swaggerOptions: SwaggerOptions = {

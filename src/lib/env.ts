@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import { expand } from "dotenv-expand";
-import { z, ZodError } from "zod";
+import { ZodError, z } from "zod";
 
 const envSchema = z.object({
   PORT: z.coerce.number().min(1),

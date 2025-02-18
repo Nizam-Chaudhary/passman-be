@@ -1,5 +1,5 @@
-import { FastifyError } from "fastify";
-import {
+import type { FastifyError } from "fastify";
+import type {
   FastifySchemaValidationError,
   SchemaErrorDataVar,
 } from "fastify/types/schema";

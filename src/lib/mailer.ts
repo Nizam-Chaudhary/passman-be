@@ -32,7 +32,7 @@ export const sendMail = (options: {
   subject: string;
   emailBody: string;
 }) => {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, _reject) => {
     transporter.sendMail(
       {
         from: env.FROM_EMAIL_ADDR,
@@ -46,8 +46,8 @@ export const sendMail = (options: {
         if (err) {
           console.error(err);
         } else {
-          console.log(new Date().toLocaleString(), info?.envelope);
-          console.log(info?.messageId);
+          console.error(new Date().toLocaleString(), info?.envelope);
+          console.error(info?.messageId);
         }
       }
     );

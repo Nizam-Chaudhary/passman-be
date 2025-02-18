@@ -1,4 +1,4 @@
-import { JWT } from "@fastify/jwt";
+import type { JWT } from "@fastify/jwt";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -6,7 +6,7 @@ declare module "fastify" {
   }
 
   export interface FastifyInstance {
-    authenticate: any;
+    authenticate: (req: FastifyRequest, reply: FastifyReply) => void;
   }
 }
 

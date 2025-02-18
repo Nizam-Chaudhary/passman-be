@@ -8,7 +8,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { MasterKeyType } from "../../utils/basicSchema";
+import type { MasterKeyType } from "../../utils/basicSchema";
 import { files } from "./files";
 import { passwords } from "./passwords";
 import { vaults } from "./vaults";

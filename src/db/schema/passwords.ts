@@ -7,7 +7,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { EncryptedValueType } from "../../utils/basicSchema";
+import type { EncryptedValueType } from "../../utils/basicSchema";
 import { users } from "./users";
 import { vaults } from "./vaults";
 

@@ -28,8 +28,6 @@ export const errorSchema = z.union([
   }),
 ]);
 
-type errorSchema = z.infer<typeof errorSchema>;
-
 export type IdParamsType = z.infer<typeof idParamsSchema>;
 
 export const encryptedValueSchema = z.object({

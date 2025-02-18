@@ -12,8 +12,7 @@ const baseSchema = createInsertSchema(passwords, {
   vaultId: (schema) => schema.min(0, "Vault id is required"),
   username: (schema) =>
     schema.min(1, "Username is required").describe("Username for the account"),
-  password: (schema) =>
-    encryptedPasswordSchema.describe("Password for the account"),
+  password: () => encryptedPasswordSchema.describe("Password for the account"),
   site: (schema) =>
     schema
       .min(1, "Site is required")
@@ -59,8 +58,7 @@ const selectPasswordsModel = createSelectSchema(passwords, {
   id: (schema) => schema.describe("Unique identifier for the password record"),
   userId: (schema) => schema.describe("User id"),
   username: (schema) => schema.describe("Username for the account"),
-  password: (schema) =>
-    encryptedPasswordSchema.describe("Password for the account"),
+  password: () => encryptedPasswordSchema.describe("Password for the account"),
   site: (schema) => schema.describe("Name of the application or website"),
   faviconUrl: (schema) => schema.describe("URL of the service favicon"),
   note: (schema) => schema.describe("Additional notes about the account"),

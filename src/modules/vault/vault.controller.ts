@@ -1,6 +1,6 @@
-import { FastifyReply } from "fastify/types/reply";
-import { FastifyRequest } from "fastify/types/request";
-import { getVaultResourceQueryOptions } from "./vault.schema";
+import type { FastifyReply } from "fastify/types/reply";
+import type { FastifyRequest } from "fastify/types/request";
+import type { getVaultResourceQueryOptions } from "./vault.schema";
 import vaultService from "./vault.service";
 
 class VaultController {

@@ -1,6 +1,6 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 import AppError from "../../lib/appError";
-import {
+import type {
   CreateMasterKeyBody,
   JwtUserData,
   RefreshTokenBody,

@@ -1,5 +1,5 @@
-import { FastifyInstance } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
+import type { FastifyInstance } from "fastify";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { errorSchema, idParamsSchema } from "../../utils/basicSchema";
 import vaultController from "./vault.controller";
 import {
@@ -10,7 +10,7 @@ import {
   updateVaultResponseSchema,
 } from "./vault.schema";
 
-export default async (fastify: FastifyInstance) => {
+export default (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "GET",
     url: "/",

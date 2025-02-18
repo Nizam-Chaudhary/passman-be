@@ -1,16 +1,17 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import {
   hasZodFastifySchemaValidationErrors,
   isResponseSerializationError,
 } from "fastify-type-provider-zod";
+import type AppError from "./appError";
 import env from "./env";
 
 export const globalErrorHandler = (
   fastify: FastifyInstance,
-  error: any,
+  error: AppError | any,
   _request: FastifyRequest,
   reply: FastifyReply
-): any => {
+) => {
   fastify.log.error(error);
   if (hasZodFastifySchemaValidationErrors(error)) {
     return sendSchemaValidationError(error, reply);
@@ -25,7 +26,7 @@ export const globalErrorHandler = (
   sendErrorProd(error, reply);
 };
 
-const sendSchemaValidationError = (error: any, reply: FastifyReply) => {
+const sendSchemaValidationError = (error: AppError, reply: FastifyReply) => {
   const statusCode = 400;
   const message = "Request does not match the schema";
   reply.code(statusCode).send({
@@ -45,7 +46,7 @@ const sendResponseSerializationError = (error: any, reply: FastifyReply) => {
   });
 };
 
-const sendErrorDev = (error: any, reply: FastifyReply) => {
+const sendErrorDev = (error: AppError, reply: FastifyReply) => {
   const statusCode = error.statusCode || 500;
   const status =
     error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
@@ -58,7 +59,7 @@ const sendErrorDev = (error: any, reply: FastifyReply) => {
   });
 };
 
-const sendErrorProd = (error: any, reply: FastifyReply) => {
+const sendErrorProd = (error: AppError, reply: FastifyReply) => {
   const statusCode = error.statusCode || 500;
   const status =
     error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";

@@ -1,5 +1,5 @@
 import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { MultipartFile } from "@fastify/multipart";
+import type { MultipartFile } from "@fastify/multipart";
 import { db } from "../../db";
 import { files } from "../../db/schema/schema";
 import AppError from "../../lib/appError";
@@ -36,7 +36,7 @@ export const uploadFile = async (fileData: MultipartFile | undefined) => {
 
   const response = await s3.send(command);
 
-  if (response.$metadata.httpStatusCode != 200) {
+  if (response.$metadata.httpStatusCode !== 200) {
     throw new AppError("FILE_UPLOAD_FAILED", "File upload failed", 400);
   }
 
