@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "../../db";
-import { users } from "../../db/schema/schema";
+import { files, users } from "../../db/schema/schema";
+import { deleteFiles } from "../file/file.service";
 import { UpdateUserInput } from "./user.schema";
 
 class UserService {
@@ -10,12 +11,16 @@ class UserService {
         id: true,
         userName: true,
         email: true,
+        fileId: true,
         masterKey: true,
         recoveryKey: true,
         createdAt: true,
         updatedAt: true,
       },
       where: eq(users.id, id),
+      with: {
+        file: true,
+      },
     });
 
     return {
@@ -25,12 +30,27 @@ class UserService {
   }
 
   async updateUser(id: number, input: UpdateUserInput) {
+    if (input.fileId) {
+      const user = (
+        await db
+          .select({ fileId: users.fileId })
+          .from(users)
+          .where(eq(users.id, id))
+      )[0];
+
+      if (user.fileId) {
+        const file = await db
+          .delete(files)
+          .where(eq(files.id, user.fileId))
+          .returning();
+
+        await deleteFiles([file[0].fileKey]);
+      }
+    }
+
     const user = await db
       .update(users)
-      .set({
-        userName: input.userName,
-        updatedAt: new Date(),
-      })
+      .set(input)
       .where(eq(users.id, id))
       .returning();
 

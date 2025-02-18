@@ -3,7 +3,7 @@ import { z } from "zod";
 import { files } from "../../db/schema/schema";
 import { responseSchema } from "../../utils/basicSchema";
 
-const selectFileSchema = createSelectSchema(files);
+export const selectFileSchema = createSelectSchema(files);
 
 export const uploadFileResponseSchema = responseSchema.and(
   z.object({ data: selectFileSchema })
