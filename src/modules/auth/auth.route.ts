@@ -19,7 +19,7 @@ import {
   verifyUserEmailBodySchema,
 } from "./auth.schema";
 
-export default (fastify: FastifyInstance) => {
+export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "POST",
     url: "/sign-up",

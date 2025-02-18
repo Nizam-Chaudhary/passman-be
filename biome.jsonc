@@ -7,8 +7,14 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["dist/**/*", "node_modules/**/*"],
-    "include": ["src/**/*.ts", "src/**/*.js"]
+    "ignore": [
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.js"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -77,14 +83,16 @@
         "noConsole": {
           "level": "warn",
           "options": {
-            "allow": ["warn", "error"]
+            "allow": [
+              "warn",
+              "error"
+            ]
           }
         },
         "noDoubleEquals": "error",
         "noExtraNonNullAssertion": "error",
         "noMisleadingInstantiator": "error",
         "noUnsafeDeclarationMerging": "error",
-        "useAwait": "error",
         "useNamespaceKeyword": "error"
       }
     },
@@ -125,13 +133,22 @@
   },
   "overrides": [
     {
-      "include": ["**/*.{js,mjs,cjs,ts}"],
+      "include": [
+        "**/*.{js,mjs,cjs,ts}"
+      ],
       "javascript": {
-        "globals": ["exports"]
+        "globals": [
+          "exports"
+        ]
       }
     },
     {
-      "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mts",
+        "**/*.cts"
+      ],
       "linter": {
         "rules": {
           "correctness": {
@@ -165,7 +182,12 @@
       }
     },
     {
-      "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mts",
+        "**/*.cts"
+      ],
       "linter": {
         "rules": {
           "correctness": {

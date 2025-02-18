@@ -11,7 +11,7 @@ import AppError from "../lib/appError";
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.decorate(
     "authenticate",
-    (req: FastifyRequest, _reply: FastifyReply) => {
+    async (req: FastifyRequest, _reply: FastifyReply) => {
       const token = req.headers.authorization?.replace("Bearer ", "");
 
       if (!token) {

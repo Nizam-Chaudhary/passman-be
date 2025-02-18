@@ -10,7 +10,7 @@ import {
   updateVaultResponseSchema,
 } from "./vault.schema";
 
-export default (fastify: FastifyInstance) => {
+export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "GET",
     url: "/",
