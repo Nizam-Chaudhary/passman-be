@@ -32,7 +32,7 @@ export const sendMail = (options: {
   subject: string;
   emailBody: string;
 }) => {
-  return new Promise(async (resolve, _reject) => {
+  return new Promise((resolve, _reject) => {
     transporter.sendMail(
       {
         from: env.FROM_EMAIL_ADDR,

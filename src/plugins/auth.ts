@@ -21,9 +21,11 @@ export default fastifyPlugin((fastify, _opts, done) => {
       try {
         const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
         req.user = decoded;
+        // biome-ignore lint/suspicious/noExplicitAny: error
       } catch (error: any) {
         if (error.code === "FAST_JWT_EXPIRED") {
           throw new AppError("UNAUTHORIZED", "Access token expired", 401);
+          // biome-ignore lint/style/noUselessElse: better explanation
         } else if (error.code === "FAST_JWT_INVALID_SIGNATURE") {
           throw new AppError(
             "UNAUTHORIZED",

@@ -1,4 +1,4 @@
-import { timingSafeEqual } from "crypto";
+import { timingSafeEqual } from "node:crypto";
 import { fastifyBasicAuth } from "@fastify/basic-auth";
 import fastifySwagger from "@fastify/swagger";
 import ScalarApiReference from "@scalar/fastify-api-reference";
@@ -52,7 +52,7 @@ export default fastifyPlugin((fastify, _opts, done) => {
   done();
 });
 
-function compare(a: any, b: any): boolean {
+function compare(a: string, b: string): boolean {
   try {
     return timingSafeEqual(Buffer.from(a), Buffer.from(b));
   } catch {

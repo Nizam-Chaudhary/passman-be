@@ -8,7 +8,8 @@ import env from "./env";
 
 export const globalErrorHandler = (
   fastify: FastifyInstance,
-  error: AppError | any,
+  // biome-ignore lint/suspicious/noExplicitAny: error
+  error: any,
   _request: FastifyRequest,
   reply: FastifyReply
 ) => {
@@ -26,7 +27,8 @@ export const globalErrorHandler = (
   sendErrorProd(error, reply);
 };
 
-const sendSchemaValidationError = (error: AppError, reply: FastifyReply) => {
+// biome-ignore lint/suspicious/noExplicitAny: error
+const sendSchemaValidationError = (error: any, reply: FastifyReply) => {
   const statusCode = 400;
   const message = "Request does not match the schema";
   reply.code(statusCode).send({
@@ -36,6 +38,7 @@ const sendSchemaValidationError = (error: AppError, reply: FastifyReply) => {
   });
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: error
 const sendResponseSerializationError = (error: any, reply: FastifyReply) => {
   const statusCode = 500;
   const message = "Response doesn't match the schema";
