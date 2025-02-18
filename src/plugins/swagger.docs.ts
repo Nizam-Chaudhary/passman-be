@@ -27,11 +27,11 @@ export default fastifyPlugin((fastify, _opts, done) => {
 
   fastify.register(ScalarApiReference, {
     routePrefix: "/",
-    hooks: {
-      onRequest: (request, reply, done) => {
-        fastify.basicAuth(request, reply, done);
-      },
-    },
+    // hooks: {
+    //   onRequest: (request, reply, done) => {
+    //     // fastify.basicAuth(request, reply, done);
+    //   },
+    // },
     configuration: {
       // layout: 'default',
       metaData: {

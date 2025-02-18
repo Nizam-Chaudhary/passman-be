@@ -13,14 +13,17 @@ const baseSchema = createUpdateSchema(users, {
     schema
       .min(2, "User name must be at least 4 characters")
       .describe("Username for the account"),
-  fileId: (schema) => schema.min(1, "File ID must be at least 1"),
+  fileId: (schema) =>
+    schema
+      .min(1, "File ID must be at least 1")
+      .describe("ID of the associated file"),
 });
 
 // Update
 export const updateUserSchema = z.object({
   userName: baseSchema.shape.userName,
   fileId: baseSchema.shape.fileId,
-});
+}).describe("Schema for updating user information");
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 
@@ -41,7 +44,7 @@ const selectUserModel = createSelectSchema(users, {
 
 export const updateUserResponseSchema = responseSchema.and(
   z.object({ data: selectUserModel })
-);
+).describe("Schema for user update response");
 
 export const getUserResponseSchema = z.object({
   status: statusSchema,
@@ -50,4 +53,4 @@ export const getUserResponseSchema = z.object({
       file: selectFileSchema,
     })
   ),
-});
+}).describe("Schema for getting user data response");
