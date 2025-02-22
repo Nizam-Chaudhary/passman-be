@@ -8,7 +8,7 @@ import env from "../../lib/env";
 import { sendMail } from "../../lib/mailer";
 import * as userTemplates from "../../templates/user";
 import { generateOtp } from "../../utils/generator";
-import {
+import type {
   CreateMasterKeyBody,
   SignInUserInput,
   SignUpUserInput,
@@ -210,7 +210,7 @@ class AuthService {
     //   );
     // }
 
-    const user = await db
+    await db
       .update(users)
       .set({
         masterPassword: hashedMasterPassword,
@@ -273,6 +273,14 @@ class AuthService {
       throw new AppError("USER_NOT_FOUND", "No user found for email", 400);
     }
 
+    if (moment(user.updatedAt).isAfter(moment().subtract(2, "minutes"))) {
+      throw new AppError(
+        "OTP_RESEND_LIMIT_REACHED",
+        "OTP resend limit reached",
+        400
+      );
+    }
+
     const otp = generateOtp();
 
     const updateOtp = await db
@@ -309,6 +317,14 @@ class AuthService {
       throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
     }
 
+    if (moment(user.updatedAt).isAfter(moment().subtract(2, "minutes"))) {
+      throw new AppError(
+        "EMAIL_SEND_LIMIT_REACHED",
+        "Email sending limit reached",
+        400
+      );
+    }
+
     const url = `${env.FE_URL}/reset-password/update?token=${token}`;
     const emailBody = userTemplates.resetLoginPassword({ url });
 
@@ -327,9 +343,12 @@ class AuthService {
   async resetPassword(email: string, password: string) {
     const hashedPassword = hashSync(password, env.SALT_ROUNDS);
 
-    const passwordUpdate = await db.update(users).set({
-      password: hashedPassword,
-    });
+    const passwordUpdate = await db
+      .update(users)
+      .set({
+        password: hashedPassword,
+      })
+      .where(ilike(users.email, email));
 
     if (!passwordUpdate.rowCount || passwordUpdate.rowCount <= 0) {
       throw new AppError("USER_NOT_FOUND", "Email not registered", 400);

@@ -22,9 +22,9 @@ main();
 
 // graceful shutdown
 const listeners = ["SIGINT", "SIGTERM"];
-listeners.forEach((signal) => {
+for (const signal of listeners) {
   process.on(signal, async () => {
     await fastify.close();
     process.exit(0);
   });
-});
+}

@@ -1,9 +1,9 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { IdParamsType } from "../../utils/basicSchema";
-import {
+import type { FastifyReply, FastifyRequest } from "fastify";
+import type { IdParamsType } from "../../utils/basicSchema";
+import type {
   AddPasswordInput,
-  getPasswordsQueryOptions,
   ImportPasswordsInput,
+  getPasswordsQueryOptions,
 } from "./password.schema";
 import passwordService from "./password.service";
 

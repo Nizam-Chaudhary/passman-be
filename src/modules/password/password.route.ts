@@ -1,5 +1,5 @@
-import { FastifyInstance } from "fastify";
-import { ZodTypeProvider } from "fastify-type-provider-zod";
+import type { FastifyInstance } from "fastify";
+import type { ZodTypeProvider } from "fastify-type-provider-zod";
 import { errorSchema, idParamsSchema } from "../../utils/basicSchema";
 import passwordController from "./password.controller";
 import {

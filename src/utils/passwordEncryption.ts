@@ -3,7 +3,7 @@ import {
   createDecipheriv,
   randomBytes,
   scryptSync,
-} from "crypto";
+} from "node:crypto";
 import env from "../lib/env";
 
 export function deriveKey(password: string, salt: string): Buffer {

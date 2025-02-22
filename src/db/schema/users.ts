@@ -1,13 +1,15 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  integer,
   json,
   pgTable,
   serial,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import { MasterKeyType } from "../../utils/basicSchema";
+import type { MasterKeyType } from "../../utils/basicSchema";
+import { files } from "./files";
 import { passwords } from "./passwords";
 import { vaults } from "./vaults";
 
@@ -21,6 +23,7 @@ export const users = pgTable("users", {
   recoveryKey: json("recovery_key").$type<MasterKeyType>(),
   isVerified: boolean("is_verified").default(false).notNull(),
   otp: varchar("otp", { length: 6 }).notNull(),
+  fileId: integer().references(() => files.id, { onDelete: "set null" }),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()
@@ -28,7 +31,8 @@ export const users = pgTable("users", {
     .$onUpdateFn(() => new Date()),
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
   passwords: many(passwords),
   vaults: many(vaults),
+  file: one(files, { references: [files.id], fields: [users.fileId] }),
 }));

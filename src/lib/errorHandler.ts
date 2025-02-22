@@ -1,16 +1,18 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import {
   hasZodFastifySchemaValidationErrors,
   isResponseSerializationError,
 } from "fastify-type-provider-zod";
+import type AppError from "./appError";
 import env from "./env";
 
 export const globalErrorHandler = (
   fastify: FastifyInstance,
+  // biome-ignore lint/suspicious/noExplicitAny: error
   error: any,
   _request: FastifyRequest,
   reply: FastifyReply
-): any => {
+) => {
   fastify.log.error(error);
   if (hasZodFastifySchemaValidationErrors(error)) {
     return sendSchemaValidationError(error, reply);
@@ -25,6 +27,7 @@ export const globalErrorHandler = (
   sendErrorProd(error, reply);
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: error
 const sendSchemaValidationError = (error: any, reply: FastifyReply) => {
   const statusCode = 400;
   const message = "Request does not match the schema";
@@ -35,6 +38,7 @@ const sendSchemaValidationError = (error: any, reply: FastifyReply) => {
   });
 };
 
+// biome-ignore lint/suspicious/noExplicitAny: error
 const sendResponseSerializationError = (error: any, reply: FastifyReply) => {
   const statusCode = 500;
   const message = "Response doesn't match the schema";
@@ -45,7 +49,7 @@ const sendResponseSerializationError = (error: any, reply: FastifyReply) => {
   });
 };
 
-const sendErrorDev = (error: any, reply: FastifyReply) => {
+const sendErrorDev = (error: AppError, reply: FastifyReply) => {
   const statusCode = error.statusCode || 500;
   const status =
     error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
@@ -58,7 +62,7 @@ const sendErrorDev = (error: any, reply: FastifyReply) => {
   });
 };
 
-const sendErrorProd = (error: any, reply: FastifyReply) => {
+const sendErrorProd = (error: AppError, reply: FastifyReply) => {
   const statusCode = error.statusCode || 500;
   const status =
     error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";

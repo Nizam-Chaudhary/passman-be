@@ -1,5 +1,5 @@
-import { FastifyError } from "fastify";
-import {
+import type { FastifyError } from "fastify";
+import type {
   FastifySchemaValidationError,
   SchemaErrorDataVar,
 } from "fastify/types/schema";
@@ -15,8 +15,8 @@ export default class AppError extends Error implements FastifyError {
     name: string,
     message: string,
     statusCode: number,
-    isOperational: boolean = true,
-    code: string = "ERR_INTERNAL_SERVER_ERROR"
+    isOperational = true,
+    code = "ERR_INTERNAL_SERVER_ERROR"
   ) {
     super(message);
 

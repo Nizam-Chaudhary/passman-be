@@ -2,7 +2,7 @@ import { and, desc, eq, ilike, or } from "drizzle-orm";
 import { db } from "../../db";
 import { passwords } from "../../db/schema/schema";
 import AppError from "../../lib/appError";
-import { AddPasswordInput, ImportPasswordsInput } from "./password.schema";
+import type { AddPasswordInput, ImportPasswordsInput } from "./password.schema";
 
 class PasswordService {
   async addPassword(userId: number, input: AddPasswordInput) {

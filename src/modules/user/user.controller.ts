@@ -1,5 +1,5 @@
-import { FastifyReply, FastifyRequest } from "fastify";
-import { UpdateUserInput } from "./user.schema";
+import type { FastifyReply, FastifyRequest } from "fastify";
+import type { UpdateUserInput } from "./user.schema";
 import userService from "./user.service";
 
 class UserController {
