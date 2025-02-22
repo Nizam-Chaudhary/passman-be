@@ -1,8 +1,9 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+import { z } from "zod";
 import { errorSchema } from "../../utils/basicSchema";
 import fileController from "./file.controller";
-import { uploadFileResponseSchema } from "./file.schema";
+import { fileUploadBodySchema, uploadFileResponseSchema } from "./file.schema";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -14,6 +15,7 @@ export default async (fastify: FastifyInstance) => {
       summary: "Upload file",
       description: "Upload file",
       security: [{ jwtAuth: [] }],
+      body: z.any(),
       consumes: ["multipart/form-data"],
       response: {
         200: uploadFileResponseSchema,

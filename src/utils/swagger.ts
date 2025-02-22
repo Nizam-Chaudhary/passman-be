@@ -17,14 +17,6 @@ export const swaggerOptions: SwaggerOptions = {
         },
       },
     },
-    servers: [
-      {
-        url: "https://api.passman.live",
-      },
-      {
-        url: "http://localhost:3000",
-      },
-    ],
     // Use `x-tagGroups` to group tags under a parent
     // @ts-ignore
     "x-tagGroups": [

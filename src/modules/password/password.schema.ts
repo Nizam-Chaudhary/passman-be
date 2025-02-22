@@ -76,7 +76,7 @@ export const getPasswordsResponseSchema = z.object({
 }).describe("Schema for get passwords response");
 
 export const getPasswordsQueryStringSchema = z.object({
-  vaultId: z.coerce.number().min(0, "Please provide vaultId").describe("ID of the vault to fetch passwords from"),
+  vaultId: z.coerce.number().min(0, "Please provide vaultId").optional().describe("ID of the vault to fetch passwords from"),
   search: z.string().min(1, "provide atleast one character").optional().describe("Search string to filter passwords"),
 }).describe("Schema for password query parameters");
 
