@@ -29,7 +29,7 @@ export default fastifyPlugin((fastify, _opts, done) => {
     routePrefix: "/",
     hooks: {
       onRequest: (request, reply, done) => {
-        if (env.NODE_ENV === 'production') {
+        if (env.NODE_ENV === "production") {
           fastify.basicAuth(request, reply, done);
         }
       },

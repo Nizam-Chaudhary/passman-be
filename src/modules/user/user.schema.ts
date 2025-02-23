@@ -20,10 +20,12 @@ const baseSchema = createUpdateSchema(users, {
 });
 
 // Update
-export const updateUserSchema = z.object({
-  userName: baseSchema.shape.userName,
-  fileId: baseSchema.shape.fileId,
-}).describe("Schema for updating user information");
+export const updateUserSchema = z
+  .object({
+    userName: baseSchema.shape.userName,
+    fileId: baseSchema.shape.fileId,
+  })
+  .describe("Schema for updating user information");
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 
@@ -42,15 +44,17 @@ const selectUserModel = createSelectSchema(users, {
   })
   .describe("User model with selected fields for responses");
 
-export const updateUserResponseSchema = responseSchema.and(
-  z.object({ data: selectUserModel })
-).describe("Schema for user update response");
+export const updateUserResponseSchema = responseSchema
+  .and(z.object({ data: selectUserModel }))
+  .describe("Schema for user update response");
 
-export const getUserResponseSchema = z.object({
-  status: statusSchema,
-  data: selectUserModel.and(
-    z.object({
-      file: selectFileSchema,
-    })
-  ),
-}).describe("Schema for getting user data response");
+export const getUserResponseSchema = z
+  .object({
+    status: statusSchema,
+    data: selectUserModel.and(
+      z.object({
+        file: selectFileSchema,
+      })
+    ),
+  })
+  .describe("Schema for getting user data response");
