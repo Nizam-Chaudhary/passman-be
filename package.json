@@ -1,6 +1,11 @@
 {
   "name": "passman-be",
   "version": "1.0.0",
+  "packageManager": "pnpm@10.4.1",
+  "description": "Password Manager backend",
+  "author": "Nizam Chaudhary",
+  "license": "ISC",
+  "keywords": [],
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
@@ -8,9 +13,9 @@
     "start": "node dist/src/server.js",
     "dev": "tsx watch src/server.ts",
     "debug": "tsx watch --inspect src/server.ts",
-    "lint": "pnpm biome lint --write .",
-    "lint:format": "pnpm biome check --write .",
-    "format": "pnpm biome format --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -21,30 +26,15 @@
     "db:update": "pnpm db:generate && pnpm db:migrate",
     "db:seed": "tsx src/db/seed.ts"
   },
-  "keywords": [],
-  "author": "Nizam Chaudhary",
-  "license": "ISC",
-  "description": "Password Manager backend",
-  "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "@types/bcrypt": "^5.0.2",
-    "@types/node": "^22.13.4",
-    "@types/nodemailer": "^6.4.17",
-    "@types/pg": "^8.11.11",
-    "drizzle-kit": "^0.30.4",
-    "pino-pretty": "^13.0.0",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
-  },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.749.0",
-    "@aws-sdk/client-ses": "^3.749.0",
+    "@aws-sdk/client-s3": "^3.750.0",
+    "@aws-sdk/client-ses": "^3.750.0",
     "@fastify/basic-auth": "^6.0.3",
     "@fastify/cors": "^10.0.2",
     "@fastify/jwt": "^9.0.4",
     "@fastify/multipart": "^9.0.3",
     "@fastify/swagger": "^9.4.2",
-    "@scalar/fastify-api-reference": "^1.25.118",
+    "@scalar/fastify-api-reference": "^1.25.122",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
@@ -61,10 +51,22 @@
     "pino-loki": "^2.5.0",
     "zod": "^3.24.2"
   },
-  "packageManager": "pnpm@10.4.1",
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.3.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/node": "^22.13.5",
+    "@types/nodemailer": "^6.4.17",
+    "@types/pg": "^8.11.11",
+    "drizzle-kit": "^0.30.4",
+    "eslint": "^9.20.1",
+    "eslint-plugin-format": "^1.0.1",
+    "pino-pretty": "^13.0.0",
+    "prettier": "^3.5.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@biomejs/biome",
       "bcrypt",
       "esbuild"
     ]

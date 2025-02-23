@@ -1,6 +1,7 @@
 # Passman BE
 
 ## Features List
+
 - [x] resend otp
 - [x] expire otp
 - [x] forgot login password
@@ -21,10 +22,11 @@
 - [ ] Animations
 
 ## Bug List
+
 - [ ] make email matching ignore case in db
 
-
 ### generate openssl tls certificate
+
 ```bash
 openssl req -x509 -newkey rsa:4096 -keyout certs/key.pem -out certs/cert.pem -days 365 -nodes
 ```

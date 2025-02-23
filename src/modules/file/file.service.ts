@@ -1,5 +1,7 @@
-import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import type { MultipartFile } from "@fastify/multipart";
+
+import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+
 import { db } from "../../db";
 import { files } from "../../db/schema/schema";
 import AppError from "../../lib/appError";
@@ -7,7 +9,7 @@ import env from "../../lib/env";
 import { s3 } from "../../lib/s3";
 import { validFileTypesSchema } from "./file.schema";
 
-export const uploadFile = async (fileData: MultipartFile | undefined) => {
+export async function uploadFile(fileData: MultipartFile | undefined) {
   if (!fileData) {
     throw new AppError("FILE_REQUIRED", "File is required", 400);
   }
@@ -17,7 +19,7 @@ export const uploadFile = async (fileData: MultipartFile | undefined) => {
 
   // Sanitize filename
   const sanitizedFilename = fileData.filename
-    .replace(/[^a-zA-Z0-9.-]/g, "_") // Replace special chars with underscore
+    .replace(/[^a-z0-9.-]/gi, "_") // Replace special chars with underscore
     .toLowerCase(); // Convert to lowercase
 
   if (sanitizedFilename !== fileData.filename) {
@@ -55,15 +57,15 @@ export const uploadFile = async (fileData: MultipartFile | undefined) => {
     message: "File uploaded successfully",
     data: uploadedFile[0],
   };
-};
+}
 
-export const deleteFiles = async (keys: string[]) => {
+export async function deleteFiles(keys: string[]) {
   const command = new DeleteObjectsCommand({
     Bucket: env.S3_BUCKET,
     Delete: {
-      Objects: keys.map((key) => ({ Key: key })),
+      Objects: keys.map(key => ({ Key: key })),
     },
   });
 
   await s3.send(command);
-};
+}

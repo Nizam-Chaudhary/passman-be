@@ -101,12 +101,8 @@
           "name": "notes_userId_users_id_fk",
           "tableFrom": "notes",
           "tableTo": "users",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["userId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -114,12 +110,8 @@
           "name": "notes_vaultId_vaults_id_fk",
           "tableFrom": "notes",
           "tableTo": "vaults",
-          "columnsFrom": [
-            "vaultId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vaultId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -200,12 +192,8 @@
           "name": "passwords_user_id_users_id_fk",
           "tableFrom": "passwords",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -213,12 +201,8 @@
           "name": "passwords_vault_id_vaults_id_fk",
           "tableFrom": "passwords",
           "tableTo": "vaults",
-          "columnsFrom": [
-            "vault_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vault_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -312,12 +296,8 @@
           "name": "users_fileId_files_id_fk",
           "tableFrom": "users",
           "tableTo": "files",
-          "columnsFrom": [
-            "fileId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["fileId"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -327,9 +307,7 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       }
     },
@@ -376,12 +354,8 @@
           "name": "vaults_user_id_users_id_fk",
           "tableFrom": "vaults",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

@@ -1,4 +1,6 @@
+import type { EncryptedValueType } from "../../utils/basicSchema";
 import { relations } from "drizzle-orm";
+
 import {
   integer,
   json,
@@ -7,7 +9,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import type { EncryptedValueType } from "../../utils/basicSchema";
+
 import { users } from "./users";
 import { vaults } from "./vaults";
 

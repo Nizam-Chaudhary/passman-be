@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+
 import env from "./lib/env";
 import logger from "./lib/logger";
 import plugins from "./plugins";

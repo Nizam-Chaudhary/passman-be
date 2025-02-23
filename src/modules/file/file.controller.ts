@@ -1,4 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
+
 import * as fileService from "./file.service";
 
 class FileController {

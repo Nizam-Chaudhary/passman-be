@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+
 import { errorSchema, idParamsSchema } from "../../utils/basicSchema";
 import vaultController from "./vault.controller";
 import {
@@ -20,7 +21,7 @@ export default async (fastify: FastifyInstance) => {
       description: "Get vaults",
       security: [{ jwtAuth: [] }],
       response: {
-        200: getVaultsResponseSchema,
+        "200": getVaultsResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -39,7 +40,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       body: addUpdateVaultBodySchema,
       response: {
-        200: addVaultResponseSchema,
+        "200": addVaultResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -59,7 +60,7 @@ export default async (fastify: FastifyInstance) => {
       params: idParamsSchema,
       body: addUpdateVaultBodySchema,
       response: {
-        200: updateVaultResponseSchema,
+        "200": updateVaultResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -78,7 +79,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       params: idParamsSchema,
       response: {
-        200: deleteVaultResponseSchema,
+        "200": deleteVaultResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },

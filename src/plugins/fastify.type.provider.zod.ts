@@ -1,4 +1,3 @@
-import type { FastifyInstance, FastifyPluginOptions } from "fastify";
 import { fastifyPlugin } from "fastify-plugin";
 import {
   serializerCompiler,

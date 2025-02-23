@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import { expand } from "dotenv-expand";
-import { ZodError, z } from "zod";
+import { z, ZodError } from "zod";
 
 const envSchema = z.object({
   PORT: z.coerce.number().min(1),
@@ -34,11 +34,14 @@ const envSchema = z.object({
 expand(config());
 
 try {
+  // eslint-disable-next-line node/no-process-env
   envSchema.parse(process.env);
-} catch (e) {
+}
+catch (e) {
   if (e instanceof ZodError) {
-    console.error("Environment validation error:", e.errors);
+    console.error("Environment validation error:", e.flatten());
   }
 }
 
+// eslint-disable-next-line node/no-process-env
 export default envSchema.parse(process.env);

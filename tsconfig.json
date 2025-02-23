@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
+    "incremental": true,
     "target": "ES2016",
     "module": "CommonJS",
-    "sourceMap": true,
+    "strict": true,
     "outDir": "./dist",
+    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "incremental": true
+    "skipLibCheck": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "./app.log", "husky/**/*"]

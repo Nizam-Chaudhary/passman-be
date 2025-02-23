@@ -1,5 +1,6 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+
 import { z } from "zod";
 
 export default async function health(fastify: FastifyInstance) {

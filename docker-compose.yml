@@ -3,9 +3,9 @@ services:
     image: traefik:v3.3
     container_name: traefik
     command:
-      - "--providers.docker"
-      - "--api.insecure=true"
-      - "--providers.docker.exposedbydefault=false"
+      - --providers.docker
+      - --api.insecure=true
+      - --providers.docker.exposedbydefault=false
       # - "--entrypoints.web.address=:80"
       # - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
       # - "--certificatesresolvers.myresolver.acme.email=chaudharynizam10@gmail.com"
@@ -28,9 +28,9 @@ services:
       context: .
     container_name: passman-be
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.passman-be.loadbalancer.server.port=3000"
-      - "traefik.http.routers.passman-be.rule=Host(`api.localhost`)"
+      - traefik.enable=true
+      - traefik.http.services.passman-be.loadbalancer.server.port=3000
+      - traefik.http.routers.passman-be.rule=Host(`api.localhost`)
       # - "traefik.http.routers.passman-be.entrypoints=websecure"
       # - "traefik.http.routers.passman-be.tls.certresolver=myresolver"
     env_file:

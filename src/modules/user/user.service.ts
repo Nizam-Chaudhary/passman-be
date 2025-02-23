@@ -1,8 +1,10 @@
+import type { UpdateUserInput } from "./user.schema";
+
 import { eq } from "drizzle-orm";
+
 import { db } from "../../db";
 import { files, users } from "../../db/schema/schema";
 import { deleteFiles } from "../file/file.service";
-import type { UpdateUserInput } from "./user.schema";
 
 class UserService {
   async getUser(id: number) {
