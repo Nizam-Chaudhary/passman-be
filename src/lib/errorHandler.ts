@@ -1,18 +1,17 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+
+import type AppError from "./appError";
+
 import {
   hasZodFastifySchemaValidationErrors,
   isResponseSerializationError,
 } from "fastify-type-provider-zod";
-import type AppError from "./appError";
+
 import env from "./env";
 
-export const globalErrorHandler = (
-  fastify: FastifyInstance,
+export function globalErrorHandler(fastify: FastifyInstance,
   // biome-ignore lint/suspicious/noExplicitAny: error
-  error: any,
-  _request: FastifyRequest,
-  reply: FastifyReply
-) => {
+  error: any, _request: FastifyRequest, reply: FastifyReply) {
   fastify.log.error(error);
   if (hasZodFastifySchemaValidationErrors(error)) {
     return sendSchemaValidationError(error, reply);
@@ -25,53 +24,53 @@ export const globalErrorHandler = (
     return sendErrorDev(error, reply);
   }
   sendErrorProd(error, reply);
-};
+}
 
 // biome-ignore lint/suspicious/noExplicitAny: error
-const sendSchemaValidationError = (error: any, reply: FastifyReply) => {
+function sendSchemaValidationError(error: any, reply: FastifyReply) {
   const statusCode = 400;
   const message = "Request does not match the schema";
   reply.code(statusCode).send({
     status: "fail",
-    message: message,
+    message,
     issues: error.validation,
   });
-};
+}
 
 // biome-ignore lint/suspicious/noExplicitAny: error
-const sendResponseSerializationError = (error: any, reply: FastifyReply) => {
+function sendResponseSerializationError(error: any, reply: FastifyReply) {
   const statusCode = 500;
   const message = "Response doesn't match the schema";
   reply.code(statusCode).send({
     status: "error",
-    message: message,
+    message,
     issues: error.cause.issues,
   });
-};
+}
 
-const sendErrorDev = (error: AppError, reply: FastifyReply) => {
+function sendErrorDev(error: AppError, reply: FastifyReply) {
   const statusCode = error.statusCode || 500;
-  const status =
-    error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
+  const status
+    = error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
   const message = error.message || "Internal Server Error";
 
   reply.code(statusCode).send({
-    status: status,
-    message: message,
+    status,
+    message,
     stack: error.stack,
   });
-};
+}
 
-const sendErrorProd = (error: AppError, reply: FastifyReply) => {
+function sendErrorProd(error: AppError, reply: FastifyReply) {
   const statusCode = error.statusCode || 500;
-  const status =
-    error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
+  const status
+    = error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
   const message = error.message || "Internal Server Error";
 
   if (error.isOperational) {
     return reply.code(statusCode).send({
-      status: status,
-      message: message,
+      status,
+      message,
     });
   }
 
@@ -79,4 +78,4 @@ const sendErrorProd = (error: AppError, reply: FastifyReply) => {
     status: "error",
     message: "Internal Server Error",
   });
-};
+}

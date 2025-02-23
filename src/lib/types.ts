@@ -10,12 +10,12 @@ declare module "fastify" {
   }
 }
 
-type userPayload = {
+interface userPayload {
   id: number;
   email: string;
   userName: string;
   encryptionKey: string;
-};
+}
 
 declare module "@fastify/jwt" {
   interface FastifyJWT {

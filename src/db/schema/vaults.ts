@@ -6,6 +6,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+
 import { notes } from "./notes";
 import { passwords } from "./passwords";
 import { users } from "./users";

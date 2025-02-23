@@ -1,4 +1,6 @@
+import type { MasterKeyType } from "../../utils/basicSchema";
 import { relations } from "drizzle-orm";
+
 import {
   boolean,
   integer,
@@ -8,7 +10,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import type { MasterKeyType } from "../../utils/basicSchema";
+
 import { files } from "./files";
 import { passwords } from "./passwords";
 import { vaults } from "./vaults";

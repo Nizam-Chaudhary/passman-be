@@ -1,15 +1,16 @@
 import type { SwaggerOptions } from "@fastify/swagger";
+
 import { jsonSchemaTransform } from "fastify-type-provider-zod";
 
 export const swaggerOptions: SwaggerOptions = {
   openapi: {
-    openapi: "3.0.3",
-    info: {
+    "openapi": "3.0.3",
+    "info": {
       title: `Passman API's`,
       description: `Passman Backend API's`,
       version: "1.0.0",
     },
-    components: {
+    "components": {
       securitySchemes: {
         jwtAuth: {
           type: "http",
@@ -18,7 +19,7 @@ export const swaggerOptions: SwaggerOptions = {
       },
     },
     // Use `x-tagGroups` to group tags under a parent
-    // @ts-ignore
+    // @ts-expect-error not exist
     "x-tagGroups": [
       {
         name: "Health",

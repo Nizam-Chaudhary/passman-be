@@ -11,7 +11,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck: # Optional: Check if the database is ready
-      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      test: [CMD-SHELL, pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -22,9 +22,9 @@ services:
     image: traefik:v3.3
     container_name: traefik
     command:
-      - "--providers.docker"
-      - "--api.insecure=true"
-      - "--providers.docker.exposedbydefault=false"
+      - --providers.docker
+      - --api.insecure=true
+      - --providers.docker.exposedbydefault=false
       - "--entrypoints.web.address=:80"
     ports:
       - 80:80
@@ -38,9 +38,9 @@ services:
       context: .
       dockerfile: Dockerfile.dev.yml
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.passman-be.loadbalancer.server.port=3000"
-      - "traefik.http.routers.passman-be.rule=Host(`api.localhost`)"
+      - traefik.enable=true
+      - traefik.http.services.passman-be.loadbalancer.server.port=3000
+      - traefik.http.routers.passman-be.rule=Host(`api.localhost`)
     env_file:
       - .env
 
@@ -85,9 +85,9 @@ services:
     volumes:
       - grafana-data:/var/lib/grafana
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
-      - "traefik.http.routers.grafana.rule=Host(`observe.localhost`)"
+      - traefik.enable=true
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+      - traefik.http.routers.grafana.rule=Host(`observe.localhost`)
 
 volumes:
   postgres_data:

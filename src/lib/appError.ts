@@ -16,7 +16,7 @@ export default class AppError extends Error implements FastifyError {
     message: string,
     statusCode: number,
     isOperational = true,
-    code = "ERR_INTERNAL_SERVER_ERROR"
+    code = "ERR_INTERNAL_SERVER_ERROR",
   ) {
     super(message);
 

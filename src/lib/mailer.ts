@@ -1,5 +1,6 @@
 import * as aws from "@aws-sdk/client-ses";
 import { createTransport } from "nodemailer";
+
 import env from "./env";
 
 // configuring AWS SDK
@@ -27,11 +28,11 @@ const transporter = createTransport({
  * @param options.emailBody - HTML content of the email body
  * @returns Promise that resolves to true when email is sent
  */
-export const sendMail = (options: {
+export function sendMail(options: {
   toAddresses: string;
   subject: string;
   emailBody: string;
-}) => {
+}) {
   return new Promise((resolve, _reject) => {
     transporter.sendMail(
       {
@@ -45,12 +46,13 @@ export const sendMail = (options: {
         resolve(true);
         if (err) {
           console.error(err);
-        } else {
+        }
+        else {
           console.error(new Date().toLocaleString(), info?.envelope);
           console.error(info?.messageId);
         }
-      }
+      },
     );
     resolve(true);
   });
-};
+}

@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+
 import { errorSchema } from "../../utils/basicSchema";
 import userController from "./user.controller";
 import {
@@ -20,7 +21,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       body: updateUserSchema,
       response: {
-        200: updateUserResponseSchema,
+        "200": updateUserResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -38,7 +39,7 @@ export default async (fastify: FastifyInstance) => {
       summary: "Get logged in user detail",
       description: "fetch user details",
       response: {
-        200: getUserResponseSchema,
+        "200": getUserResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },

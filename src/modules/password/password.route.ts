@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
+
 import { errorSchema, idParamsSchema } from "../../utils/basicSchema";
 import passwordController from "./password.controller";
 import {
@@ -24,7 +25,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       body: addPasswordSchema,
       response: {
-        200: addOrUpdateOrDeletePasswordResponseSchema,
+        "200": addOrUpdateOrDeletePasswordResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -43,7 +44,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       querystring: getPasswordsQueryStringSchema,
       response: {
-        200: getPasswordsResponseSchema,
+        "200": getPasswordsResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -62,7 +63,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       params: idParamsSchema,
       response: {
-        200: getPasswordResponseSchema,
+        "200": getPasswordResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -82,7 +83,7 @@ export default async (fastify: FastifyInstance) => {
       params: idParamsSchema,
       body: updatePasswordSchema,
       response: {
-        200: addOrUpdateOrDeletePasswordResponseSchema,
+        "200": addOrUpdateOrDeletePasswordResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -101,7 +102,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       params: idParamsSchema,
       response: {
-        200: addOrUpdateOrDeletePasswordResponseSchema,
+        "200": addOrUpdateOrDeletePasswordResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },
@@ -120,7 +121,7 @@ export default async (fastify: FastifyInstance) => {
       security: [{ jwtAuth: [] }],
       body: importPasswordsSchema,
       response: {
-        200: importPasswordResponseSchema,
+        "200": importPasswordResponseSchema,
         "4xx": errorSchema,
         "5xx": errorSchema,
       },

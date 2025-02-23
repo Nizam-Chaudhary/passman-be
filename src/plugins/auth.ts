@@ -1,11 +1,11 @@
 import type { FastifyJWT } from "@fastify/jwt";
 import type {
-  FastifyInstance,
-  FastifyPluginOptions,
   FastifyReply,
   FastifyRequest,
 } from "fastify";
+
 import fastifyPlugin from "fastify-plugin";
+
 import AppError from "../lib/appError";
 
 export default fastifyPlugin((fastify, _opts, done) => {
@@ -22,20 +22,22 @@ export default fastifyPlugin((fastify, _opts, done) => {
         const decoded = req.jwt.verify<FastifyJWT["user"]>(token);
         req.user = decoded;
         // biome-ignore lint/suspicious/noExplicitAny: error
-      } catch (error: any) {
+      }
+      catch (error: any) {
         if (error.code === "FAST_JWT_EXPIRED") {
           throw new AppError("UNAUTHORIZED", "Access token expired", 401);
           // biome-ignore lint/style/noUselessElse: better explanation
-        } else if (error.code === "FAST_JWT_INVALID_SIGNATURE") {
+        }
+        else if (error.code === "FAST_JWT_INVALID_SIGNATURE") {
           throw new AppError(
             "UNAUTHORIZED",
             "access token has invalid signature",
-            401
+            401,
           );
         }
         throw new AppError("UNAUTHORIZED", "Unauthorized...", 401);
       }
-    }
+    },
   );
 
   done();

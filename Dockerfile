@@ -23,8 +23,8 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /app
-COPY package.json drizzle.config.ts rds-ca-rsa2048-g1.pem /app/
+COPY package.json drizzle.config.ts rds-ca-rsa2048-g1.pem deploy.sh /app/
 COPY --from=prod-deps /app/node_modules node_modules
 COPY --from=builder /app/dist dist
 EXPOSE 3000
-CMD [ "pnpm" , "start" ]
+CMD [ "./deploy.sh" ]

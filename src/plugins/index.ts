@@ -1,5 +1,5 @@
-import type { FastifyInstance, FastifyPluginOptions } from "fastify";
 import fastifyPlugin from "fastify-plugin";
+
 import auth from "./auth";
 import cors from "./cors";
 import errorHandler from "./error.handler";

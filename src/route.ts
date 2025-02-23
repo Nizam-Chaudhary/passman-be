@@ -1,4 +1,5 @@
 import type { FastifyInstance } from "fastify";
+
 import authRoute from "./modules/auth/auth.route";
 import fileRoute from "./modules/file/file.route";
 import healthRoute from "./modules/health/health.route";

@@ -1,5 +1,6 @@
 import { createSelectSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
+
 import { users } from "../../db/schema/schema";
 import {
   masterKeySchema,
@@ -9,11 +10,11 @@ import {
 import { selectFileSchema } from "../file/file.schema";
 
 const baseSchema = createUpdateSchema(users, {
-  userName: (schema) =>
+  userName: schema =>
     schema
       .min(2, "User name must be at least 4 characters")
       .describe("Username for the account"),
-  fileId: (schema) =>
+  fileId: schema =>
     schema
       .min(1, "File ID must be at least 1")
       .describe("ID of the associated file"),
@@ -54,7 +55,7 @@ export const getUserResponseSchema = z
     data: selectUserModel.and(
       z.object({
         file: selectFileSchema,
-      })
+      }),
     ),
   })
   .describe("Schema for getting user data response");

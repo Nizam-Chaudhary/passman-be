@@ -1,5 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import AppError from "../../lib/appError";
+
 import type {
   CreateMasterKeyBody,
   JwtUserData,
@@ -12,12 +12,14 @@ import type {
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "./auth.schema";
+
+import AppError from "../../lib/appError";
 import authService from "./auth.service";
 
 class UserController {
   async signUpUser(
     req: FastifyRequest<{ Body: SignUpUserInput }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const response = await authService.signUpUser(req.body);
     await reply.code(200).send(response);
@@ -25,7 +27,7 @@ class UserController {
 
   async signInUser(
     req: FastifyRequest<{ Body: SignInUserInput }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const userData = await authService.signInUser(req.body);
     const tokenPayload = {
@@ -50,7 +52,7 @@ class UserController {
 
   async refreshToken(
     req: FastifyRequest<{ Body: RefreshTokenBody }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const refresh_token = req.body.refreshToken;
     const tokenPayload = req.jwt.verify<JwtUserData>(refresh_token);
@@ -76,7 +78,7 @@ class UserController {
 
   async verifyUserEmail(
     req: FastifyRequest<{ Body: VerifyUserEmailBody }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const response = await authService.verifyUserEmail(req.body);
     reply.code(200).send(response);
@@ -84,7 +86,7 @@ class UserController {
 
   async createMasterKey(
     req: FastifyRequest<{ Body: CreateMasterKeyBody }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const id = req.user.id;
 
@@ -95,7 +97,7 @@ class UserController {
 
   async verifyMasterPassword(
     req: FastifyRequest<{ Body: VerifyMasterPasswordBody }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const id = req.user.id;
 
@@ -106,7 +108,7 @@ class UserController {
 
   async resendOtp(
     req: FastifyRequest<{ Body: { email: string } }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const email = req.body.email;
 
@@ -117,7 +119,7 @@ class UserController {
 
   async sendResetPasswordEmail(
     req: FastifyRequest<{ Body: { email: string } }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const email = req.body.email;
 
@@ -130,7 +132,7 @@ class UserController {
 
   async resetPassword(
     req: FastifyRequest<{ Body: ResetPasswordBody }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const { token, password } = req.body;
     const tokenData = req.jwt.verify<ResetPasswordJwtTokenPayload>(token);
@@ -146,7 +148,7 @@ class UserController {
 
   async updateMasterPassword(
     req: FastifyRequest<{ Body: UpdateMasterPasswordBody }>,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) {
     const userId = req.user.id;
     const body = req.body;
