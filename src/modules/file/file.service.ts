@@ -17,7 +17,7 @@ export async function uploadFile(fileData: MultipartFile | undefined) {
   // validate file type
   try {
     validFileTypesSchema.parse(fileData.mimetype);
-  } catch (error) {
+  } catch {
     throw new AppError("INVALID_FILE_TYPE", "Invalid file type", 400);
   }
 
