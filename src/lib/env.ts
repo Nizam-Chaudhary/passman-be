@@ -34,14 +34,11 @@ const envSchema = z.object({
 expand(config());
 
 try {
-  // eslint-disable-next-line node/no-process-env
   envSchema.parse(process.env);
-}
-catch (e) {
+} catch (e) {
   if (e instanceof ZodError) {
     console.error("Environment validation error:", e.flatten());
   }
 }
 
-// eslint-disable-next-line node/no-process-env
 export default envSchema.parse(process.env);
