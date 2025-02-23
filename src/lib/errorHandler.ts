@@ -9,24 +9,29 @@ import {
 
 import env from "./env";
 
-export function globalErrorHandler(fastify: FastifyInstance,
-  // biome-ignore lint/suspicious/noExplicitAny: error
-  error: any, _request: FastifyRequest, reply: FastifyReply) {
+export function globalErrorHandler(
+  fastify: FastifyInstance,
+  error: any,
+  _request: FastifyRequest,
+  reply: FastifyReply
+) {
   fastify.log.error(error);
   if (hasZodFastifySchemaValidationErrors(error)) {
-    return sendSchemaValidationError(error, reply);
+    sendSchemaValidationError(error, reply);
+    return;
   }
 
   if (isResponseSerializationError(error)) {
-    return sendResponseSerializationError(error, reply);
+    sendResponseSerializationError(error, reply);
+    return;
   }
   if (env.NODE_ENV === "development") {
-    return sendErrorDev(error, reply);
+    sendErrorDev(error, reply);
+    return;
   }
   sendErrorProd(error, reply);
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: error
 function sendSchemaValidationError(error: any, reply: FastifyReply) {
   const statusCode = 400;
   const message = "Request does not match the schema";
@@ -37,7 +42,6 @@ function sendSchemaValidationError(error: any, reply: FastifyReply) {
   });
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: error
 function sendResponseSerializationError(error: any, reply: FastifyReply) {
   const statusCode = 500;
   const message = "Response doesn't match the schema";
@@ -50,8 +54,8 @@ function sendResponseSerializationError(error: any, reply: FastifyReply) {
 
 function sendErrorDev(error: AppError, reply: FastifyReply) {
   const statusCode = error.statusCode || 500;
-  const status
-    = error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
+  const status =
+    error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
   const message = error.message || "Internal Server Error";
 
   reply.code(statusCode).send({
@@ -63,8 +67,8 @@ function sendErrorDev(error: AppError, reply: FastifyReply) {
 
 function sendErrorProd(error: AppError, reply: FastifyReply) {
   const statusCode = error.statusCode || 500;
-  const status
-    = error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
+  const status =
+    error.statusCode >= 400 && error.statusCode < 500 ? "fail" : "error";
   const message = error.message || "Internal Server Error";
 
   if (error.isOperational) {

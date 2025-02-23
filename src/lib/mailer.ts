@@ -48,8 +48,8 @@ export function sendMail(options: {
           console.error(err);
         }
         else {
-          console.error(new Date().toLocaleString(), info?.envelope);
-          console.error(info?.messageId);
+          console.error(new Date().toLocaleString(), info.envelope);
+          console.error(info.messageId);
         }
       },
     );

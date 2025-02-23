@@ -15,7 +15,11 @@ export async function uploadFile(fileData: MultipartFile | undefined) {
   }
 
   // validate file type
-  validFileTypesSchema.parse(fileData.mimetype);
+  try {
+    validFileTypesSchema.parse(fileData.mimetype);
+  } catch (error) {
+    throw new AppError("INVALID_FILE_TYPE", "Invalid file type", 400);
+  }
 
   // Sanitize filename
   const sanitizedFilename = fileData.filename
@@ -63,7 +67,7 @@ export async function deleteFiles(keys: string[]) {
   const command = new DeleteObjectsCommand({
     Bucket: env.S3_BUCKET,
     Delete: {
-      Objects: keys.map(key => ({ Key: key })),
+      Objects: keys.map((key) => ({ Key: key })),
     },
   });
 
