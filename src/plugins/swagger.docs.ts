@@ -1,9 +1,9 @@
-import { Buffer } from "node:buffer";
-import { timingSafeEqual } from "node:crypto";
 import { fastifyBasicAuth } from "@fastify/basic-auth";
 import fastifySwagger from "@fastify/swagger";
 import ScalarApiReference from "@scalar/fastify-api-reference";
 import fastifyPlugin from "fastify-plugin";
+import { Buffer } from "node:buffer";
+import { timingSafeEqual } from "node:crypto";
 
 import env from "../lib/env";
 import { swaggerOptions } from "../utils/swagger";
@@ -15,12 +15,11 @@ export default fastifyPlugin((fastify, _opts, done) => {
   fastify.register(fastifyBasicAuth, {
     validate(username, password, _req, _reply, done) {
       if (
-        compare(username, env.DOC_USERNAME)
-        && compare(password, env.DOC_PASSWORD)
+        compare(username, env.DOC_USERNAME) &&
+        compare(password, env.DOC_PASSWORD)
       ) {
         done(); // Access granted
-      }
-      else {
+      } else {
         done(new Error("Invalid credentials"));
       }
     },
@@ -34,6 +33,7 @@ export default fastifyPlugin((fastify, _opts, done) => {
         if (env.NODE_ENV === "production") {
           fastify.basicAuth(request, reply, done);
         }
+        done();
       },
     },
     configuration: {
@@ -59,8 +59,7 @@ export default fastifyPlugin((fastify, _opts, done) => {
 function compare(a: string, b: string): boolean {
   try {
     return timingSafeEqual(Buffer.from(a), Buffer.from(b));
-  }
-  catch {
+  } catch {
     return false;
   }
 }

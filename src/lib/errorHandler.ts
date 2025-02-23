@@ -32,7 +32,6 @@ export function globalErrorHandler(
   sendErrorProd(error, reply);
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: error
 function sendSchemaValidationError(error: any, reply: FastifyReply) {
   const statusCode = 400;
   const message = "Request does not match the schema";
@@ -43,7 +42,6 @@ function sendSchemaValidationError(error: any, reply: FastifyReply) {
   });
 }
 
-// biome-ignore lint/suspicious/noExplicitAny: error
 function sendResponseSerializationError(error: any, reply: FastifyReply) {
   const statusCode = 500;
   const message = "Response doesn't match the schema";
