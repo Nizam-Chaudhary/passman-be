@@ -26,9 +26,7 @@ const envSchema = z.object({
   AWS_REGION: z.string().min(1),
   S3_BUCKET: z.string().min(1),
   FROM_EMAIL_ADDR: z.string().email(),
-  LOKI_URL: z.string().url(),
-  TEMPO_URL: z.string().url(),
-  PROMETHEUS_URL: z.string().url(),
+  OTLP_COLLECTOR_URL: z.string().url(),
 });
 
 expand(config());
