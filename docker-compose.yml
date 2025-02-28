@@ -27,19 +27,23 @@ services:
     build:
       context: .
     container_name: passman-be
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.passman-be.loadbalancer.server.port=3000
-      - traefik.http.routers.passman-be.rule=Host(`api.localhost`)
-      # - "traefik.http.routers.passman-be.entrypoints=websecure"
-      # - "traefik.http.routers.passman-be.tls.certresolver=myresolver"
+    # labels:
+    #   - traefik.enable=true
+    #   - traefik.http.services.passman-be.loadbalancer.server.port=3000
+    #   - traefik.http.routers.passman-be.rule=Host(`api.localhost`)
+    # - "traefik.http.routers.passman-be.entrypoints=websecure"
+    # - "traefik.http.routers.passman-be.tls.certresolver=myresolver"
+    ports:
+      - 3000:3000
     env_file:
       - .env
     networks:
-      - web
+      - monitoring
 
 networks:
   web:
+    external: true
+  monitoring:
     external: true
 # volumes:
 #   letsencrypt:
