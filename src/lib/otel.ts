@@ -1,8 +1,10 @@
-import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
+import FastifyOtelInstrumentation from "@fastify/otel";
+// import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-grpc";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
+import { GrpcInstrumentation } from "@opentelemetry/instrumentation-grpc";
 import { Resource } from "@opentelemetry/resources";
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
@@ -14,7 +16,9 @@ import {
 import appPackage from "../../package.json";
 import env from "./env";
 
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO);
+// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
+
+const grpcInstrumentation = new GrpcInstrumentation();
 
 // OTLP Trace Exporter (for traces)
 const traceExporter = new OTLPTraceExporter({
@@ -43,18 +47,24 @@ const logExporter = new OTLPLogExporter({
 });
 
 const logProcessor = new BatchLogRecordProcessor(logExporter);
+export const fastifyOtelInstrumentation = new FastifyOtelInstrumentation({
+  registerOnInitialization: true,
+});
 
 // OpenTelemetry SDK setup
 const sdk = new NodeSDK({
+  instrumentations: [
+    getNodeAutoInstrumentations(),
+    fastifyOtelInstrumentation,
+    grpcInstrumentation,
+  ],
   resource: new Resource({
-    [ATTR_SERVICE_NAME]: "passman",
+    [ATTR_SERVICE_NAME]: appPackage.name,
     [ATTR_SERVICE_VERSION]: appPackage.version,
   }),
   traceExporter: traceExporter,
   metricReader: metricReader,
   logRecordProcessors: [logProcessor],
-  instrumentations: [getNodeAutoInstrumentations()],
 });
 
-// Start SDK
 export default sdk;
