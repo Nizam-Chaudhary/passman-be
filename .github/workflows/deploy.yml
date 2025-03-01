@@ -50,7 +50,7 @@ jobs:
       - name: Create Docker context and set in use
         run: |
           ssh-keyscan -H passman.live >> ~/.ssh/known_hosts
-          docker context create passman --docker "host=ssh://ubuntu@passman.live"
+          docker context create passman --docker "host=ssh://ec2-user@passman.live"
           docker context use passman
           # echo ${{ secrets.GRAFANA_USERNAME }} | docker secret create grafana_username -
           # echo ${{ secrets.GRAFANA_PASSWORD }} | docker secret create grafana_password -
