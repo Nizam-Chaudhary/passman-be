@@ -1,5 +1,5 @@
 import FastifyOtelInstrumentation from "@fastify/otel";
-// import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
+import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-grpc";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
@@ -7,7 +7,10 @@ import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
 import { GrpcInstrumentation } from "@opentelemetry/instrumentation-grpc";
 import { Resource } from "@opentelemetry/resources";
 import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
-import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
+import {
+  MeterProvider,
+  PeriodicExportingMetricReader,
+} from "@opentelemetry/sdk-metrics";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import {
   ATTR_SERVICE_NAME,
@@ -16,7 +19,7 @@ import {
 import appPackage from "../../package.json";
 import env from "./env";
 
-// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
 
 const grpcInstrumentation = new GrpcInstrumentation();
 
@@ -47,9 +50,25 @@ const logExporter = new OTLPLogExporter({
 });
 
 const logProcessor = new BatchLogRecordProcessor(logExporter);
-export const fastifyOtelInstrumentation = new FastifyOtelInstrumentation({
-  registerOnInitialization: true,
+
+const meterProvider = new MeterProvider({
+  resource: new Resource({
+    [ATTR_SERVICE_NAME]: appPackage.name,
+    [ATTR_SERVICE_VERSION]: appPackage.version,
+  }),
+  readers: [
+    new PeriodicExportingMetricReader({
+      exporter: metricExporter,
+      exportIntervalMillis: 5000,
+    }),
+  ],
 });
+
+export const meter = meterProvider.getMeter("fastify-metrics");
+
+export const fastifyOtelInstrumentation = new FastifyOtelInstrumentation();
+
+fastifyOtelInstrumentation.setMeterProvider(meterProvider);
 
 // OpenTelemetry SDK setup
 const sdk = new NodeSDK({

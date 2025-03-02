@@ -1,2 +1,2 @@
-pnpm run db:migrate
+# pnpm run db:migrate
 pnpm run start
