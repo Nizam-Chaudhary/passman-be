@@ -7,6 +7,7 @@ import plugins from "./plugins";
 import routes from "./route";
 
 otelSdk.start();
+
 const fastify = Fastify({
   logger,
 });
@@ -28,7 +29,7 @@ main();
 function setupGracefulShutdown(fastify: FastifyInstance) {
   const listeners = ["SIGINT", "SIGTERM"];
   for (const signal of listeners) {
-    process.on(signal, async () => {
+    process.once(signal, async () => {
       await fastify.close();
       await otelSdk.shutdown();
       process.exit(0);

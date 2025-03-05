@@ -13,5 +13,5 @@
     "skipLibCheck": true
   },
   "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules", "./app.log", "husky/**/*"]
+  "exclude": ["node_modules", "./app.log", "husky/**/*", "dist"]
 }
