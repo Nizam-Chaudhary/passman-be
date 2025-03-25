@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
-import { db } from "../../db";
-import * as schema from "../../db/schema/schema";
-import AppError from "../../lib/appError";
+import { db } from "@/db/index.js";
+import * as schema from "@/db/schema/schema.js";
+import AppError from "@/lib/appError.js";
 
 class UserService {
   async getVaults(userId: number) {
@@ -20,7 +20,7 @@ class UserService {
     const vault = await db.query.vaults.findFirst({
       where: and(
         eq(schema.vaults.name, name),
-        eq(schema.vaults.userId, userId),
+        eq(schema.vaults.userId, userId)
       ),
     });
 
@@ -28,7 +28,7 @@ class UserService {
       throw new AppError(
         "VAULT_ALREADY_EXISTS",
         `Vault with name "${name}" already exists`,
-        400,
+        400
       );
     }
     const vaults = await db

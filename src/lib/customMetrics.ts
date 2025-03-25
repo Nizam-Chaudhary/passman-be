@@ -1,4 +1,4 @@
-import { meter } from "./otel";
+import { meter } from "@/lib/otel.js";
 
 // 1. Histogram: Track request duration in seconds
 export const requestDurationHistogram = meter.createHistogram(

@@ -5,19 +5,19 @@ import type {
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "./auth.schema";
+} from "@/modules/auth/auth.schema.js";
 import { compare, compareSync, hash, hashSync } from "bcrypt";
 import { eq, ilike } from "drizzle-orm";
 
 import moment from "moment";
 
-import { db } from "../../db";
-import { users, vaults } from "../../db/schema/schema";
-import AppError from "../../lib/appError";
-import env from "../../lib/env";
-import { sendMail } from "../../lib/mailer";
-import * as userTemplates from "../../templates/user";
-import { generateOtp } from "../../utils/generator";
+import { db } from "@/db/index.js";
+import { users, vaults } from "@/db/schema/schema.js";
+import AppError from "@/lib/appError.js";
+import env from "@/lib/env.js";
+import { sendMail } from "@/lib/mailer.js";
+import * as userTemplates from "@/templates/user.js";
+import { generateOtp } from "@/utils/generator.js";
 
 class AuthService {
   async signUpUser(input: SignUpUserInput) {
@@ -91,7 +91,7 @@ class AuthService {
         "USER_NOT_REGISTERED",
         "Email not registered. Please register first!",
         401,
-        true,
+        true
       );
     }
 
@@ -100,19 +100,19 @@ class AuthService {
         "EMAIL_NOT_VERIFIED",
         "Email not verified. Please verify first!",
         401,
-        true,
+        true
       );
     }
 
-    const isMatch
-      = userData && (await compare(input.password, userData.password));
+    const isMatch =
+      userData && (await compare(input.password, userData.password));
 
     if (!userData || !isMatch) {
       throw new AppError(
         "INVALID_CREDENTIALS",
         "Invalid email or password",
         401,
-        true,
+        true
       );
     }
 
@@ -163,7 +163,7 @@ class AuthService {
       throw new AppError(
         "USER_NOT_REGISTERED",
         "Email not registered. Please register first!",
-        400,
+        400
       );
     }
 
@@ -190,7 +190,7 @@ class AuthService {
   async createMasterKey(id: number, input: CreateMasterKeyBody) {
     const hashedMasterPassword = await hash(
       input.masterPassword,
-      env.SALT_ROUNDS,
+      env.SALT_ROUNDS
     );
 
     const userPassword = await db.query.users.findFirst({
@@ -240,20 +240,20 @@ class AuthService {
       throw new AppError(
         "MASTER_PASSWORD_NOT_EXISTS",
         "Master password not created yet",
-        400,
+        400
       );
     }
 
     const isMasterPasswordValid = compareSync(
       input.masterPassword,
-      user.masterPassword,
+      user.masterPassword
     );
 
     if (!isMasterPasswordValid) {
       throw new AppError(
         "INCORRECT_MASTER_PASSWORD",
         "Incorrect master password",
-        400,
+        400
       );
     }
 
@@ -279,7 +279,7 @@ class AuthService {
       throw new AppError(
         "OTP_RESEND_LIMIT_REACHED",
         "OTP resend limit reached",
-        400,
+        400
       );
     }
 
@@ -323,7 +323,7 @@ class AuthService {
       throw new AppError(
         "EMAIL_SEND_LIMIT_REACHED",
         "Email sending limit reached",
-        400,
+        400
       );
     }
 
@@ -365,7 +365,7 @@ class AuthService {
   async updateMasterPassword(userId: number, body: UpdateMasterPasswordBody) {
     const hashedMasterPassword = await hash(
       body.masterPassword,
-      env.SALT_ROUNDS,
+      env.SALT_ROUNDS
     );
 
     const updateUser = await db

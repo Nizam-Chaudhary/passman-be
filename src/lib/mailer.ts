@@ -1,7 +1,7 @@
 import * as aws from "@aws-sdk/client-ses";
 import { createTransport } from "nodemailer";
 
-import env from "./env";
+import env from "@/lib/env.js";
 
 // configuring AWS SDK
 const ses = new aws.SES({
@@ -46,12 +46,11 @@ export function sendMail(options: {
         resolve(true);
         if (err) {
           console.error(err);
-        }
-        else {
+        } else {
           console.error(new Date().toLocaleString(), info.envelope);
           console.error(info.messageId);
         }
-      },
+      }
     );
     resolve(true);
   });

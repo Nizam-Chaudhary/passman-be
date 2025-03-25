@@ -1,8 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { errorSchema, responseSchema } from "../../utils/basicSchema";
-import authController from "./auth.controller";
+import authController from "@/modules/auth/auth.controller.js";
 import {
   createMasterKeyBodySchema,
   refreshTokenBodySchema,
@@ -18,7 +17,8 @@ import {
   verifyMasterPasswordBodySchema,
   verifyMasterPasswordResponseSchema,
   verifyUserEmailBodySchema,
-} from "./auth.schema";
+} from "@/modules/auth/auth.schema.js";
+import { errorSchema, responseSchema } from "@/utils/basicSchema.js";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({

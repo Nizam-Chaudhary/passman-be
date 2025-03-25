@@ -1,5 +1,5 @@
-export { files } from "./files";
-export { notes, notesRelations } from "./notes";
-export { passwords, passwordsRelations } from "./passwords";
-export { users, usersRelations } from "./users";
-export { vaults, vaultsRelations } from "./vaults";
+export { files } from "@/db/schema/files.js";
+export { notes, notesRelations } from "@/db/schema/notes.js";
+export { passwords, passwordsRelations } from "@/db/schema/passwords.js";
+export { users, usersRelations } from "@/db/schema/users.js";
+export { vaults, vaultsRelations } from "@/db/schema/vaults.js";

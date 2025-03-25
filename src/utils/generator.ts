@@ -6,7 +6,7 @@ import { randomBytes } from "node:crypto";
  * @param {number} [length] - The length of the OTP to generate. Defaults to 6 digits.
  * @returns {string} - The generated OTP as a string.
  */
-export function generateOtp(length = 6): string {
+export function generateOtp(length: number = 6): string {
   let otp = "";
   const digits = "0123456789";
 

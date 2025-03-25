@@ -1,8 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { errorSchema, idParamsSchema } from "../../utils/basicSchema";
-import passwordController from "./password.controller";
+import passwordController from "@/modules/password/password.controller.js";
 import {
   addOrUpdateOrDeletePasswordResponseSchema,
   addPasswordSchema,
@@ -12,7 +11,8 @@ import {
   importPasswordResponseSchema,
   importPasswordsSchema,
   updatePasswordSchema,
-} from "./password.schema";
+} from "@/modules/password/password.schema.js";
+import { errorSchema, idParamsSchema } from "@/utils/basicSchema.js";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({

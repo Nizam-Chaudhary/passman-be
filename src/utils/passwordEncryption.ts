@@ -6,7 +6,7 @@ import {
   scryptSync,
 } from "node:crypto";
 
-import env from "../lib/env";
+import env from "@/lib/env.js";
 
 export function deriveKey(password: string, salt: string): Buffer {
   return scryptSync(password, salt, env.ENC_KEY_LENGTH);
@@ -14,7 +14,7 @@ export function deriveKey(password: string, salt: string): Buffer {
 
 export function encryptPassword(
   password: string,
-  storedKey: string,
+  storedKey: string
 ): { iv: string; content: string } {
   const iv = randomBytes(env.ENC_IV_LENGTH);
   const key = Buffer.from(storedKey, "hex");
@@ -31,7 +31,7 @@ export function encryptPassword(
 export function decryptPassword(
   storedIv: string,
   encryptedPassword: string,
-  storedKey: string,
+  storedKey: string
 ): string {
   const iv = Buffer.from(storedIv, "hex");
   const key = Buffer.from(storedKey, "hex");

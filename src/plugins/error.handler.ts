@@ -1,19 +1,16 @@
-import type {
-  FastifyReply,
-  FastifyRequest,
-} from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
-import type AppError from "../lib/appError";
+import type AppError from "@/lib/appError.js";
 
 import fastifyPlugin from "fastify-plugin";
 
-import { globalErrorHandler } from "../lib/errorHandler";
+import { globalErrorHandler } from "@/lib/errorHandler.js";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.setErrorHandler(
     (error: AppError, request: FastifyRequest, reply: FastifyReply) => {
       globalErrorHandler(fastify, error, request, reply);
-    },
+    }
   );
 
   done();

@@ -1,8 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { users } from "../../db/schema/users";
-import { masterKeySchema, responseSchema } from "../../utils/basicSchema";
+import { users } from "@/db/schema/users.js";
+import { masterKeySchema, responseSchema } from "@/utils/basicSchema.js";
 
 export const ecryptedValueSchema = z.object({
   iv: z
@@ -15,26 +15,26 @@ export const ecryptedValueSchema = z.object({
 const passwordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters long")
-  .refine(value => /[A-Z]/.test(value), {
+  .refine((value) => /[A-Z]/.test(value), {
     message: "Password must contain at least one uppercase letter",
   })
-  .refine(value => /[a-z]/.test(value), {
+  .refine((value) => /[a-z]/.test(value), {
     message: "Password must contain at least one lowercase letter",
   })
-  .refine(value => /\d/.test(value), {
+  .refine((value) => /\d/.test(value), {
     message: "Password must contain at least one number",
   })
-  .refine(value => /[$@!%*?&_]/.test(value), {
+  .refine((value) => /[$@!%*?&_]/.test(value), {
     message: "Password must contain at least one special character",
   })
   .describe("Password for the account");
 
 const baseSchema = createInsertSchema(users, {
-  userName: schema =>
+  userName: (schema) =>
     schema
       .min(2, "User name must be at least 4 characters")
       .describe("Username for the account"),
-  email: schema =>
+  email: (schema) =>
     schema
       .email("Invalid email format")
       .describe("Email address for the account"),
@@ -105,7 +105,7 @@ export const signInResponseSchema = responseSchema
         masterKey: masterKeySchema.nullable().describe("Encrypted master key"),
         isVerified: z.boolean().describe("Email verification status"),
       }),
-    }),
+    })
   )
   .describe("Response schema for successful signin");
 
@@ -130,7 +130,7 @@ export const refreshTokenResponseSchema = responseSchema
           .min(1, "refreshToken is required")
           .describe("New JWT refresh token"),
       }),
-    }),
+    })
   )
   .describe("Response schema for token refresh");
 
@@ -153,16 +153,16 @@ export type VerifyUserEmailBody = z.infer<typeof verifyUserEmailBodySchema>;
 const masterPasswordSchema = z
   .string()
   .min(10, "Master password must be at least 10 characters")
-  .refine(value => /[A-Z]/.test(value), {
+  .refine((value) => /[A-Z]/.test(value), {
     message: "Master password must contain at least one uppercase letter",
   })
-  .refine(value => /[a-z]/.test(value), {
+  .refine((value) => /[a-z]/.test(value), {
     message: "Master password must contain at least one lowercase letter",
   })
-  .refine(value => /\d/.test(value), {
+  .refine((value) => /\d/.test(value), {
     message: "Master password must contain at least one number",
   })
-  .refine(value => /[$@!%*?&_]/.test(value), {
+  .refine((value) => /[$@!%*?&_]/.test(value), {
     message: "Master password must contain at least one special character",
   })
   .describe("Master password for the account");

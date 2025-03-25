@@ -1,10 +1,13 @@
-import type { AddPasswordInput, ImportPasswordsInput } from "./password.schema";
+import type {
+  AddPasswordInput,
+  ImportPasswordsInput,
+} from "@/modules/password/password.schema.js";
 
 import { and, desc, eq, ilike, or } from "drizzle-orm";
 
-import { db } from "../../db";
-import { passwords } from "../../db/schema/schema";
-import AppError from "../../lib/appError";
+import { db } from "@/db/index.js";
+import { passwords } from "@/db/schema/schema.js";
+import AppError from "@/lib/appError.js";
 
 class PasswordService {
   async addPassword(userId: number, input: AddPasswordInput) {
@@ -33,7 +36,7 @@ class PasswordService {
       ? or(
           ilike(passwords.site, `%${search}%`),
           ilike(passwords.username, `%${search}%`),
-          ilike(passwords.note, `%${search}%`),
+          ilike(passwords.note, `%${search}%`)
         )
       : undefined;
 
@@ -41,7 +44,7 @@ class PasswordService {
       where: and(
         eq(passwords.userId, userId),
         eq(passwords.vaultId, vaultId),
-        searchCondition,
+        searchCondition
       ),
       orderBy: [desc(passwords.updatedAt)],
     });
@@ -103,7 +106,7 @@ class PasswordService {
   }
 
   async importPasswords(userId: number, inputPasswords: ImportPasswordsInput) {
-    const allPasswords = inputPasswords.map(password => ({
+    const allPasswords = inputPasswords.map((password) => ({
       ...password,
       userId,
     }));

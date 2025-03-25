@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
-const {
-  getNodeAutoInstrumentations,
-} = require("@opentelemetry/auto-instrumentations-node");
+const { getNodeAutoInstrumentations } = await import(
+  "@opentelemetry/auto-instrumentations-node"
+);
 const nodeAutoInstrumentations = getNodeAutoInstrumentations({});
-import FastifyOtelInstrumentation from "@fastify/otel";
+import { FastifyOtelInstrumentation } from "@fastify/otel";
 // import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
+import env from "@/lib/env.js";
+import { credentials } from "@grpc/grpc-js";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-grpc";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
@@ -19,20 +20,19 @@ import {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
-import appPackage from "../../package.json";
-import env from "./env";
+import appPackage from "../../package.json" assert { type: "json" };
 
 // diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
 
 // OTLP Trace Exporter (for traces)
 const traceExporter = new OTLPTraceExporter({
   url: env.OTLP_COLLECTOR_URL, // OTLP gRPC endpoint
-  credentials: require("@grpc/grpc-js").credentials.createInsecure(),
+  credentials: credentials.createInsecure(),
 });
 
 const metricExporter = new OTLPMetricExporter({
   url: env.OTLP_COLLECTOR_URL, // OTLP gRPC endpoint
-  credentials: require("@grpc/grpc-js").credentials.createInsecure(),
+  credentials: credentials.createInsecure(),
 });
 
 // OTLP Metric Exporter (for metrics)
@@ -44,7 +44,7 @@ const metricReader = new PeriodicExportingMetricReader({
 // OTLP Log exporter (for logs)
 const logExporter = new OTLPLogExporter({
   url: env.OTLP_COLLECTOR_URL,
-  credentials: require("@grpc/grpc-js").credentials.createInsecure(),
+  credentials: credentials.createInsecure(),
 });
 
 const logProcessor = new BatchLogRecordProcessor(logExporter);

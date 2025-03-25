@@ -1,4 +1,3 @@
-import fastifyPlugin from "fastify-plugin";
 import {
   activeRequests,
   requestCounter,
@@ -6,7 +5,8 @@ import {
   requestDurationSummary,
   requestSizeHistogram,
   responseSizeHistogram,
-} from "../lib/customMetrics";
+} from "@/lib/customMetrics.js";
+import fastifyPlugin from "fastify-plugin";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.addHook("onRequest", (request, reply, done) => {

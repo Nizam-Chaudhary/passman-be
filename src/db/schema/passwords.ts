@@ -1,4 +1,4 @@
-import type { EncryptedValueType } from "../../utils/basicSchema";
+import type { EncryptedValueType } from "@/utils/basicSchema.js";
 import { relations } from "drizzle-orm";
 
 import {
@@ -10,8 +10,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { users } from "./users";
-import { vaults } from "./vaults";
+import { users, vaults } from "@/db/schema/schema.js";
 
 export const passwords = pgTable("passwords", {
   id: serial("id").primaryKey(),

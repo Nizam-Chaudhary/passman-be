@@ -1,13 +1,13 @@
 import { createSelectSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { users } from "../../db/schema/schema";
+import { users } from "@/db/schema/schema.js";
+import { selectFileSchema } from "@/modules/file/file.schema.js";
 import {
   masterKeySchema,
   responseSchema,
   statusSchema,
-} from "../../utils/basicSchema";
-import { selectFileSchema } from "../file/file.schema";
+} from "@/utils/basicSchema.js";
 
 const baseSchema = createUpdateSchema(users, {
   userName: (schema) =>

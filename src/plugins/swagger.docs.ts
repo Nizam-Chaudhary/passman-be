@@ -5,8 +5,8 @@ import fastifyPlugin from "fastify-plugin";
 import { Buffer } from "node:buffer";
 import { timingSafeEqual } from "node:crypto";
 
-import env from "../lib/env";
-import { swaggerOptions } from "../utils/swagger";
+import env from "@/lib/env.js";
+import { swaggerOptions } from "@/utils/swagger.js";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.register(fastifySwagger, swaggerOptions);
@@ -46,6 +46,10 @@ export default fastifyPlugin((fastify, _opts, done) => {
         ogImage: "https://example.com/image.png",
         twitterCard: "summary_large_image",
         // Add more...
+      },
+      defaultHttpClient: {
+        targetKey: "javascript",
+        clientKey: "fetch",
       },
       theme: "saturn", // alternate, default, moon, purple, solarized, bluePlanet, saturn, kepler, mars, deepSpace, none
       hideDownloadButton: false,

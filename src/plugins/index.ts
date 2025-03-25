@@ -1,14 +1,14 @@
 import fastifyPlugin from "fastify-plugin";
 
-import auth from "./auth";
-import cors from "./cors";
-import errorHandler from "./error.handler";
-import fastifyTypeProviderZod from "./fastify.type.provider.zod";
-import jwt from "./jwt";
-import multipart from "./multipart";
-import rateLimit from "./rate.limit";
-import recordFastifyMetrics from "./record.fastify.metrics";
-import swaggerDocs from "./swagger.docs";
+import auth from "@/plugins/auth.js";
+import cors from "@/plugins/cors.js";
+import errorHandler from "@/plugins/error.handler.js";
+import fastifyTypeProviderZod from "@/plugins/fastify.type.provider.zod.js";
+import jwt from "@/plugins/jwt.js";
+import multipart from "@/plugins/multipart.js";
+import rateLimit from "@/plugins/rate.limit.js";
+import recordFastifyMetrics from "@/plugins/record.fastify.metrics.js";
+import swaggerDocs from "@/plugins/swagger.docs.js";
 
 export default fastifyPlugin((fastify, opts, done) => {
   fastify.register(cors, opts);
