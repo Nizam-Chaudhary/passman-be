@@ -1,3 +1,5 @@
+import { compare, compareSync, hash, hashSync } from "bcrypt";
+import { eq, ilike } from "drizzle-orm";
 import type {
   CreateMasterKeyBody,
   SignInUserInput,
@@ -5,19 +7,17 @@ import type {
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "@/modules/auth/auth.schema.js";
-import { compare, compareSync, hash, hashSync } from "bcrypt";
-import { eq, ilike } from "drizzle-orm";
+} from "./auth.schema.js";
 
 import moment from "moment";
 
-import { db } from "@/db/index.js";
-import { users, vaults } from "@/db/schema/schema.js";
-import AppError from "@/lib/appError.js";
-import env from "@/lib/env.js";
-import { sendMail } from "@/lib/mailer.js";
-import * as userTemplates from "@/templates/user.js";
-import { generateOtp } from "@/utils/generator.js";
+import { db } from "../../db/index.js";
+import { users, vaults } from "../../db/schema/schema.js";
+import AppError from "../../lib/appError.js";
+import env from "../../lib/env.js";
+import { sendMail } from "../../lib/mailer.js";
+import * as userTemplates from "../../templates/user.js";
+import { generateOtp } from "../../utils/generator.js";
 
 class AuthService {
   async signUpUser(input: SignUpUserInput) {

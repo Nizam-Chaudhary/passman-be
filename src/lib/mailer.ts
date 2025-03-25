@@ -1,7 +1,7 @@
 import * as aws from "@aws-sdk/client-ses";
 import { createTransport } from "nodemailer";
 
-import env from "@/lib/env.js";
+import env from "./env.js";
 
 // configuring AWS SDK
 const ses = new aws.SES({

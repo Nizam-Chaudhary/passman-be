@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import * as fileService from "@/modules/file/file.service.js";
+import * as fileService from "./file.service.js";
 
 class FileController {
   async uploadFile(req: FastifyRequest, reply: FastifyReply) {

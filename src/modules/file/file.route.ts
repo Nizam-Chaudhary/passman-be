@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import fileController from "@/modules/file/file.controller.js";
-import { uploadFileResponseSchema } from "@/modules/file/file.schema.js";
-import { errorSchema } from "@/utils/basicSchema.js";
 import { z } from "zod";
+import { errorSchema } from "../../utils/basicSchema.js";
+import fileController from "./file.controller.js";
+import { uploadFileResponseSchema } from "./file.schema.js";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({

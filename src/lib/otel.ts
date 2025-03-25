@@ -2,10 +2,9 @@ const { getNodeAutoInstrumentations } = await import(
   "@opentelemetry/auto-instrumentations-node"
 );
 const nodeAutoInstrumentations = getNodeAutoInstrumentations({});
-import { FastifyOtelInstrumentation } from "@fastify/otel";
-// import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
-import env from "@/lib/env.js";
+import fastifyOtel from "@fastify/otel";
 import { credentials } from "@grpc/grpc-js";
+import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-grpc";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
@@ -20,9 +19,11 @@ import {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
-import appPackage from "../../package.json" assert { type: "json" };
+import appPackage from "../../package.json" with { type: "json" };
+import env from "./env.js";
+const { FastifyOtelInstrumentation } = fastifyOtel;
 
-// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
+diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
 
 // OTLP Trace Exporter (for traces)
 const traceExporter = new OTLPTraceExporter({

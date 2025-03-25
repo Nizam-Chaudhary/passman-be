@@ -1,13 +1,13 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
+import type { IdParamsType } from "../../utils/basicSchema.js";
 import type {
   AddPasswordInput,
   getPasswordsQueryOptions,
   ImportPasswordsInput,
-} from "@/modules/password/password.schema.js";
-import type { IdParamsType } from "@/utils/basicSchema.js";
+} from "./password.schema.js";
 
-import passwordService from "@/modules/password/password.service.js";
+import passwordService from "./password.service.js";
 
 class PasswordController {
   async addPassword(

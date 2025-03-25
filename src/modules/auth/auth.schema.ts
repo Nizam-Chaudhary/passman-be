@@ -1,8 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { users } from "@/db/schema/users.js";
-import { masterKeySchema, responseSchema } from "@/utils/basicSchema.js";
+import { users } from "../../db/schema/users.js";
+import { masterKeySchema, responseSchema } from "../../utils/basicSchema.js";
 
 export const ecryptedValueSchema = z.object({
   iv: z

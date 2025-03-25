@@ -1,5 +1,5 @@
-import type { MasterKeyType } from "@/utils/basicSchema.js";
 import { relations } from "drizzle-orm";
+import type { MasterKeyType } from "../../utils/basicSchema.js";
 
 import {
   boolean,
@@ -11,7 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { files, passwords, vaults } from "@/db/schema/schema.js";
+import { files, passwords, vaults } from "./schema.js";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),

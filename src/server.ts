@@ -1,9 +1,9 @@
-import env from "@/lib/env.js";
-import logger from "@/lib/logger.js";
-import otelSdk, { fastifyOtelInstrumentation } from "@/lib/otel.js";
-import plugins from "@/plugins/index.js";
-import routes from "@/route.js";
 import Fastify, { FastifyInstance } from "fastify";
+import env from "./lib/env.js";
+import logger from "./lib/logger.js";
+import otelSdk, { fastifyOtelInstrumentation } from "./lib/otel.js";
+import plugins from "./plugins/index.js";
+import routes from "./route.js";
 
 otelSdk.start();
 

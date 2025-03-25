@@ -1,8 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { passwords } from "@/db/schema/schema.js";
-import { responseSchema, statusSchema } from "@/utils/basicSchema.js";
+import { passwords } from "../../db/schema/schema.js";
+import { responseSchema, statusSchema } from "../../utils/basicSchema.js";
 
 const encryptedPasswordSchema = z
   .object({
