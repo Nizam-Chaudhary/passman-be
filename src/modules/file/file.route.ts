@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
 import { z } from "zod";
-import { errorSchema } from "../../utils/basicSchema.js";
+import { errorResponseSchema } from "../../shared/schemas/responseSchemas.js";
 import fileController from "./file.controller.js";
 import { uploadFileResponseSchema } from "./file.schema.js";
 
@@ -20,8 +20,8 @@ export default async (fastify: FastifyInstance) => {
       consumes: ["multipart/form-data"],
       response: {
         "200": uploadFileResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],

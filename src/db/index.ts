@@ -1,7 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 
-import env from "../lib/env.js";
+import env from "../shared/config/env.js";
 import * as schema from "./schema/schema.js";
 
 const { Pool } = pg;

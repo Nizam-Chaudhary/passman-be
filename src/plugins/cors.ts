@@ -2,8 +2,7 @@ import type { FastifyInstance } from "fastify";
 
 import fastifyCors from "@fastify/cors";
 import fastifyPlugin from "fastify-plugin";
-
-import env from "../lib/env.js";
+import env from "../shared/config/env.js";
 
 export default fastifyPlugin((fastify: FastifyInstance, _opts, done) => {
   fastify.register(fastifyCors, {

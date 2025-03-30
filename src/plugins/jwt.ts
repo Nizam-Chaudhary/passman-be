@@ -1,7 +1,6 @@
 import { fastifyJwt } from "@fastify/jwt";
 import fastifyPlugin from "fastify-plugin";
-
-import env from "../lib/env.js";
+import env from "../shared/config/env.js";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.register(fastifyJwt, { secret: env.JWT_SECRET });

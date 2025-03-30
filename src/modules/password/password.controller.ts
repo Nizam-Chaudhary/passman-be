@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import type { IdParamsType } from "../../utils/basicSchema.js";
+import type { IdParams } from "../../shared/schemas/requestSchemas.js";
 import type {
   AddPasswordInput,
   getPasswordsQueryOptions,
@@ -33,7 +33,7 @@ class PasswordController {
   }
 
   async getPasswordById(
-    req: FastifyRequest<{ Params: IdParamsType }>,
+    req: FastifyRequest<{ Params: IdParams }>,
     reply: FastifyReply
   ) {
     const response = await passwordService.getPassword(
@@ -44,7 +44,7 @@ class PasswordController {
   }
 
   async updatePassword(
-    req: FastifyRequest<{ Body: AddPasswordInput; Params: IdParamsType }>,
+    req: FastifyRequest<{ Body: AddPasswordInput; Params: IdParams }>,
     reply: FastifyReply
   ) {
     const response = await passwordService.updatePassword(
@@ -57,7 +57,7 @@ class PasswordController {
   }
 
   async deletePassword(
-    req: FastifyRequest<{ Params: IdParamsType }>,
+    req: FastifyRequest<{ Params: IdParams }>,
     reply: FastifyReply
   ) {
     const response = await passwordService.deletePassword(

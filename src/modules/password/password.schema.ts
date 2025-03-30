@@ -2,7 +2,10 @@ import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
 import { passwords } from "../../db/schema/schema.js";
-import { responseSchema, statusSchema } from "../../utils/basicSchema.js";
+import {
+  responseSchema,
+  statusSchema,
+} from "../../shared/schemas/responseSchemas.js";
 
 const encryptedPasswordSchema = z
   .object({
@@ -17,6 +20,8 @@ const encryptedPasswordSchema = z
   })
   .describe("Schema for encrypted password data");
 
+export type EncryptedPassword = z.infer<typeof encryptedPasswordSchema>;
+
 const baseSchema = createInsertSchema(passwords, {
   vaultId: (schema) =>
     schema
@@ -24,7 +29,7 @@ const baseSchema = createInsertSchema(passwords, {
       .describe("ID of the vault this password belongs to"),
   username: (schema) =>
     schema.min(1, "Username is required").describe("Username for the account"),
-  password: () => encryptedPasswordSchema.describe("Password for the account"),
+  password: () => encryptedPasswordSchema,
   site: (schema) =>
     schema
       .min(1, "Site is required")

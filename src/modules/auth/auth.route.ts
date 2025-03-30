@@ -1,7 +1,10 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { errorSchema, responseSchema } from "../../utils/basicSchema.js";
+import {
+  errorResponseSchema,
+  responseSchema,
+} from "../../shared/schemas/responseSchemas.js";
 import authController from "./auth.controller.js";
 import {
   createMasterKeyBodySchema,
@@ -12,8 +15,6 @@ import {
   sendResetPasswordEmailBodySchema,
   signInResponseSchema,
   signInUserSchema,
-  signUpUserResponseSchema,
-  signUpUserSchema,
   updateMasterPasswordBodySchema,
   verifyMasterPasswordBodySchema,
   verifyMasterPasswordResponseSchema,
@@ -21,24 +22,6 @@ import {
 } from "./auth.schema.js";
 
 export default async (fastify: FastifyInstance) => {
-  fastify.withTypeProvider<ZodTypeProvider>().route({
-    method: "POST",
-    url: "/sign-up",
-    schema: {
-      tags: ["Auth"],
-      summary: "Sign up user",
-      description: "Sign up user",
-      body: signUpUserSchema,
-      response: {
-        "200": signUpUserResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
-      },
-      required: ["email"],
-    },
-    handler: authController.signUpUser,
-  });
-
   fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "POST",
     url: "/sign-in",
@@ -49,8 +32,8 @@ export default async (fastify: FastifyInstance) => {
       body: signInUserSchema,
       response: {
         "200": signInResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     handler: authController.signInUser,
@@ -66,8 +49,8 @@ export default async (fastify: FastifyInstance) => {
       description: "Refresh access token",
       response: {
         "200": refreshTokenResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     handler: authController.refreshToken,
@@ -83,8 +66,8 @@ export default async (fastify: FastifyInstance) => {
       body: verifyUserEmailBodySchema,
       response: {
         "200": responseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     handler: authController.verifyUserEmail,
@@ -101,8 +84,8 @@ export default async (fastify: FastifyInstance) => {
       description: "creates master key for user",
       response: {
         "200": responseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],
@@ -120,8 +103,8 @@ export default async (fastify: FastifyInstance) => {
       description: "Verify master password for user",
       response: {
         "200": verifyMasterPasswordResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],
@@ -138,8 +121,8 @@ export default async (fastify: FastifyInstance) => {
       description: "Resend otp to user's email",
       response: {
         "200": responseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     handler: authController.resendOtp,
@@ -155,8 +138,8 @@ export default async (fastify: FastifyInstance) => {
       description: "send reset password email",
       response: {
         "200": responseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     handler: authController.sendResetPasswordEmail,
@@ -172,8 +155,8 @@ export default async (fastify: FastifyInstance) => {
       description: "reset login password",
       response: {
         "200": responseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     handler: authController.resetPassword,
@@ -189,8 +172,8 @@ export default async (fastify: FastifyInstance) => {
       description: "Update master password",
       response: {
         "200": responseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],

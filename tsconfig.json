@@ -1,4 +1,9 @@
 {
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "esm": true
+  },
   "compilerOptions": {
     "baseUrl": ".",
     "target": "ESNext",
@@ -12,6 +17,8 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true
   },

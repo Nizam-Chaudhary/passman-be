@@ -3,7 +3,6 @@ import { eq, ilike } from "drizzle-orm";
 import type {
   CreateMasterKeyBody,
   SignInUserInput,
-  SignUpUserInput,
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
@@ -12,67 +11,18 @@ import type {
 import moment from "moment";
 
 import { db } from "../../db/index.js";
-import { users, vaults } from "../../db/schema/schema.js";
-import AppError from "../../lib/appError.js";
-import env from "../../lib/env.js";
-import { sendMail } from "../../lib/mailer.js";
-import * as userTemplates from "../../templates/user.js";
+import { users } from "../../db/schema/schema.js";
+// import * as userTemplates from "../../templates/user.js";
 import { generateOtp } from "../../utils/generator.js";
+import {
+  BadRequestError,
+  ForbiddenError,
+  NotFoundError,
+  UnprocessableEntityError,
+} from "../../shared/lib/httpError.js";
+import env from "../../shared/config/env.js";
 
 class AuthService {
-  async signUpUser(input: SignUpUserInput) {
-    const alreadyRegistered = await db.query.users.findFirst({
-      columns: {
-        id: true,
-      },
-      where: ilike(users.email, input.email),
-    });
-
-    if (alreadyRegistered) {
-      const newLocal = "Email already registered";
-      throw new AppError("EMAIL_ALREADY_REGISTERED", newLocal, 400);
-    }
-
-    const hashedPassword = hashSync(input.password, env.SALT_ROUNDS);
-
-    const otp = generateOtp();
-
-    return await db.transaction(async (tx) => {
-      const user = await tx
-        .insert(users)
-        .values({
-          email: input.email,
-          userName: input.userName,
-          password: hashedPassword,
-          otp,
-          isVerified: false,
-        })
-        .returning();
-
-      await tx.insert(vaults).values({
-        name: "Default",
-        userId: user[0].id,
-      });
-
-      const signUpEmailBody = userTemplates.signUp({
-        userName: input.userName,
-        otp,
-      });
-
-      sendMail({
-        toAddresses: input.email,
-        subject: "Passman account verfication OTP",
-        emailBody: signUpEmailBody,
-      });
-
-      return {
-        status: "success",
-        message: "User signed up successfully",
-        data: user[0],
-      };
-    });
-  }
-
   async signInUser(input: SignInUserInput) {
     const userData = await db.query.users.findFirst({
       columns: {
@@ -87,33 +37,18 @@ class AuthService {
     });
 
     if (!userData) {
-      throw new AppError(
-        "USER_NOT_REGISTERED",
-        "Email not registered. Please register first!",
-        401,
-        true
-      );
+      throw new NotFoundError("Email not registered");
     }
 
     if (!userData.isVerified) {
-      throw new AppError(
-        "EMAIL_NOT_VERIFIED",
-        "Email not verified. Please verify first!",
-        401,
-        true
-      );
+      throw new BadRequestError("Email not verified. Please verify first!");
     }
 
     const isMatch =
       userData && (await compare(input.password, userData.password));
 
     if (!userData || !isMatch) {
-      throw new AppError(
-        "INVALID_CREDENTIALS",
-        "Invalid email or password",
-        401,
-        true
-      );
+      throw new BadRequestError("Invalid email or password");
     }
 
     return {
@@ -137,7 +72,7 @@ class AuthService {
     });
 
     if (!userData) {
-      throw new AppError("UNAUTORIZED", "Refresh token is invalid", 401);
+      throw new NotFoundError("Refresh token is invalid");
     }
 
     return {
@@ -160,18 +95,14 @@ class AuthService {
     });
 
     if (!userData) {
-      throw new AppError(
-        "USER_NOT_REGISTERED",
-        "Email not registered. Please register first!",
-        400
-      );
+      throw new NotFoundError("Email not registered");
     }
 
     if (moment(userData.updatedAt).isBefore(moment().subtract(5, "minutes"))) {
-      throw new AppError("OTP_EXPIRED", "Entered otp is expired", 400);
+      throw new BadRequestError("OTP expired");
     }
     if (input.otp !== userData.otp) {
-      throw new AppError("INVALID_OTP", "Invalid OTP", 400);
+      throw new BadRequestError("Invalid OTP");
     }
 
     await db
@@ -201,7 +132,7 @@ class AuthService {
     });
 
     if (!userPassword?.password) {
-      throw new AppError("USER_NOT_FOUND", "user not found", 400);
+      throw new NotFoundError("Email not registered");
     }
 
     // if (compareSync(input.masterPassword, userPassword.password)) {
@@ -237,11 +168,7 @@ class AuthService {
     });
 
     if (!user?.masterPassword) {
-      throw new AppError(
-        "MASTER_PASSWORD_NOT_EXISTS",
-        "Master password not created yet",
-        400
-      );
+      throw new NotFoundError("Master password not created yet");
     }
 
     const isMasterPasswordValid = compareSync(
@@ -250,11 +177,7 @@ class AuthService {
     );
 
     if (!isMasterPasswordValid) {
-      throw new AppError(
-        "INCORRECT_MASTER_PASSWORD",
-        "Incorrect master password",
-        400
-      );
+      throw new UnprocessableEntityError("Incorrect master password");
     }
 
     return {
@@ -272,15 +195,11 @@ class AuthService {
     });
 
     if (!user) {
-      throw new AppError("USER_NOT_FOUND", "No user found for email", 400);
+      throw new NotFoundError("Email not registered");
     }
 
     if (moment(user.updatedAt).isAfter(moment().subtract(2, "minutes"))) {
-      throw new AppError(
-        "OTP_RESEND_LIMIT_REACHED",
-        "OTP resend limit reached",
-        400
-      );
+      throw new ForbiddenError("OTP resend limit reached");
     }
 
     const otp = generateOtp();
@@ -293,16 +212,16 @@ class AuthService {
       .where(ilike(users.email, email));
 
     if (!updateOtp.rowCount || updateOtp.rowCount <= 0) {
-      throw new AppError("UNABLE_TO_UPDATE_OTP", "Error sending otp", 400);
+      throw new BadRequestError("Error sending otp");
     }
 
-    const emailBody = userTemplates.resendOtp({ otp });
+    // const emailBody = userTemplates.resendOtp({ otp });
 
-    sendMail({
-      toAddresses: email,
-      subject: "Passman's OTP (One time password)",
-      emailBody,
-    });
+    // sendMail({
+    //   toAddresses: email,
+    //   subject: "Passman's OTP (One time password)",
+    //   emailBody,
+    // });
 
     return {
       status: "success",
@@ -316,25 +235,21 @@ class AuthService {
     });
 
     if (!user) {
-      throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
+      throw new NotFoundError("Email not registered");
     }
 
     if (moment(user.updatedAt).isAfter(moment().subtract(2, "minutes"))) {
-      throw new AppError(
-        "EMAIL_SEND_LIMIT_REACHED",
-        "Email sending limit reached",
-        400
-      );
+      throw new ForbiddenError("Email sending limit reached");
     }
 
-    const url = `${env.FE_URL}/reset-password/update?token=${token}`;
-    const emailBody = userTemplates.resetLoginPassword({ url });
+    // const url = `${env.FE_URL}/reset-password/update?token=${token}`;
+    // const emailBody = userTemplates.resetLoginPassword({ url });
 
-    sendMail({
-      toAddresses: email,
-      subject: "Reset login password",
-      emailBody,
-    });
+    // sendMail({
+    //   toAddresses: email,
+    //   subject: "Reset login password",
+    //   emailBody,
+    // });
 
     return {
       status: "success",
@@ -353,7 +268,7 @@ class AuthService {
       .where(ilike(users.email, email));
 
     if (!passwordUpdate.rowCount || passwordUpdate.rowCount <= 0) {
-      throw new AppError("USER_NOT_FOUND", "Email not registered", 400);
+      throw new NotFoundError("Email not registered");
     }
 
     return {
@@ -377,7 +292,7 @@ class AuthService {
       .where(eq(users.id, userId));
 
     if (!updateUser.rowCount || updateUser.rowCount <= 0) {
-      throw new AppError("USER_NOT_FOUND", "User not found", 400);
+      throw new NotFoundError("Email not registered");
     }
 
     return {

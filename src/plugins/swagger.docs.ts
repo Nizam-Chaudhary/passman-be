@@ -5,8 +5,8 @@ import fastifyPlugin from "fastify-plugin";
 import { Buffer } from "node:buffer";
 import { timingSafeEqual } from "node:crypto";
 
-import env from "../lib/env.js";
 import { swaggerOptions } from "../utils/swagger.js";
+import env from "../shared/config/env.js";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.register(fastifySwagger, swaggerOptions);

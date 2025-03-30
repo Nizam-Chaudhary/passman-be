@@ -1,7 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { errorSchema, idParamsSchema } from "../../utils/basicSchema.js";
+import { idParamsSchema } from "../../shared/schemas/requestSchemas.js";
+import { errorResponseSchema } from "../../shared/schemas/responseSchemas.js";
 import passwordController from "./password.controller.js";
 import {
   addOrUpdateOrDeletePasswordResponseSchema,
@@ -26,8 +27,8 @@ export default async (fastify: FastifyInstance) => {
       body: addPasswordSchema,
       response: {
         "200": addOrUpdateOrDeletePasswordResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],
@@ -45,8 +46,8 @@ export default async (fastify: FastifyInstance) => {
       querystring: getPasswordsQueryStringSchema,
       response: {
         "200": getPasswordsResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],
@@ -64,8 +65,8 @@ export default async (fastify: FastifyInstance) => {
       params: idParamsSchema,
       response: {
         "200": getPasswordResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],
@@ -84,8 +85,8 @@ export default async (fastify: FastifyInstance) => {
       body: updatePasswordSchema,
       response: {
         "200": addOrUpdateOrDeletePasswordResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],
@@ -103,8 +104,8 @@ export default async (fastify: FastifyInstance) => {
       params: idParamsSchema,
       response: {
         "200": addOrUpdateOrDeletePasswordResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],
@@ -122,8 +123,8 @@ export default async (fastify: FastifyInstance) => {
       body: importPasswordsSchema,
       response: {
         "200": importPasswordResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
+        "4xx": errorResponseSchema,
+        "5xx": errorResponseSchema,
       },
     },
     preHandler: [fastify.authenticate],

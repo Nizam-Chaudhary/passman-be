@@ -1,5 +1,4 @@
 import { relations } from "drizzle-orm";
-import type { MasterKeyType } from "../../utils/basicSchema.js";
 
 import {
   boolean,
@@ -12,6 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { files, passwords, vaults } from "./schema.js";
+import { EncryptedMasterKey } from "../../modules/user/types/user.js";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
@@ -19,8 +19,8 @@ export const users = pgTable("users", {
   email: varchar("email", { length: 255 }).notNull().unique(),
   password: varchar("password", { length: 255 }).notNull(),
   masterPassword: varchar("master_password", { length: 255 }),
-  masterKey: json("master_key").$type<MasterKeyType>(),
-  recoveryKey: json("recovery_key").$type<MasterKeyType>(),
+  masterKey: json("master_key").$type<EncryptedMasterKey>(),
+  recoveryKey: json("recovery_key").$type<EncryptedMasterKey>(),
   isVerified: boolean("is_verified").default(false).notNull(),
   otp: varchar("otp", { length: 6 }).notNull(),
   fileId: integer().references(() => files.id, { onDelete: "set null" }),

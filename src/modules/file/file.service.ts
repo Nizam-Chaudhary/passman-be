@@ -4,21 +4,24 @@ import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { db } from "../../db/index.js";
 import { files } from "../../db/schema/schema.js";
-import AppError from "../../lib/appError.js";
-import env from "../../lib/env.js";
-import { s3 } from "../../lib/s3.js";
+import env from "../../shared/config/env.js";
+import { s3 } from "../../shared/config/s3.js";
 import { validFileTypesSchema } from "./file.schema.js";
+import {
+  BadRequestError,
+  UnprocessableEntityError,
+} from "../../shared/lib/httpError.js";
 
 export async function uploadFile(fileData: MultipartFile | undefined) {
   if (!fileData) {
-    throw new AppError("FILE_REQUIRED", "File is required", 400);
+    throw new UnprocessableEntityError("File is required");
   }
 
   // validate file type
   try {
     validFileTypesSchema.parse(fileData.mimetype);
   } catch {
-    throw new AppError("INVALID_FILE_TYPE", "Invalid file type", 400);
+    throw new UnprocessableEntityError("File is required");
   }
 
   // Sanitize filename
@@ -43,7 +46,7 @@ export async function uploadFile(fileData: MultipartFile | undefined) {
   const response = await s3.send(command);
 
   if (response.$metadata.httpStatusCode !== 200) {
-    throw new AppError("FILE_UPLOAD_FAILED", "File upload failed", 400);
+    throw new BadRequestError("File upload failed");
   }
 
   const url = `https://${env.S3_BUCKET}.s3.${env.AWS_REGION}.amazonaws.com/${fileKey}`;

@@ -1,8 +1,9 @@
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-
-import { users } from "../../db/schema/users.js";
-import { masterKeySchema, responseSchema } from "../../utils/basicSchema.js";
+import { responseSchema } from "../../shared/schemas/responseSchemas.js";
+import {
+  masterKeySchema,
+  passwordSchema,
+} from "../user/presentation/schemas/userSchema.js";
 
 export const ecryptedValueSchema = z.object({
   iv: z
@@ -12,52 +13,10 @@ export const ecryptedValueSchema = z.object({
   encrypted: z.string().min(1, "key is required").describe("Encrypted data"),
 });
 
-const passwordSchema = z
-  .string()
-  .min(8, "Password must be at least 8 characters long")
-  .refine((value) => /[A-Z]/.test(value), {
-    message: "Password must contain at least one uppercase letter",
-  })
-  .refine((value) => /[a-z]/.test(value), {
-    message: "Password must contain at least one lowercase letter",
-  })
-  .refine((value) => /\d/.test(value), {
-    message: "Password must contain at least one number",
-  })
-  .refine((value) => /[$@!%*?&_]/.test(value), {
-    message: "Password must contain at least one special character",
-  })
-  .describe("Password for the account");
-
-const baseSchema = createInsertSchema(users, {
-  userName: (schema) =>
-    schema
-      .min(2, "User name must be at least 4 characters")
-      .describe("Username for the account"),
-  email: (schema) =>
-    schema
-      .email("Invalid email format")
-      .describe("Email address for the account"),
-  password: passwordSchema,
-  masterKey: () => ecryptedValueSchema,
-  recoveryKey: () => ecryptedValueSchema,
-});
-
-// Signup
-export const signUpUserSchema = z
-  .object({
-    userName: baseSchema.shape.userName,
-    email: baseSchema.shape.email,
-    password: baseSchema.shape.password,
-  })
-  .describe("Schema for user signup data");
-
-export type SignUpUserInput = z.infer<typeof signUpUserSchema>;
-
 // SignIn
 export const signInUserSchema = z
   .object({
-    email: baseSchema.shape.email,
+    email: z.string().email("Enter valid email").describe("User email address"),
     password: z
       .string()
       .min(8, "At least 8 characters")
@@ -66,23 +25,6 @@ export const signInUserSchema = z
   .describe("Schema for user signin data");
 
 export type SignInUserInput = z.infer<typeof signInUserSchema>;
-
-const selectUserModel = createSelectSchema(users, {
-  masterKey: () => masterKeySchema,
-})
-  .pick({
-    id: true,
-    userName: true,
-    email: true,
-    masterKey: true,
-    createdAt: true,
-    updatedAt: true,
-  })
-  .describe("User model with selected fields for responses");
-
-export const signUpUserResponseSchema = responseSchema
-  .and(z.object({ data: selectUserModel }))
-  .describe("Response schema for successful signup");
 
 export const signInResponseSchema = responseSchema
   .and(

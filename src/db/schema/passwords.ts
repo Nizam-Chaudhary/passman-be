@@ -1,5 +1,4 @@
 import { relations } from "drizzle-orm";
-import type { EncryptedValueType } from "../../utils/basicSchema.js";
 
 import {
   integer,
@@ -11,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { users, vaults } from "./schema.js";
+import { EncryptedPassword } from "../../modules/password/password.schema.js";
 
 export const passwords = pgTable("passwords", {
   id: serial("id").primaryKey(),
@@ -22,7 +22,7 @@ export const passwords = pgTable("passwords", {
     .references(() => vaults.id),
   site: varchar("site", { length: 255 }).notNull(),
   username: varchar("username", { length: 255 }).notNull(),
-  password: json("password").$type<EncryptedValueType>().notNull(),
+  password: json("password").$type<EncryptedPassword>().notNull(),
   faviconUrl: varchar("favicon_url", { length: 255 }),
   note: varchar("note", { length: 500 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),

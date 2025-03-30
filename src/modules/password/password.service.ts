@@ -7,7 +7,7 @@ import { and, desc, eq, ilike, or } from "drizzle-orm";
 
 import { db } from "../../db/index.js";
 import { passwords } from "../../db/schema/schema.js";
-import AppError from "../../lib/appError.js";
+import { NotFoundError } from "../../shared/lib/httpError.js";
 
 class PasswordService {
   async addPassword(userId: number, input: AddPasswordInput) {
@@ -61,7 +61,7 @@ class PasswordService {
     });
 
     if (!password) {
-      throw new AppError("PASSWORD_NOT_FOUND", "Password not found", 404);
+      throw new NotFoundError("Password not found");
     }
 
     return {
@@ -76,7 +76,7 @@ class PasswordService {
     });
 
     if (!password) {
-      throw new AppError("PASSWORD_NOT_FOUND", "password not found", 400);
+      throw new NotFoundError("Password not found");
     }
 
     const updatedPassword = await db

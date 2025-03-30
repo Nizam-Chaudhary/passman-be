@@ -7,24 +7,15 @@ import type {
   ResetPasswordBody,
   ResetPasswordJwtTokenPayload,
   SignInUserInput,
-  SignUpUserInput,
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
 } from "./auth.schema.js";
 
-import AppError from "../../lib/appError.js";
 import authService from "./auth.service.js";
+import { BadRequestError } from "../../shared/lib/httpError.js";
 
 class UserController {
-  async signUpUser(
-    req: FastifyRequest<{ Body: SignUpUserInput }>,
-    reply: FastifyReply
-  ) {
-    const response = await authService.signUpUser(req.body);
-    await reply.code(200).send(response);
-  }
-
   async signInUser(
     req: FastifyRequest<{ Body: SignInUserInput }>,
     reply: FastifyReply
@@ -58,7 +49,7 @@ class UserController {
     const tokenPayload = req.jwt.verify<JwtUserData>(refresh_token);
 
     if (!tokenPayload) {
-      throw new AppError("UNAUTORIZED", "Refresh token is invalid", 401);
+      throw new BadRequestError("Refresh token is invalid");
     }
 
     const userData = await authService.refreshToken(tokenPayload.id);
@@ -138,7 +129,7 @@ class UserController {
     const tokenData = req.jwt.verify<ResetPasswordJwtTokenPayload>(token);
 
     if (!tokenData) {
-      throw new AppError("TOKEN_EXPIRED", "Reset password token expired", 400);
+      throw new BadRequestError("Refresh token is invalid");
     }
 
     const response = await authService.resetPassword(tokenData.email, password);
