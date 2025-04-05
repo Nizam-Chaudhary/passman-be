@@ -1,7 +1,7 @@
-import { NotFoundError } from "../../../../shared/lib/httpError.js";
-import { UserRepository } from "../../domain/repositories/userRepository.js";
-import { MESSAGES } from "../../domain/constants/messages.js";
-import { UpdateUser } from "../../types/user.js";
+import { NotFoundError } from "../../../../shared/lib/httpError";
+import { UserRepository } from "../../domain/repositories/userRepository";
+import { MESSAGES } from "../../domain/constants/messages";
+import { UpdateUser } from "../../types/user";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

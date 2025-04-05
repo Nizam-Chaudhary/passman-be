@@ -1,5 +1,5 @@
-import { Transaction } from "../../../../shared/domain/repositories/transaction.js";
-import { Vault } from "../../types/vault.js";
+import { Transaction } from "../../../../shared/domain/repositories/transaction";
+import { Vault } from "../../types/vault";
 
 /**
  * Repository interface for managing vault operations

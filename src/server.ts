@@ -1,14 +1,13 @@
-import "reflect-metadata";
+import "@abraham/reflection";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { sdk: otelSdk } = require("./shared/lib/otel");
 import Fastify, { FastifyInstance } from "fastify";
-import env from "./shared/config/env.js";
-import logger from "./shared/config/logger.js";
-import otelSdk, { fastifyOtelInstrumentation } from "./shared/lib/otel.js";
-import plugins from "./plugins/index.js";
-import routes from "./route.js";
-import "./dIRegistry.js";
+import env from "./shared/config/env";
+import logger from "./shared/config/logger";
+import plugins from "./plugins/index";
+import routes from "./route";
+import "./dIRegistry";
 import { container } from "tsyringe";
-
-otelSdk.start();
 
 const fastify = Fastify({
   logger,
@@ -17,7 +16,6 @@ const fastify = Fastify({
 container.register("Logger", { useValue: fastify.log });
 
 async function main() {
-  await fastify.register(fastifyOtelInstrumentation.plugin());
   await fastify.register(plugins);
   await fastify.register(routes);
   await fastify.listen({

@@ -1,4 +1,4 @@
-export interface LoggingService {
+export interface LoggerService {
   debug?: LogFn;
   log: LogFn;
   warn?: LogFn;

@@ -1,84 +1,113 @@
-const { getNodeAutoInstrumentations } = await import(
-  "@opentelemetry/auto-instrumentations-node"
-);
-const nodeAutoInstrumentations = getNodeAutoInstrumentations({});
-import fastifyOtel from "@fastify/otel";
-import { credentials } from "@grpc/grpc-js";
-import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
-import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-grpc";
-import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-grpc";
-import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-grpc";
-import { Resource } from "@opentelemetry/resources";
-import { BatchLogRecordProcessor } from "@opentelemetry/sdk-logs";
-import {
-  MeterProvider,
-  PeriodicExportingMetricReader,
-} from "@opentelemetry/sdk-metrics";
-import { NodeSDK } from "@opentelemetry/sdk-node";
-import {
-  ATTR_SERVICE_NAME,
-  ATTR_SERVICE_VERSION,
-} from "@opentelemetry/semantic-conventions";
-import appPackage from "../../../package.json" with { type: "json" };
-import env from "../config/env.js";
-const { FastifyOtelInstrumentation } = fastifyOtel;
+/* eslint-disable @typescript-eslint/no-require-imports */
+import appPackage from "../../../package.json";
+import env from "../config/env";
 
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
+// Conditional exports for meter and instrumentation
+export let meter: any = {
+  createCounter: () => ({ add: () => {} }),
+  createHistogram: () => ({ record: () => {} }),
+  createUpDownCounter: () => ({ add: () => {} }),
+  createObservableGauge: () => ({ observe: () => {} }),
+};
+export let fastifyOtelInstrumentation: any = {
+  setMeterProvider: () => {},
+};
 
-// OTLP Trace Exporter (for traces)
-const traceExporter = new OTLPTraceExporter({
-  url: env.OTLP_COLLECTOR_URL, // OTLP gRPC endpoint
-  credentials: credentials.createInsecure(),
-});
+export let sdk: any = {
+  shutdown: () => Promise<void>,
+};
 
-const metricExporter = new OTLPMetricExporter({
-  url: env.OTLP_COLLECTOR_URL, // OTLP gRPC endpoint
-  credentials: credentials.createInsecure(),
-});
+// Only load OpenTelemetry in production
+if (process.env.NODE_ENV === "production") {
+  const {
+    getNodeAutoInstrumentations,
+  } = require("@opentelemetry/auto-instrumentations-node");
+  const nodeAutoInstrumentations = getNodeAutoInstrumentations({});
+  const FastifyOtelInstrumentation = require("@fastify/otel");
+  const { credentials } = require("@grpc/grpc-js");
+  const {
+    diag,
+    DiagConsoleLogger,
+    DiagLogLevel,
+  } = require("@opentelemetry/api");
+  const { OTLPLogExporter } = require("@opentelemetry/exporter-logs-otlp-grpc");
+  const {
+    OTLPMetricExporter,
+  } = require("@opentelemetry/exporter-metrics-otlp-grpc");
+  const {
+    OTLPTraceExporter,
+  } = require("@opentelemetry/exporter-trace-otlp-grpc");
+  const { Resource } = require("@opentelemetry/resources");
+  const { BatchLogRecordProcessor } = require("@opentelemetry/sdk-logs");
+  const {
+    MeterProvider,
+    PeriodicExportingMetricReader,
+  } = require("@opentelemetry/sdk-metrics");
+  const { NodeSDK } = require("@opentelemetry/sdk-node");
+  const {
+    ATTR_SERVICE_NAME,
+    ATTR_SERVICE_VERSION,
+  } = require("@opentelemetry/semantic-conventions");
 
-// OTLP Metric Exporter (for metrics)
-const metricReader = new PeriodicExportingMetricReader({
-  exporter: metricExporter,
-  exportIntervalMillis: 5000, // Export every 5 seconds
-});
+  diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
 
-// OTLP Log exporter (for logs)
-const logExporter = new OTLPLogExporter({
-  url: env.OTLP_COLLECTOR_URL,
-  credentials: credentials.createInsecure(),
-});
+  // OTLP Trace Exporter (for traces)
+  const traceExporter = new OTLPTraceExporter({
+    url: env.OTLP_COLLECTOR_URL, // OTLP gRPC endpoint
+    credentials: credentials.createInsecure(),
+  });
 
-const logProcessor = new BatchLogRecordProcessor(logExporter);
+  const metricExporter = new OTLPMetricExporter({
+    url: env.OTLP_COLLECTOR_URL, // OTLP gRPC endpoint
+    credentials: credentials.createInsecure(),
+  });
 
-const meterProvider = new MeterProvider({
-  resource: new Resource({
-    [ATTR_SERVICE_NAME]: appPackage.name,
-    [ATTR_SERVICE_VERSION]: appPackage.version,
-  }),
-  readers: [
-    new PeriodicExportingMetricReader({
-      exporter: metricExporter,
-      exportIntervalMillis: 5000,
+  // OTLP Metric Exporter (for metrics)
+  const metricReader = new PeriodicExportingMetricReader({
+    exporter: metricExporter,
+    exportIntervalMillis: 5000, // Export every 5 seconds
+  });
+
+  // OTLP Log exporter (for logs)
+  const logExporter = new OTLPLogExporter({
+    url: env.OTLP_COLLECTOR_URL,
+    credentials: credentials.createInsecure(),
+  });
+
+  const logProcessor = new BatchLogRecordProcessor(logExporter);
+
+  const meterProvider = new MeterProvider({
+    resource: new Resource({
+      [ATTR_SERVICE_NAME]: appPackage.name,
+      [ATTR_SERVICE_VERSION]: appPackage.version,
     }),
-  ],
-});
+    readers: [
+      new PeriodicExportingMetricReader({
+        exporter: metricExporter,
+        exportIntervalMillis: 5000,
+      }),
+    ],
+  });
 
-export const meter = meterProvider.getMeter("fastify-metrics");
+  meter = meterProvider.getMeter("fastify-metrics");
 
-export const fastifyOtelInstrumentation = new FastifyOtelInstrumentation();
+  fastifyOtelInstrumentation = new FastifyOtelInstrumentation({
+    registerOnInitialization: true,
+  });
 
-fastifyOtelInstrumentation.setMeterProvider(meterProvider);
+  fastifyOtelInstrumentation.setMeterProvider(meterProvider);
 
-// OpenTelemetry SDK setup
-const sdk = new NodeSDK({
-  instrumentations: [nodeAutoInstrumentations, fastifyOtelInstrumentation],
-  resource: new Resource({
-    [ATTR_SERVICE_NAME]: appPackage.name,
-    [ATTR_SERVICE_VERSION]: appPackage.version,
-  }),
-  traceExporter: traceExporter,
-  metricReader: metricReader,
-  logRecordProcessors: [logProcessor],
-});
+  // OpenTelemetry SDK setup
+  sdk = new NodeSDK({
+    instrumentations: [nodeAutoInstrumentations, fastifyOtelInstrumentation],
+    resource: new Resource({
+      [ATTR_SERVICE_NAME]: appPackage.name,
+      [ATTR_SERVICE_VERSION]: appPackage.version,
+    }),
+    traceExporter: traceExporter,
+    metricReader: metricReader,
+    logRecordProcessors: [logProcessor],
+  });
 
-export default sdk;
+  sdk.start();
+}

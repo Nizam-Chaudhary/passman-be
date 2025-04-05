@@ -10,8 +10,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { files, passwords, vaults } from "./schema.js";
-import { EncryptedMasterKey } from "../../modules/user/types/user.js";
+import { files, passwords, vaults } from "./schema";
+import { EncryptedMasterKey } from "../../modules/user/types/user";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),

@@ -1,10 +1,10 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import type HttpError from "../shared/lib/httpError.js";
+import type HttpError from "../shared/lib/httpError";
 
 import fastifyPlugin from "fastify-plugin";
 
-import { globalErrorHandler } from "../shared/lib/errorHandler.js";
+import { globalErrorHandler } from "../shared/lib/errorHandler";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.setErrorHandler(

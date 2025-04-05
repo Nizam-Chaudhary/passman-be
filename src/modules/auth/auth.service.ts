@@ -6,21 +6,21 @@ import type {
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "./auth.schema.js";
+} from "./auth.schema";
 
 import moment from "moment";
 
-import { db } from "../../db/index.js";
-import { users } from "../../db/schema/schema.js";
-// import * as userTemplates from "../../templates/user.js";
-import { generateOtp } from "../../utils/generator.js";
+import { db } from "../../db/index";
+import { users } from "../../db/schema/schema";
+// import * as userTemplates from "../../templates/user";
+import { generateOtp } from "../../utils/generator";
 import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
   UnprocessableEntityError,
-} from "../../shared/lib/httpError.js";
-import env from "../../shared/config/env.js";
+} from "../../shared/lib/httpError";
+import env from "../../shared/config/env";
 
 class AuthService {
   async signInUser(input: SignInUserInput) {

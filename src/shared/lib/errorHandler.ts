@@ -1,13 +1,13 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
-import type HttpError from "./httpError.js";
+import type HttpError from "./httpError";
 
 import {
   hasZodFastifySchemaValidationErrors,
   isResponseSerializationError,
 } from "fastify-type-provider-zod";
 
-import env from "../config/env.js";
+import env from "../config/env";
 
 export function globalErrorHandler(
   fastify: FastifyInstance,

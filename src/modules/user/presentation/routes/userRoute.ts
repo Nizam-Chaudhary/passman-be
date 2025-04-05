@@ -1,16 +1,16 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { errorResponseSchema } from "../../../../shared/schemas/responseSchemas.js";
+import { errorResponseSchema } from "../../../../shared/schemas/responseSchemas";
 import {
   createUserSchema,
   getUserResponseSchema,
   signUpUserResponseSchema,
   updateUserResponseSchema,
   updateUserSchema,
-} from "../schemas/userSchema.js";
+} from "../schemas/userSchema";
 import { container } from "tsyringe";
-import { UserController } from "../controllers/userController.js";
+import { UserController } from "../controllers/userController";
 
 export default async (fastify: FastifyInstance) => {
   const userController = container.resolve(UserController);

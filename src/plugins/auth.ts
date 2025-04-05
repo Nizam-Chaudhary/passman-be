@@ -2,7 +2,7 @@ import type { FastifyJWT } from "@fastify/jwt";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import fastifyPlugin from "fastify-plugin";
-import { UnauthorizedError } from "../shared/lib/httpError.js";
+import { UnauthorizedError } from "../shared/lib/httpError";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.decorate(

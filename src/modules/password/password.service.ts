@@ -1,13 +1,10 @@
-import type {
-  AddPasswordInput,
-  ImportPasswordsInput,
-} from "./password.schema.js";
+import type { AddPasswordInput, ImportPasswordsInput } from "./password.schema";
 
 import { and, desc, eq, ilike, or } from "drizzle-orm";
 
-import { db } from "../../db/index.js";
-import { passwords } from "../../db/schema/schema.js";
-import { NotFoundError } from "../../shared/lib/httpError.js";
+import { db } from "../../db/index";
+import { passwords } from "../../db/schema/schema";
+import { NotFoundError } from "../../shared/lib/httpError";
 
 class PasswordService {
   async addPassword(userId: number, input: AddPasswordInput) {

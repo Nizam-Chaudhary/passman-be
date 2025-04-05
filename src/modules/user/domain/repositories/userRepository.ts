@@ -1,10 +1,5 @@
-import { Transaction } from "../../../../shared/domain/repositories/transaction.js";
-import {
-  CreateUser,
-  UpdateUser,
-  User,
-  UserWithFile,
-} from "../../types/user.js";
+import { Transaction } from "../../../../shared/domain/repositories/transaction";
+import { CreateUser, UpdateUser, User, UserWithFile } from "../../types/user";
 
 export interface UserRepository {
   /**

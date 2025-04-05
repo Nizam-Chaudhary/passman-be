@@ -6,7 +6,7 @@ import {
   scryptSync,
 } from "node:crypto";
 
-import env from "../shared/config/env.js";
+import env from "../shared/config/env";
 
 export function deriveKey(password: string, salt: string): Buffer {
   return scryptSync(password, salt, env.ENC_KEY_LENGTH);

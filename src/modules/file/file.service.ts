@@ -2,15 +2,15 @@ import type { MultipartFile } from "@fastify/multipart";
 
 import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
-import { db } from "../../db/index.js";
-import { files } from "../../db/schema/schema.js";
-import env from "../../shared/config/env.js";
-import { s3 } from "../../shared/config/s3.js";
-import { validFileTypesSchema } from "./file.schema.js";
+import { db } from "../../db/index";
+import { files } from "../../db/schema/schema";
+import env from "../../shared/config/env";
+import { s3 } from "../../shared/config/s3";
+import { validFileTypesSchema } from "./file.schema";
 import {
   BadRequestError,
   UnprocessableEntityError,
-} from "../../shared/lib/httpError.js";
+} from "../../shared/lib/httpError";
 
 export async function uploadFile(fileData: MultipartFile | undefined) {
   if (!fileData) {

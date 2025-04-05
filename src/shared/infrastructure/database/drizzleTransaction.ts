@@ -1,7 +1,7 @@
-import { Transaction } from "../../domain/repositories/transaction.js";
+import { Transaction } from "../../domain/repositories/transaction";
 import { PgTransaction } from "drizzle-orm/pg-core";
 import { NodePgQueryResultHKT } from "drizzle-orm/node-postgres";
-import * as schema from "../../../db/schema/schema.js";
+import * as schema from "../../../db/schema/schema";
 import { ExtractTablesWithRelations } from "drizzle-orm";
 
 export class DrizzleTransaction implements Transaction {

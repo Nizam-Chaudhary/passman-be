@@ -1,18 +1,18 @@
-import { Transaction } from "../../../../shared/domain/repositories/transaction.js";
-import { VaultRepository } from "../../domain/repositories/vaultRepository.js";
-import { Vault } from "../../types/vault.js";
-import { DB } from "../../../../db/index.js";
-import { DrizzleTx } from "../../../../shared/domain/types/drizzle.js";
-import { vaults } from "../../../../db/schema/schema.js";
+import { Transaction } from "../../../../shared/domain/repositories/transaction";
+import { VaultRepository } from "../../domain/repositories/vaultRepository";
+import { Vault } from "../../types/vault";
+import { Database } from "../../../../db/index";
+import { DrizzleTx } from "../../../../shared/domain/types/drizzle";
+import { vaults } from "../../../../db/schema/schema";
 import { and, eq } from "drizzle-orm";
-import { inject, injectable } from "tsyringe";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class VaultRepositoryImpl implements VaultRepository {
-  constructor(@inject(Symbol("Db")) private readonly db: DB) {}
+  constructor(private readonly db: Database) {}
 
   getConnection(tx?: Transaction) {
-    return tx ? (tx as unknown as DrizzleTx) : this.db;
+    return tx ? (tx as unknown as DrizzleTx) : this.db.connection;
   }
 
   async createVault(

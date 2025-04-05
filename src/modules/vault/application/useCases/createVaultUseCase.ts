@@ -1,5 +1,5 @@
-import { VaultRepository } from "../../domain/repositories/vaultRepository.js";
-import { Vault } from "../../types/vault.js";
+import { VaultRepository } from "../../domain/repositories/vaultRepository";
+import { Vault } from "../../types/vault";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

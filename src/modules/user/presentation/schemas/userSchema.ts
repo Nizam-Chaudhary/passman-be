@@ -5,12 +5,12 @@ import {
 } from "drizzle-zod";
 import { z } from "zod";
 
-import { users } from "../../../../db/schema/schema.js";
+import { users } from "../../../../db/schema/schema";
 import {
   responseSchema,
   statusSchema,
-} from "../../../../shared/schemas/responseSchemas.js";
-import { selectFileSchema } from "../../../file/file.schema.js";
+} from "../../../../shared/schemas/responseSchemas";
+import { selectFileSchema } from "../../../file/file.schema";
 
 export const masterKeySchema = z
   .object({

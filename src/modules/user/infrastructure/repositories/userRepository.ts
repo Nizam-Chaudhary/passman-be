@@ -1,25 +1,18 @@
 import { eq, ilike } from "drizzle-orm";
-import { UserRepository } from "../../domain/repositories/userRepository.js";
-import {
-  CreateUser,
-  UpdateUser,
-  User,
-  UserWithFile,
-} from "../../types/user.js";
-import { DB } from "../../../../db/index.js";
-import { users } from "../../../../db/schema/schema.js";
-import { Transaction } from "../../../../shared/domain/repositories/transaction.js";
-import { DrizzleTx } from "../../../../shared/domain/types/drizzle.js";
-import { inject, injectable } from "tsyringe";
+import { UserRepository } from "../../domain/repositories/userRepository";
+import { CreateUser, UpdateUser, User, UserWithFile } from "../../types/user";
+import { users } from "../../../../db/schema/schema";
+import { Transaction } from "../../../../shared/domain/repositories/transaction";
+import { DrizzleTx } from "../../../../shared/domain/types/drizzle";
+import { injectable } from "tsyringe";
+import { Database } from "src/db";
 
 @injectable()
 export class UserRepositoryImpl implements UserRepository {
-  constructor(@inject("Db") private readonly db: DB) {
-    console.log("Registered user Repo");
-  }
+  constructor(private readonly db: Database) {}
 
   getConnection(tx?: Transaction) {
-    return tx ? (tx as unknown as DrizzleTx) : this.db;
+    return tx ? (tx as unknown as DrizzleTx) : this.db.connection;
   }
 
   async createUser(

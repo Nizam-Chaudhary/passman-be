@@ -1,8 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { idParamsSchema } from "../../../../shared/schemas/requestSchemas.js";
-import { errorResponseSchema } from "../../../../shared/schemas/responseSchemas.js";
+import { idParamsSchema } from "../../../../shared/schemas/requestSchemas";
+import { errorResponseSchema } from "../../../../shared/schemas/responseSchemas";
 
 import {
   addUpdateVaultBodySchema,
@@ -10,14 +10,12 @@ import {
   deleteVaultResponseSchema,
   getVaultsResponseSchema,
   updateVaultResponseSchema,
-} from "../schemas/vaultSchema.js";
-import { container, inject, injectable } from "tsyringe";
-import { VaultController } from "../controllers/vault.controller.js";
+} from "../schemas/vaultSchema";
+import { container } from "tsyringe";
+import { VaultController } from "../controllers/vault.controller";
 
 export default async (fastify: FastifyInstance) => {
   const vaultController = container.resolve(VaultController);
-  const service = container.resolve(Service);
-  console.log(service.fetchData());
   fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "GET",
     url: "/",
@@ -91,19 +89,3 @@ export default async (fastify: FastifyInstance) => {
     handler: vaultController.deleteVault,
   });
 };
-
-@injectable()
-class Repository {
-  getData() {
-    return "Hello from Repository";
-  }
-}
-
-@injectable()
-class Service {
-  constructor(@inject(Repository) private repository: Repository) {}
-
-  fetchData() {
-    return this.repository.getData();
-  }
-}

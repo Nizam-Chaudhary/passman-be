@@ -5,7 +5,7 @@ import {
   masterKeySchema,
   updateUserSchema,
   userResponseDataSchema,
-} from "../presentation/schemas/userSchema.js";
+} from "../presentation/schemas/userSchema";
 
 export type User = z.infer<typeof userResponseDataSchema>;
 

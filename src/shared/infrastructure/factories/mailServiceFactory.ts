@@ -1,16 +1,16 @@
-import { MailService } from "../../domain/services/mailService.js";
-import env from "../../config/env.js";
+import { MailService } from "../../domain/services/mailService";
+import env from "../../config/env";
 import * as aws from "@aws-sdk/client-ses";
 import { createTransport } from "nodemailer";
-import { NodeMailerService } from "../services/mail/nodeMailerService.js";
-import { LoggingService } from "../../domain/services/loggerService.js";
+import { NodeMailerService } from "../services/mail/nodeMailerService";
+import { LoggerService } from "../../domain/services/loggerService";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
 export class MailServiceFactory {
   constructor(
     private readonly provider: MailServices,
-    @inject("LoggingService") private readonly logger: LoggingService
+    @inject("LoggerService") private readonly logger: LoggerService
   ) {}
 
   createService(): MailService {

@@ -1,7 +1,7 @@
-import { NotFoundError } from "../../../../shared/lib/httpError.js";
-import { VaultRepository } from "../../domain/repositories/vaultRepository.js";
-import { Vault } from "../../types/vault.js";
-import { MESSAGES } from "../../domain/constants/messages.js";
+import { NotFoundError } from "../../../../shared/lib/httpError";
+import { VaultRepository } from "../../domain/repositories/vaultRepository";
+import { Vault } from "../../types/vault";
+import { MESSAGES } from "../../domain/constants/messages";
 import { injectable, inject } from "tsyringe";
 
 @injectable()

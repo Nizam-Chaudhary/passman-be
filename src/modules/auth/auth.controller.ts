@@ -10,10 +10,10 @@ import type {
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "./auth.schema.js";
+} from "./auth.schema";
 
-import authService from "./auth.service.js";
-import { BadRequestError } from "../../shared/lib/httpError.js";
+import authService from "./auth.service";
+import { BadRequestError } from "../../shared/lib/httpError";
 
 class UserController {
   async signInUser(

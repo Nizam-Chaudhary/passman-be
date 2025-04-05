@@ -1,9 +1,9 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { CreateUser, UpdateUser } from "../../types/user.js";
-import { CreateUserUseCase } from "../../application/useCases/createUserUseCase.js";
-import { UpdateUserByIdUseCase } from "../../application/useCases/updateUserUseCase.js";
-import { GetUserByIdUserUseCase } from "../../application/useCases/getUserByIdUseCase.js";
+import { CreateUser, UpdateUser } from "../../types/user";
+import { CreateUserUseCase } from "../../application/useCases/createUserUseCase";
+import { UpdateUserByIdUseCase } from "../../application/useCases/updateUserUseCase";
+import { GetUserByIdUserUseCase } from "../../application/useCases/getUserByIdUseCase";
 import { injectable } from "tsyringe";
 
 @injectable()

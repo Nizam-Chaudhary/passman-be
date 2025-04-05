@@ -9,8 +9,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { users, vaults } from "./schema.js";
-import { EncryptedPassword } from "../../modules/password/password.schema.js";
+import { users, vaults } from "./schema";
+import { EncryptedPassword } from "../../modules/password/password.schema";
 
 export const passwords = pgTable("passwords", {
   id: serial("id").primaryKey(),

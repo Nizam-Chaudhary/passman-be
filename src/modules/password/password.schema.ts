@@ -1,11 +1,11 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { passwords } from "../../db/schema/schema.js";
+import { passwords } from "../../db/schema/schema";
 import {
   responseSchema,
   statusSchema,
-} from "../../shared/schemas/responseSchemas.js";
+} from "../../shared/schemas/responseSchemas";
 
 const encryptedPasswordSchema = z
   .object({

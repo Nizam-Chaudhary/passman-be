@@ -1,25 +1,21 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import type { getVaultResourceQueryOptions } from "../schemas/vaultSchema.js";
-import { CreateVaultUseCase } from "../../application/useCases/createVaultUseCase.js";
-import { DeleteVaultUseCase } from "../../application/useCases/deleteVaultUseCase.js";
-import { GetVaultsForUserUseCase } from "../../application/useCases/getVaultsForUserUseCase.js";
-import { UpdateVaultUseCase } from "../../application/useCases/updateVaultUseCase.js";
-import { inject, injectable } from "tsyringe";
+import type { getVaultResourceQueryOptions } from "../schemas/vaultSchema";
+import { CreateVaultUseCase } from "../../application/useCases/createVaultUseCase";
+import { DeleteVaultUseCase } from "../../application/useCases/deleteVaultUseCase";
+import { GetVaultsForUserUseCase } from "../../application/useCases/getVaultsForUserUseCase";
+import { UpdateVaultUseCase } from "../../application/useCases/updateVaultUseCase";
+import { injectable } from "tsyringe";
 
 @injectable()
 export class VaultController {
   constructor(
-    @inject(GetVaultsForUserUseCase)
     private readonly getVaultsForUserUseCase: GetVaultsForUserUseCase,
 
-    @inject(CreateVaultUseCase)
     private readonly createVaultUseCase: CreateVaultUseCase,
 
-    @inject(UpdateVaultUseCase)
     private readonly updateVaultUseCase: UpdateVaultUseCase,
 
-    @inject(DeleteVaultUseCase)
     private readonly deleteVaultUseCase: DeleteVaultUseCase
   ) {}
   async getVaults(

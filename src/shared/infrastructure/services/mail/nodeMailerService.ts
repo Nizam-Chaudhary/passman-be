@@ -1,6 +1,6 @@
 import { Transporter } from "nodemailer";
-import { LoggingService } from "../../../domain/services/loggerService.js";
-import { MailService } from "../../../domain/services/mailService.js";
+import { LoggerService } from "../../../domain/services/loggerService";
+import { MailService } from "../../../domain/services/mailService";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
@@ -8,7 +8,7 @@ export class NodeMailerService implements MailService {
   constructor(
     private readonly transporter: Transporter,
     private readonly fromMailAddress: string,
-    @inject("LoggingService") private readonly logger: LoggingService
+    @inject("LoggerService") private readonly logger: LoggerService
   ) {}
 
   sendMail(to: string, subject: string, text: string): Promise<void> {

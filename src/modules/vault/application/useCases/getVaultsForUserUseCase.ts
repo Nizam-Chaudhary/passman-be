@@ -1,6 +1,6 @@
 import { injectable, inject } from "tsyringe";
-import { VaultRepository } from "../../domain/repositories/vaultRepository.js";
-import { Vault } from "../../types/vault.js";
+import { VaultRepository } from "../../domain/repositories/vaultRepository";
+import { Vault } from "../../types/vault";
 
 @injectable()
 export class GetVaultsForUserUseCase {

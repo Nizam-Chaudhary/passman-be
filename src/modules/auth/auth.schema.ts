@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { responseSchema } from "../../shared/schemas/responseSchemas.js";
+import { responseSchema } from "../../shared/schemas/responseSchemas";
 import {
   masterKeySchema,
   passwordSchema,
-} from "../user/presentation/schemas/userSchema.js";
+} from "../user/presentation/schemas/userSchema";
 
 export const ecryptedValueSchema = z.object({
   iv: z

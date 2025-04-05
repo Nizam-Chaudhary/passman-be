@@ -1,10 +1,12 @@
 import { inject, singleton } from "tsyringe";
-import { LoggingService } from "../../../domain/services/loggerService.js";
-import { Logger } from "pino";
+import { LoggerService } from "../../../domain/services/loggerService";
+import { FastifyLoggerInstance } from "fastify";
 
 @singleton()
-export class PinoLoggerService implements LoggingService {
-  constructor(@inject("Logger") private readonly logger: Logger) {}
+export class PinoLoggerService implements LoggerService {
+  constructor(
+    @inject("Logger") private readonly logger: FastifyLoggerInstance
+  ) {}
 
   debug(message: unknown, ...args: any[]): void {
     if (typeof message === "string" || typeof message === "object") {

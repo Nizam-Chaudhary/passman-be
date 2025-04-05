@@ -7,7 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { notes, passwords, users } from "./schema.js";
+import { notes, passwords, users } from "./schema";
 
 export const vaults = pgTable("vaults", {
   id: serial("id").primaryKey(),
