@@ -1,7 +1,9 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
+import { container } from "tsyringe";
 import { errorResponseSchema } from "../../../../shared/schemas/responseSchemas";
+import { UserController } from "../controllers/userController";
 import {
   createUserSchema,
   getUserResponseSchema,
@@ -9,8 +11,6 @@ import {
   updateUserResponseSchema,
   updateUserSchema,
 } from "../schemas/userSchema";
-import { container } from "tsyringe";
-import { UserController } from "../controllers/userController";
 
 export default async (fastify: FastifyInstance) => {
   const userController = container.resolve(UserController);
@@ -18,7 +18,7 @@ export default async (fastify: FastifyInstance) => {
     method: "POST",
     url: "/sign-up",
     schema: {
-      tags: ["Auth"],
+      tags: ["User"],
       summary: "Sign up user",
       description: "Sign up user",
       body: createUserSchema,
@@ -31,6 +31,7 @@ export default async (fastify: FastifyInstance) => {
     },
     handler: userController.createUser,
   });
+
   fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "PATCH",
     url: "/",

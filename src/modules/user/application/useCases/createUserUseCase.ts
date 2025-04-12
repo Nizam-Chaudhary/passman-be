@@ -1,14 +1,14 @@
+import { hashSync } from "bcrypt";
+import { LoggerService } from "src/shared/domain/services/loggerService";
+import { inject, injectable } from "tsyringe";
+import { VaultRepository } from "../../../../modules/vault/domain/repositories/vaultRepository";
+import env from "../../../../shared/config/env";
+import { TransactionManager } from "../../../../shared/domain/repositories/transactionManager";
 import { ConflictError } from "../../../../shared/lib/httpError";
+import { generateOtp } from "../../../../utils/generator";
+import { MESSAGES } from "../../domain/constants/messages";
 import { UserRepository } from "../../domain/repositories/userRepository";
 import { CreateUserBody } from "../../types/user";
-import { MESSAGES } from "../../domain/constants/messages";
-import { hashSync } from "bcrypt";
-import env from "../../../../shared/config/env";
-import { generateOtp } from "../../../../utils/generator";
-import { TransactionManager } from "../../../../shared/domain/repositories/transactionManager";
-import { VaultRepository } from "../../../../modules/vault/domain/repositories/vaultRepository";
-import { inject, injectable } from "tsyringe";
-import { LoggerService } from "src/shared/domain/services/loggerService";
 
 @injectable()
 export class CreateUserUseCase {
@@ -38,44 +38,27 @@ export class CreateUserUseCase {
 
     const otp = generateOtp();
 
-    let createdUser;
+    const createdUser = await this.transactionManager.run(async (tx) => {
+      const userData = await this.userRepository.createUser(
+        {
+          ...user,
+          otp,
+          password: hashedPassword,
+          isVerified: false,
+        },
+        { tx }
+      );
 
-    createdUser = await this.userRepository.createUser({
-      ...user,
-      otp,
-      password: hashedPassword,
-      isVerified: false,
+      await this.vaultRepository.createVault(
+        {
+          name: "Default",
+          userId: userData.id,
+        },
+        { tx }
+      );
+
+      return userData;
     });
-
-    this.logger.log(createdUser, "createdUser");
-
-    await this.vaultRepository.createVault({
-      name: "Default",
-      userId: createdUser.id,
-    });
-
-    // await this.transactionManager.run(async (tx) => {
-    //   this.logger.log("Starting transaction in createUserUseCase");
-    //   createdUser = await this.userRepository.createUser(
-    //     {
-    //       ...user,
-    //       otp,
-    //       password: hashedPassword,
-    //       isVerified: false,
-    //     },
-    //     { tx }
-    //   );
-
-    //   this.logger.log(createdUser, "createdUser");
-
-    //   await this.vaultRepository.createVault(
-    //     {
-    //       name: "Default",
-    //       userId: createdUser.id,
-    //     },
-    //     { tx }
-    //   );
-    // });
 
     // TODO: Send email with OTP
     // sendMail({

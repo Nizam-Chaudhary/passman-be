@@ -1,17 +1,13 @@
 import { Database } from "src/db";
-import { Transaction } from "../../domain/repositories/transaction";
-import { TransactionManager } from "../../domain/repositories/transactionManager";
-import { DrizzleTransaction } from "./drizzleTransaction";
 import { injectable } from "tsyringe";
+import { TransactionManager } from "../../domain/repositories/transactionManager";
 
 @injectable()
 export class DrizzleTransactionManager implements TransactionManager {
   constructor(private readonly db: Database) {}
-  run<T>(operation: (tx: Transaction) => Promise<T>): Promise<T> {
-    console.log("Starting transaction");
+  run<T>(operation: (tx: any) => Promise<T>): Promise<T> {
     return this.db.connection.transaction(async (tx) => {
-      const transaction = new DrizzleTransaction(tx);
-      return await operation(transaction);
+      return await operation(tx);
     });
   }
 }

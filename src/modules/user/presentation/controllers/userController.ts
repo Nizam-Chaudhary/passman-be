@@ -1,10 +1,12 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { CreateUser, UpdateUser } from "../../types/user";
-import { CreateUserUseCase } from "../../application/useCases/createUserUseCase";
-import { UpdateUserByIdUseCase } from "../../application/useCases/updateUserUseCase";
-import { GetUserByIdUserUseCase } from "../../application/useCases/getUserByIdUseCase";
+import { RESPONSE_STATUS } from "src/shared/lib/constants";
 import { injectable } from "tsyringe";
+import { CreateUserUseCase } from "../../application/useCases/createUserUseCase";
+import { GetUserByIdUserUseCase } from "../../application/useCases/getUserByIdUseCase";
+import { UpdateUserByIdUseCase } from "../../application/useCases/updateUserUseCase";
+import { MESSAGES } from "../../domain/constants/messages";
+import { CreateUser, UpdateUser } from "../../types/user";
 
 @injectable()
 export class UserController {
@@ -22,7 +24,12 @@ export class UserController {
     req: FastifyRequest<{ Body: CreateUser }>,
     reply: FastifyReply
   ) {
-    const response = await this.createUserUseCase.execute(req.body);
+    const data = await this.createUserUseCase.execute(req.body);
+    const response = {
+      status: RESPONSE_STATUS.SUCCESS,
+      message: MESSAGES.USER_REGISTERED_SUCCESSFULLY,
+      data,
+    };
     await reply.code(200).send(response);
   }
 
@@ -30,10 +37,13 @@ export class UserController {
     req: FastifyRequest<{ Body: UpdateUser }>,
     reply: FastifyReply
   ) {
-    const response = await this.updateUserUseCase.execute(
-      req.user.id,
-      req.body
-    );
+    const data = await this.updateUserUseCase.execute(req.user.id, req.body);
+
+    const response = {
+      status: RESPONSE_STATUS.SUCCESS,
+      message: MESSAGES.USER_UPDATED_SUCCESSFULLY,
+      data,
+    };
 
     reply.code(200).send(response);
   }

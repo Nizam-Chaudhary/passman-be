@@ -1,12 +1,10 @@
+import { FastifyBaseLogger } from "fastify";
 import { inject, singleton } from "tsyringe";
 import { LoggerService } from "../../../domain/services/loggerService";
-import { FastifyLoggerInstance } from "fastify";
 
 @singleton()
 export class PinoLoggerService implements LoggerService {
-  constructor(
-    @inject("Logger") private readonly logger: FastifyLoggerInstance
-  ) {}
+  constructor(@inject("Logger") private readonly logger: FastifyBaseLogger) {}
 
   debug(message: unknown, ...args: any[]): void {
     if (typeof message === "string" || typeof message === "object") {

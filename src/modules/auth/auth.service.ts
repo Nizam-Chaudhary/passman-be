@@ -10,17 +10,18 @@ import type {
 
 import moment from "moment";
 
-import { db } from "../../db/index";
 import { users } from "../../db/schema/schema";
 // import * as userTemplates from "../../templates/user";
-import { generateOtp } from "../../utils/generator";
+import { Database } from "src/db";
+import env from "../../shared/config/env";
 import {
   BadRequestError,
   ForbiddenError,
   NotFoundError,
   UnprocessableEntityError,
 } from "../../shared/lib/httpError";
-import env from "../../shared/config/env";
+import { generateOtp } from "../../utils/generator";
+const db = new Database().connection;
 
 class AuthService {
   async signInUser(input: SignInUserInput) {
