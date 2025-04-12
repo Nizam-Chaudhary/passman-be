@@ -1,11 +1,16 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { errorSchema, idParamsSchema } from "../../utils/basicSchema.js";
+import {
+  errorSchema,
+  idParamsSchema,
+  responseSchema,
+} from "../../utils/basicSchema.js";
 import passwordController from "./password.controller.js";
 import {
   addOrUpdateOrDeletePasswordResponseSchema,
   addPasswordSchema,
+  deleteMultiplePasswrodsBodySchema,
   getPasswordResponseSchema,
   getPasswordsQueryStringSchema,
   getPasswordsResponseSchema,
@@ -128,5 +133,24 @@ export default async (fastify: FastifyInstance) => {
     },
     preHandler: [fastify.authenticate],
     handler: passwordController.importPasswords,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "DELETE",
+    url: "/many",
+    schema: {
+      tags: ["Password"],
+      summary: "Delete multiple passwords",
+      description: "delete passwords",
+      security: [{ jwtAuth: [] }],
+      body: deleteMultiplePasswrodsBodySchema,
+      response: {
+        "200": responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    preHandler: [fastify.authenticate],
+    handler: passwordController.deleteMultiplePasswords,
   });
 };

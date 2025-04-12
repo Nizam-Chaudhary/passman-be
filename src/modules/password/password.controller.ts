@@ -3,6 +3,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 import type { IdParamsType } from "../../utils/basicSchema.js";
 import type {
   AddPasswordInput,
+  DeleteMultiplePasswordsBody,
   getPasswordsQueryOptions,
   ImportPasswordsInput,
 } from "./password.schema.js";
@@ -53,7 +54,7 @@ class PasswordController {
       req.user.id
     );
 
-    reply.code(201).send(response);
+    reply.code(200).send(response);
   }
 
   async deletePassword(
@@ -65,7 +66,19 @@ class PasswordController {
       req.user.id
     );
 
-    reply.code(201).send(response);
+    reply.code(200).send(response);
+  }
+
+  async deleteMultiplePasswords(
+    req: FastifyRequest<{ Body: DeleteMultiplePasswordsBody }>,
+    reply: FastifyReply
+  ) {
+    const response = await passwordService.deleteMultiplePasswords(
+      req.user.id,
+      req.body.ids
+    );
+
+    reply.code(200).send(response);
   }
 
   async importPasswords(

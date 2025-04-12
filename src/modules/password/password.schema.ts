@@ -135,3 +135,11 @@ export const importPasswordResponseSchema = responseSchema
     })
   )
   .describe("Schema for import password response");
+
+export const deleteMultiplePasswrodsBodySchema = z.object({
+  ids: z.array(z.number().min(1)).min(1),
+});
+
+export type DeleteMultiplePasswordsBody = z.infer<
+  typeof deleteMultiplePasswrodsBodySchema
+>;

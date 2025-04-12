@@ -3,7 +3,7 @@ import type {
   ImportPasswordsInput,
 } from "./password.schema.js";
 
-import { and, desc, eq, ilike, or } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, or } from "drizzle-orm";
 
 import { db } from "../../db/index.js";
 import { passwords } from "../../db/schema/schema.js";
@@ -102,6 +102,17 @@ class PasswordService {
       status: "success",
       message: "password deleted successfully",
       data: password[0],
+    };
+  }
+
+  async deleteMultiplePasswords(userId: number, ids: number[]) {
+    await db
+      .delete(passwords)
+      .where(and(inArray(passwords.id, ids), eq(passwords.userId, userId)));
+
+    return {
+      status: "success",
+      message: "passwords deleted successfully",
     };
   }
 
