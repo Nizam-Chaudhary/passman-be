@@ -1,4 +1,5 @@
 import fastifyPlugin from "fastify-plugin";
+import env from "src/lib/env.js";
 import {
   activeRequests,
   requestCounter,
@@ -9,6 +10,10 @@ import {
 } from "../lib/customMetrics.js";
 
 export default fastifyPlugin((fastify, _opts, done) => {
+  if (env.TELEMETRY_ENABLED === "false") {
+    done();
+    return;
+  }
   fastify.addHook("onRequest", (request, reply, done) => {
     activeRequests.add(1); // Increase active request count
     request.metricsStartTime = process.hrtime(); // Store start time

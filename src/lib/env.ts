@@ -26,6 +26,7 @@ const envSchema = z.object({
   AWS_REGION: z.string().min(1),
   S3_BUCKET: z.string().min(1),
   FROM_EMAIL_ADDR: z.string().email(),
+  TELEMETRY_ENABLED: z.enum(["false", "true"]),
   OTLP_COLLECTOR_URL: z.string().url(),
 });
 

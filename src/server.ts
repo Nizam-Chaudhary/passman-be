@@ -1,18 +1,19 @@
 import Fastify, { FastifyInstance } from "fastify";
 import env from "./lib/env.js";
 import logger from "./lib/logger.js";
-import otelSdk, { fastifyOtelInstrumentation } from "./lib/otel.js";
+import otelSdk from "./lib/otel.js";
 import plugins from "./plugins/index.js";
 import routes from "./route.js";
 
-otelSdk.start();
+if (env.TELEMETRY_ENABLED === "true") {
+  otelSdk.start();
+}
 
 const fastify = Fastify({
   logger,
 });
 
 async function main() {
-  await fastify.register(fastifyOtelInstrumentation.plugin());
   await fastify.register(plugins);
   await fastify.register(routes);
   await fastify.listen({

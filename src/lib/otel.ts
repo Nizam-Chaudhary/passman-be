@@ -2,7 +2,7 @@ const { getNodeAutoInstrumentations } = await import(
   "@opentelemetry/auto-instrumentations-node"
 );
 const nodeAutoInstrumentations = getNodeAutoInstrumentations({});
-import fastifyOtel from "@fastify/otel";
+
 import { credentials } from "@grpc/grpc-js";
 import { diag, DiagConsoleLogger, DiagLogLevel } from "@opentelemetry/api";
 import { OTLPLogExporter } from "@opentelemetry/exporter-logs-otlp-grpc";
@@ -21,7 +21,12 @@ import {
 } from "@opentelemetry/semantic-conventions";
 import appPackage from "../../package.json" with { type: "json" };
 import env from "./env.js";
-const { FastifyOtelInstrumentation } = fastifyOtel;
+
+const { default: fastifyOtel } = await import("@fastify/otel");
+const fastifyOtelInstrumentation = new fastifyOtel.FastifyOtelInstrumentation({
+  registerOnInitialization: true,
+  enabled: env.TELEMETRY_ENABLED === "true",
+});
 
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.INFO); //enable for logging otel network calls
 
@@ -64,8 +69,6 @@ const meterProvider = new MeterProvider({
 });
 
 export const meter = meterProvider.getMeter("fastify-metrics");
-
-export const fastifyOtelInstrumentation = new FastifyOtelInstrumentation();
 
 fastifyOtelInstrumentation.setMeterProvider(meterProvider);
 
