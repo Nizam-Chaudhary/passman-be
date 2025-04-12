@@ -16,6 +16,7 @@ import {
   getPasswordsResponseSchema,
   importPasswordResponseSchema,
   importPasswordsSchema,
+  movePasswordsVaultBodySchema,
   updatePasswordSchema,
 } from "./password.schema.js";
 
@@ -37,6 +38,25 @@ export default async (fastify: FastifyInstance) => {
     },
     preHandler: [fastify.authenticate],
     handler: passwordController.addPassword,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "POST",
+    url: "/import",
+    schema: {
+      tags: ["Password"],
+      summary: "Import multiple passwords",
+      description: "import passwords",
+      security: [{ jwtAuth: [] }],
+      body: importPasswordsSchema,
+      response: {
+        "200": importPasswordResponseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    preHandler: [fastify.authenticate],
+    handler: passwordController.importPasswords,
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
@@ -117,25 +137,6 @@ export default async (fastify: FastifyInstance) => {
   });
 
   fastify.withTypeProvider<ZodTypeProvider>().route({
-    method: "POST",
-    url: "/import",
-    schema: {
-      tags: ["Password"],
-      summary: "Import multiple passwords",
-      description: "import passwords",
-      security: [{ jwtAuth: [] }],
-      body: importPasswordsSchema,
-      response: {
-        "200": importPasswordResponseSchema,
-        "4xx": errorSchema,
-        "5xx": errorSchema,
-      },
-    },
-    preHandler: [fastify.authenticate],
-    handler: passwordController.importPasswords,
-  });
-
-  fastify.withTypeProvider<ZodTypeProvider>().route({
     method: "DELETE",
     url: "/many",
     schema: {
@@ -152,5 +153,24 @@ export default async (fastify: FastifyInstance) => {
     },
     preHandler: [fastify.authenticate],
     handler: passwordController.deleteMultiplePasswords,
+  });
+
+  fastify.withTypeProvider<ZodTypeProvider>().route({
+    method: "POST",
+    url: "/move-vaults",
+    schema: {
+      tags: ["Password"],
+      summary: "Move multiple passwords to a different vault",
+      description: "move passwords to vault",
+      security: [{ jwtAuth: [] }],
+      body: movePasswordsVaultBodySchema,
+      response: {
+        "200": responseSchema,
+        "4xx": errorSchema,
+        "5xx": errorSchema,
+      },
+    },
+    preHandler: [fastify.authenticate],
+    handler: passwordController.movePasswordsToVault,
   });
 };

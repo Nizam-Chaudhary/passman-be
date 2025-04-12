@@ -143,3 +143,12 @@ export const deleteMultiplePasswrodsBodySchema = z.object({
 export type DeleteMultiplePasswordsBody = z.infer<
   typeof deleteMultiplePasswrodsBodySchema
 >;
+
+export const movePasswordsVaultBodySchema = z.object({
+  vaultId: z.number().min(1),
+  ids: z.array(z.number().min(1)).min(1),
+});
+
+export type MovePasswordsVaultBody = z.infer<
+  typeof movePasswordsVaultBodySchema
+>;

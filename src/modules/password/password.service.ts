@@ -132,6 +132,18 @@ class PasswordService {
       data: importedPasswords,
     };
   }
+
+  async movePasswordsToVault(userId: number, vaultId: number, ids: number[]) {
+    await db
+      .update(passwords)
+      .set({ vaultId })
+      .where(and(inArray(passwords.id, ids), eq(passwords.userId, userId)));
+
+    return {
+      status: "success",
+      message: "passwords moved to vault successfully",
+    };
+  }
 }
 
 export default new PasswordService();

@@ -6,6 +6,7 @@ import type {
   DeleteMultiplePasswordsBody,
   getPasswordsQueryOptions,
   ImportPasswordsInput,
+  MovePasswordsVaultBody,
 } from "./password.schema.js";
 
 import passwordService from "./password.service.js";
@@ -91,6 +92,19 @@ class PasswordController {
     );
 
     reply.code(201).send(response);
+  }
+
+  async movePasswordsToVault(
+    req: FastifyRequest<{ Body: MovePasswordsVaultBody }>,
+    reply: FastifyReply
+  ) {
+    const response = await passwordService.movePasswordsToVault(
+      req.user.id,
+      req.body.vaultId,
+      req.body.ids
+    );
+
+    reply.code(200).send(response);
   }
 }
 
