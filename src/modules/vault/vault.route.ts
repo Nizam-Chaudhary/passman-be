@@ -1,15 +1,15 @@
 import type { FastifyInstance } from "fastify";
 import type { ZodTypeProvider } from "fastify-type-provider-zod";
 
-import { errorSchema, idParamsSchema } from "../../utils/basicSchema.js";
-import vaultController from "./vault.controller.js";
+import { errorSchema, idParamsSchema } from "../../utils/basicSchema";
+import vaultController from "./vault.controller";
 import {
   addUpdateVaultBodySchema,
   addVaultResponseSchema,
   deleteVaultResponseSchema,
   getVaultsResponseSchema,
   updateVaultResponseSchema,
-} from "./vault.schema.js";
+} from "./vault.schema";
 
 export default async (fastify: FastifyInstance) => {
   fastify.withTypeProvider<ZodTypeProvider>().route({

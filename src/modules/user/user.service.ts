@@ -1,10 +1,10 @@
-import type { UpdateUserInput } from "./user.schema.js";
+import type { UpdateUserInput } from "./user.schema";
 
 import { eq } from "drizzle-orm";
 
-import { db } from "../../db/index.js";
-import { files, users } from "../../db/schema/schema.js";
-import { deleteFiles } from "../file/file.service.js";
+import { db } from "../../db/index";
+import { files, users } from "../../db/schema/schema";
+import { deleteFiles } from "../file/file.service";
 
 class UserService {
   async getUser(id: number) {

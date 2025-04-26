@@ -1,8 +1,8 @@
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { files } from "../../db/schema/schema.js";
-import { responseSchema } from "../../utils/basicSchema.js";
+import { files } from "../../db/schema/schema";
+import { responseSchema } from "../../utils/basicSchema";
 
 export const selectFileSchema = createSelectSchema(files).describe(
   "Schema for file selection"

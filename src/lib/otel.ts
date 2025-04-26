@@ -1,6 +1,6 @@
-const { getNodeAutoInstrumentations } = await import(
-  "@opentelemetry/auto-instrumentations-node"
-);
+const {
+  getNodeAutoInstrumentations,
+} = require("@opentelemetry/auto-instrumentations-node");
 const nodeAutoInstrumentations = getNodeAutoInstrumentations({});
 
 import { credentials } from "@grpc/grpc-js";
@@ -19,10 +19,10 @@ import {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
-import appPackage from "../../package.json" with { type: "json" };
-import env from "./env.js";
+import appPackage from "../../package.json";
+import env from "./env";
 
-const { default: fastifyOtel } = await import("@fastify/otel");
+const { default: fastifyOtel } = require("@fastify/otel");
 const fastifyOtelInstrumentation = new fastifyOtel.FastifyOtelInstrumentation({
   registerOnInitialization: true,
   enabled: env.TELEMETRY_ENABLED === "true",

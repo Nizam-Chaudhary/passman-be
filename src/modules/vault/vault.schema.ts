@@ -1,8 +1,8 @@
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-import { vaults } from "../../db/schema/schema.js";
-import { statusSchema } from "../../utils/basicSchema.js";
+import { vaults } from "../../db/schema/schema";
+import { statusSchema } from "../../utils/basicSchema";
 
 export const selectVaultsSchema = createSelectSchema(vaults).describe(
   "Schema for selecting vault data"

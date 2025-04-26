@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 
-import { users, vaults } from "./schema.js";
+import { users, vaults } from "./schema";
 
 export const notes = pgTable("notes", {
   id: serial().primaryKey(),

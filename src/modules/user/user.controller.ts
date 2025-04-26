@@ -1,8 +1,8 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import type { UpdateUserInput } from "./user.schema.js";
+import type { UpdateUserInput } from "./user.schema";
 
-import userService from "./user.service.js";
+import userService from "./user.service";
 
 class UserController {
   async updateUser(

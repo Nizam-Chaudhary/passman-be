@@ -1,5 +1,4 @@
 import fastifyPlugin from "fastify-plugin";
-import env from "src/lib/env.js";
 import {
   activeRequests,
   requestCounter,
@@ -7,7 +6,8 @@ import {
   requestDurationSummary,
   requestSizeHistogram,
   responseSizeHistogram,
-} from "../lib/customMetrics.js";
+} from "../lib/customMetrics";
+import env from "../lib/env";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   if (env.TELEMETRY_ENABLED === "false") {

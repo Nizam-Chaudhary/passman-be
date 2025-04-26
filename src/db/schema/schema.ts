@@ -1,5 +1,5 @@
-export { files } from "./files.js";
-export { notes, notesRelations } from "./notes.js";
-export { passwords, passwordsRelations } from "./passwords.js";
-export { users, usersRelations } from "./users.js";
-export { vaults, vaultsRelations } from "./vaults.js";
+export { files } from "./files";
+export { notes, notesRelations } from "./notes";
+export { passwords, passwordsRelations } from "./passwords";
+export { users, usersRelations } from "./users";
+export { vaults, vaultsRelations } from "./vaults";

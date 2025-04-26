@@ -1,9 +1,9 @@
 import Fastify, { FastifyInstance } from "fastify";
-import env from "./lib/env.js";
-import logger from "./lib/logger.js";
-import otelSdk from "./lib/otel.js";
-import plugins from "./plugins/index.js";
-import routes from "./route.js";
+import env from "./lib/env";
+import logger from "./lib/logger";
+import otelSdk from "./lib/otel";
+import plugins from "./plugins/index";
+import routes from "./route";
 
 if (env.TELEMETRY_ENABLED === "true") {
   otelSdk.start();

@@ -1,8 +1,8 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import type { getVaultResourceQueryOptions } from "./vault.schema.js";
+import type { getVaultResourceQueryOptions } from "./vault.schema";
 
-import vaultService from "./vault.service.js";
+import vaultService from "./vault.service";
 
 class VaultController {
   async getVaults(

@@ -3,7 +3,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 import fastifyPlugin from "fastify-plugin";
 
-import AppError from "../lib/appError.js";
+import AppError from "../lib/appError";
 
 export default fastifyPlugin((fastify, _opts, done) => {
   fastify.decorate(

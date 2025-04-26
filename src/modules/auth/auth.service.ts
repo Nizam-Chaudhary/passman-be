@@ -7,17 +7,17 @@ import type {
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "./auth.schema.js";
+} from "./auth.schema";
 
 import moment from "moment";
 
-import { db } from "../../db/index.js";
-import { users, vaults } from "../../db/schema/schema.js";
-import AppError from "../../lib/appError.js";
-import env from "../../lib/env.js";
-import { sendMail } from "../../lib/mailer.js";
-import * as userTemplates from "../../templates/user.js";
-import { generateOtp } from "../../utils/generator.js";
+import { db } from "../../db/index";
+import { users, vaults } from "../../db/schema/schema";
+import AppError from "../../lib/appError";
+import env from "../../lib/env";
+import { sendMail } from "../../lib/mailer";
+import * as userTemplates from "../../templates/user";
+import { generateOtp } from "../../utils/generator";
 
 class AuthService {
   async signUpUser(input: SignUpUserInput) {

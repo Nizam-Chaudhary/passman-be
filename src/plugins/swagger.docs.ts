@@ -1,14 +1,14 @@
 import { fastifyBasicAuth } from "@fastify/basic-auth";
 import fastifySwagger from "@fastify/swagger";
-import ScalarApiReference from "@scalar/fastify-api-reference";
 import fastifyPlugin from "fastify-plugin";
 import { Buffer } from "node:buffer";
 import { timingSafeEqual } from "node:crypto";
 
-import env from "../lib/env.js";
-import { swaggerOptions } from "../utils/swagger.js";
+import { FastifyReply, FastifyRequest } from "fastify";
+import env from "../lib/env";
+import { swaggerOptions } from "../utils/swagger";
 
-export default fastifyPlugin((fastify, _opts, done) => {
+export default fastifyPlugin(async (fastify, _opts) => {
   fastify.register(fastifySwagger, swaggerOptions);
 
   // Register fastify-basic-auth plugin for basic authentication
@@ -26,10 +26,13 @@ export default fastifyPlugin((fastify, _opts, done) => {
     authenticate: true, // Enforce authentication on routes
   });
 
+  const { default: ScalarApiReference } = await import(
+    "@scalar/fastify-api-reference"
+  );
   fastify.register(ScalarApiReference, {
     routePrefix: "/",
     hooks: {
-      onRequest: (request, reply, done) => {
+      onRequest: (request: FastifyRequest, reply: FastifyReply, done: any) => {
         if (env.NODE_ENV === "production") {
           fastify.basicAuth(request, reply, done);
         }
@@ -43,21 +46,21 @@ export default fastifyPlugin((fastify, _opts, done) => {
         description: "API documentation of Passman",
         ogDescription: "API documentation of Passman",
         ogTitle: "Passman Docs",
-        ogImage: "https://example.com/image.png",
+        ogImage:
+          "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM1N2UzODkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1maWxlLWNvZGUiPjxwYXRoIGQ9Ik0xMCAxMi41IDggMTVsMiAyLjUiLz48cGF0aCBkPSJtMTQgMTIuNSAyIDIuNS0yIDIuNSIvPjxwYXRoIGQ9Ik0xNCAydjRhMiAyIDAgMCAwIDIgMmg0Ii8+PHBhdGggZD0iTTE1IDJINmEyIDIgMCAwIDAtMiAydjE2YTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMlY3eiIvPjwvc3ZnPg==",
         twitterCard: "summary_large_image",
         // Add more...
       },
-      defaultHttpClient: {
-        targetKey: "javascript",
-        clientKey: "fetch",
-      },
-      theme: "saturn", // alternate, default, moon, purple, solarized, bluePlanet, saturn, kepler, mars, deepSpace, none
+      // defaultHttpClient: {
+      //   targetKey: "javascript",
+      //   clientKey: "fetch",
+      // },
+      theme: "default", // alternate, default, moon, purple, solarized, bluePlanet, saturn, kepler, mars, deepSpace, none
       hideDownloadButton: false,
       favicon:
         "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM1N2UzODkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1maWxlLWNvZGUiPjxwYXRoIGQ9Ik0xMCAxMi41IDggMTVsMiAyLjUiLz48cGF0aCBkPSJtMTQgMTIuNSAyIDIuNS0yIDIuNSIvPjxwYXRoIGQ9Ik0xNCAydjRhMiAyIDAgMCAwIDIgMmg0Ii8+PHBhdGggZD0iTTE1IDJINmEyIDIgMCAwIDAtMiAydjE2YTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMlY3eiIvPjwvc3ZnPg==",
     },
   });
-  done();
 });
 
 function compare(a: string, b: string): boolean {

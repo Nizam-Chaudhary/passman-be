@@ -11,10 +11,10 @@ import type {
   UpdateMasterPasswordBody,
   VerifyMasterPasswordBody,
   VerifyUserEmailBody,
-} from "./auth.schema.js";
+} from "./auth.schema";
 
-import AppError from "../../lib/appError.js";
-import authService from "./auth.service.js";
+import AppError from "../../lib/appError";
+import authService from "./auth.service";
 
 class UserController {
   async signUpUser(

@@ -1,13 +1,13 @@
 import { and, eq } from "drizzle-orm";
 
-import { db } from "../../db/index.js";
-import * as schema from "../../db/schema/schema.js";
-import AppError from "../../lib/appError.js";
+import { db } from "../../db/index";
+import * as schema from "../../db/schema/schema";
+import AppError from "../../lib/appError";
 
 class UserService {
   async getVaults(userId: number) {
     const vaults = await db.query.vaults.findMany({
-      where: (vaults, { eq }) => eq(vaults.userId, userId),
+      where: eq(schema.vaults.userId, userId),
     });
 
     return {
