@@ -22,13 +22,18 @@ const baseSchema = createInsertSchema(passwords, {
     schema
       .min(0, "Vault id is required")
       .describe("ID of the vault this password belongs to"),
+  name: (schema) =>
+    schema
+      .min(1, "Name is required")
+      .describe("Name of the application or website")
+      .optional(),
   username: (schema) =>
     schema.min(1, "Username is required").describe("Username for the account"),
   password: () => encryptedPasswordSchema.describe("Password for the account"),
-  site: (schema) =>
+  url: (schema) =>
     schema
-      .min(1, "Site is required")
-      .describe("Name of the application or website"),
+      .min(1, "Url is required")
+      .describe("Unique url of the application or website"),
   faviconUrl: (schema) =>
     schema
       .url("invalid url")
@@ -42,9 +47,10 @@ const baseSchema = createInsertSchema(passwords, {
 export const addPasswordSchema = z
   .object({
     vaultId: baseSchema.shape.vaultId,
+    name: baseSchema.shape.name,
     username: baseSchema.shape.username,
     password: encryptedPasswordSchema,
-    site: baseSchema.shape.site,
+    url: baseSchema.shape.url,
     faviconUrl: baseSchema.shape.faviconUrl,
     note: baseSchema.shape.note,
   })
@@ -60,9 +66,10 @@ export type ImportPasswordsInput = z.infer<typeof importPasswordsSchema>;
 
 export const updatePasswordSchema = z
   .object({
+    name: baseSchema.shape.name.describe("Name for the account"),
     username: baseSchema.shape.username.describe("Username for the account"),
     password: encryptedPasswordSchema.describe("Password for the account"),
-    site: baseSchema.shape.site.describe("Name of the application or website"),
+    url: baseSchema.shape.url.describe("URL of the application or website"),
     faviconUrl: baseSchema.shape.faviconUrl.describe(
       "URL of the service favicon"
     ),
@@ -75,9 +82,10 @@ export type UpdatePasswordInput = z.infer<typeof updatePasswordSchema>;
 const selectPasswordsModel = createSelectSchema(passwords, {
   id: (schema) => schema.describe("Unique identifier for the password record"),
   userId: (schema) => schema.describe("User id"),
+  name: (schema) => schema.describe("Name of the application or website"),
   username: (schema) => schema.describe("Username for the account"),
   password: () => encryptedPasswordSchema.describe("Password for the account"),
-  site: (schema) => schema.describe("Name of the application or website"),
+  url: (schema) => schema.describe("URL of the application or website"),
   faviconUrl: (schema) => schema.describe("URL of the service favicon"),
   note: (schema) => schema.describe("Additional notes about the account"),
   createdAt: (schema) =>

@@ -16,7 +16,8 @@ class PasswordService {
       .values({
         vaultId: input.vaultId,
         userId,
-        site: input.site,
+        name: input.name,
+        url: input.url,
         username: input.username,
         password: input.password,
         faviconUrl: input.faviconUrl,
@@ -34,7 +35,8 @@ class PasswordService {
   async getPasswords(userId: number, vaultId: number, search?: string) {
     const searchCondition = search
       ? or(
-          ilike(passwords.site, `%${search}%`),
+          ilike(passwords.name, `%${search}%`),
+          ilike(passwords.url, `%${search}%`),
           ilike(passwords.username, `%${search}%`),
           ilike(passwords.note, `%${search}%`)
         )

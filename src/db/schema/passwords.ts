@@ -20,7 +20,8 @@ export const passwords = pgTable("passwords", {
   vaultId: integer("vault_id")
     .notNull()
     .references(() => vaults.id),
-  site: varchar("site", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }),
+  url: varchar("url", { length: 255 }).notNull(),
   username: varchar("username", { length: 255 }).notNull(),
   password: json("password").$type<EncryptedValueType>().notNull(),
   faviconUrl: varchar("favicon_url", { length: 255 }),
