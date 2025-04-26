@@ -4,7 +4,6 @@ import fastifyPlugin from "fastify-plugin";
 import { Buffer } from "node:buffer";
 import { timingSafeEqual } from "node:crypto";
 
-import { FastifyReply, FastifyRequest } from "fastify";
 import env from "../lib/env";
 import { swaggerOptions } from "../utils/swagger";
 
@@ -32,7 +31,7 @@ export default fastifyPlugin(async (fastify, _opts) => {
   fastify.register(ScalarApiReference, {
     routePrefix: "/",
     hooks: {
-      onRequest: (request: FastifyRequest, reply: FastifyReply, done: any) => {
+      onRequest: (request, reply, done) => {
         if (env.NODE_ENV === "production") {
           fastify.basicAuth(request, reply, done);
         }
@@ -40,7 +39,8 @@ export default fastifyPlugin(async (fastify, _opts) => {
       },
     },
     configuration: {
-      // layout: 'default',
+      hideClientButton: false,
+      // layout: "default",
       metaData: {
         title: "Passman Docs",
         description: "API documentation of Passman",
@@ -55,7 +55,7 @@ export default fastifyPlugin(async (fastify, _opts) => {
       //   targetKey: "javascript",
       //   clientKey: "fetch",
       // },
-      theme: "default", // alternate, default, moon, purple, solarized, bluePlanet, saturn, kepler, mars, deepSpace, none
+      theme: "fastify", // alternate, default, moon, purple, solarized, bluePlanet, saturn, kepler, mars, deepSpace, none
       hideDownloadButton: false,
       favicon:
         "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM1N2UzODkiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1maWxlLWNvZGUiPjxwYXRoIGQ9Ik0xMCAxMi41IDggMTVsMiAyLjUiLz48cGF0aCBkPSJtMTQgMTIuNSAyIDIuNS0yIDIuNSIvPjxwYXRoIGQ9Ik0xNCAydjRhMiAyIDAgMCAwIDIgMmg0Ii8+PHBhdGggZD0iTTE1IDJINmEyIDIgMCAwIDAtMiAydjE2YTIgMiAwIDAgMCAyIDJoMTJhMiAyIDAgMCAwIDItMlY3eiIvPjwvc3ZnPg==",
