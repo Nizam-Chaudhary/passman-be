@@ -8,10 +8,10 @@ import userRoute from "./modules/user/user.route";
 import vaultRoute from "./modules/vault/vault.route";
 
 export default (fastify: FastifyInstance) => {
-  fastify.register(authRoute, { prefix: "api/v1/auth" });
-  fastify.register(fileRoute, { prefix: "api/v1/files" });
-  fastify.register(healthRoute, { prefix: "health" });
-  fastify.register(passwordRoute, { prefix: "api/v1/passwords" });
-  fastify.register(userRoute, { prefix: "api/v1/users" });
-  fastify.register(vaultRoute, { prefix: "api/v1/vaults" });
+    fastify.register(authRoute, { prefix: "api/v1/auth" });
+    fastify.register(fileRoute, { prefix: "api/v1/files" });
+    fastify.register(healthRoute, { prefix: "health" });
+    fastify.register(passwordRoute, { prefix: "api/v1/passwords" });
+    fastify.register(userRoute, { prefix: "api/v1/users" });
+    fastify.register(vaultRoute, { prefix: "api/v1/vaults" });
 };
